@@ -1,0 +1,97 @@
+.container{
+    width: 540px;
+    height:225px; 
+    background-color: pink; 
+    border-radius: 10px;
+    box-shadow:  0 4px 8px rgba(0, 0, 0, 0.3);
+    margin: auto;
+    align-items: center;
+    margin-top: 25.5%;
+}
+
+.passwordInput{
+    border: solid 2px black;
+    background-color: pink;
+    border-radius: 10px;
+    padding: 10px;
+    height: 32px;
+    width: 475px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: -40px;
+    margin-left:20px;
+    letter-spacing: 4x;
+}
+
+.input{
+    font-size: 24px;
+    border: none;
+    background-color: pink;
+    outline: none;
+}
+
+.copy-button i {
+    cursor: pointer;
+    font-size: 32px; 
+    color: black;    
+    opacity: 0.3;
+  }
+
+.copy-button:hover i {
+    color: black; 
+    opacity: 1;
+    background-color: pink; 
+    border: none;
+  }
+
+#generate{
+    background: black;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin: 10px 0;
+    font-size: 20px;
+    cursor: pointer;
+    margin-left:20px;
+  }
+
+#generate:hover{
+    background-color: green;
+  }
+
+#alert{
+    
+    position: fixed;
+    width: 300px;
+    height: 50px;
+    background-color: lightgreen;
+    right: 20px;
+    bottom: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    font-family: 'Courier New', Courier, monospace;
+    animation-name: slidein;
+    animation-duration: 0.5s;
+    animation-fill-mode: forwards; 
+}
+
+@keyframes slidein{
+    from {
+    transform: translateX(100%);
+}
+    to {
+    transform: translateX(0);
+}
+}
+  
+
+
+
+
+  
