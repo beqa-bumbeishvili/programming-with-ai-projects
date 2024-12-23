@@ -55,6 +55,15 @@ input[type="text" i] {
     font-size: 20px;
 }
 
+/* Change color to green when the mouse is over the button */
+.btn:hover {
+    background-color: green;
+}
+
+/* Change color to green when the button is clicked (active state) */
+.btn:active {
+    background-color: green;
+}
 
 .alert-container {
     position: fixed;
