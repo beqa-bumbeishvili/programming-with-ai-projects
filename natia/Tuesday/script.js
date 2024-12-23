@@ -17,9 +17,6 @@ document.addEventListener("DOMContentLoaded", () => {
         inputField.value = password;
     }
 
-
-
-
     function copyToClipboard() {
         if (inputField.value === "") {
             alert("No password to copy!");

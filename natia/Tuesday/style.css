@@ -55,13 +55,6 @@ input[type="text" i] {
     font-size: 20px;
 }
 
-.btn {
-    background-color: black;
-    color: white;
-    transition: background-color 0.3s ease;
-    /* Add any other styles like padding, font-size, etc. */
-}
-
 /* Change color to green when the mouse is over the button */
 .btn:hover {
     background-color: green;
@@ -71,7 +64,6 @@ input[type="text" i] {
 .btn:active {
     background-color: green;
 }
-
 
 .alert-container {
     position: fixed;
