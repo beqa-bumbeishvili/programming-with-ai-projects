@@ -4,18 +4,18 @@ let copy = document.querySelector(".fa-copy");
 let alertContainer = document.querySelector(".alert-container");
 
 
-function genPassword(){
+function genPassword() {
     let chars = "0123456789abcdefghijklmnopqrstuvwxyz!@#$%^&*()_-+=[]{}|;:><ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     let passwordLength = 14;
-    let password= "";
+    let password = "";
 
-    for (let i = 0; i <= passwordLength; i++){
+    for (let i = 0; i <= passwordLength; i++) {
         let randomNumber = Math.floor(Math.random() * chars.length);
-        password += chars.substring(randomNumber, randomNumber +1);
+        password += chars.substring(randomNumber, randomNumber + 1);
     }
 
-document.getElementById("input").value = password;
-return password;
+    document.getElementById("input").value = password;
+    return password;
 }
 
 function copyPassword() {
@@ -27,14 +27,16 @@ function copyPassword() {
 }
 
 
-copy.addEventListener("click", () =>{
+copy.addEventListener("click", () => {
     copyPassword();
+
     if (document.getElementById("input").value) {
         alertContainer.classList.remove("active");
         setTimeout(() => {
             alertContainer.classList.add("active")
         }, 2000);
     }
+
 })
 
 
