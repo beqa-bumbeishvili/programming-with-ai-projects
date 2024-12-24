@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", () => {   // DOMContentLoaded არაა აუცილებელი, script.js-ში html-ს ბოლოში გიწერია, ამიტომ ჩატვირთულია ელემენტები ისედაც
     const inputField = document.getElementById("input");
     const copyIcon = document.getElementById("copy-icon");
     const generateButton = document.querySelector(".btn");
@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const characters =
             "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+";
         const passwordLength = 12;
-        let password = "";
+        let password = "";              // ცოტა დააშორე კოდები ერთმანეთს, ისე რო ლოგიკურად იყოს გამოყოფილი. მაგ. for ციკლი ახალ ხაზზე აქ
         for (let i = 0; i < passwordLength; i++) {
             const randomIndex = Math.floor(Math.random() * characters.length);
             password += characters[randomIndex];
