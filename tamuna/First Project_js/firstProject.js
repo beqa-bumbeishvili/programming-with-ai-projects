@@ -26,7 +26,7 @@ copyButton.addEventListener('click', function() {
 
             showAlert(password); 
             }
-});
+});  
 function showAlert(copiedPassword) {
     alert.textContent = ` ${copiedPassword} copied!`;
     alert.style.display = 'flex'; 
@@ -34,3 +34,7 @@ function showAlert(copiedPassword) {
         alert.style.display = 'none';
     }, 3000);
 }
+
+// javascript-ის ფიდბექი:
+// 1. ფუნქცია ერთი ხაზით გამოყავი ზედა კოდთან. მაგ. function showAlert(copiedPassword), ერთით ქვევით უნდა იყოს
+// 2. cmd + shift + f_ით გაასწორე კოდი ატვირთვამდე
