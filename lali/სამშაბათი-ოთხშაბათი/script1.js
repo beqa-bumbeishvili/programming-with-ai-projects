@@ -26,6 +26,7 @@ function copyPassword() {
     alertContainer.innerText = `${copiedPassword} copied!`;
 }
 
+
 copy.addEventListener("click", () =>{
     copyPassword();
     if (document.getElementById("input").value) {
