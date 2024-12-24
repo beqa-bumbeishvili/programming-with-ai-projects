@@ -1,0 +1,17 @@
+body{
+    margin: 0;
+    background-image: linear-gradient(to right, #90ee8f,#9ee3ba,#add8e4);
+    font-family: "Courier New", Courier, monospace;
+}
+.header{
+    text-align: center;
+    color: darkblue;
+    font-size: 35px;
+    padding-top: 10px;
+}
+.additionalInstruction{
+    text-align: center;
+    color: darkblue;
+    font-size: 18px;
+}
+
