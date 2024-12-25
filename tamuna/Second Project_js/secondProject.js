@@ -31,3 +31,7 @@ childDiv.addEventListener('dblclick', function() {
     }
 });
 });
+
+
+// CTRL + SHIFT + F გაუშვი ატვირთვამდე :D
+// ფოლდერების სახელში space არ დატოვო, Second Project_js -> second-project-js ან უკეთესი, notes-app 
