@@ -30,7 +30,7 @@ body {
     background-color: pink;
     outline: none;
     letter-spacing: 2px;
-}
+} /* აქ ერთი ცარიელი ხაზი */
 input::placeholder {
     letter-spacing: 0;
 }
@@ -64,7 +64,7 @@ h2 {
 
 #icon:hover {
     opacity: 1;
-}
+}/* აქ ერთი ცარიელი ხაზი */
 .alert {
     position: fixed;
     bottom: 20px;
@@ -78,8 +78,10 @@ h2 {
     border-radius: 5px;
     display: none;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
+}/* აქ ერთი ცარიელი ხაზი */
 #password {
     text-align: center;
     padding-top: 20px;
 }
+
+/* ctrl + shift + f_ით გაასწორე კოდი */

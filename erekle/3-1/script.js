@@ -14,12 +14,12 @@ document.getElementById("generate-password").addEventListener("click", function 
     const inputField = document.getElementById("input");
     const copyIcon = document.getElementById("fav");
     const notification = document.getElementById("notification");
-
+// აქ ორი ცარიელი ხაზი ზედმეტია
 
     document.getElementById("fav").addEventListener("click", function () {
     const passwordField = document.getElementById("input");
     const password = passwordField.value;
-           
+          // აქ ორი ცარიელი ხაზი ზედმეტია 
         
         const notification = document.getElementById("notification");
         notification.style.display = "block";
@@ -30,3 +30,5 @@ document.getElementById("generate-password").addEventListener("click", function 
         notification.textContent = `copied!: ${password}`;
         notification.style.display = "block";
     });
+
+    // ცვლადების სახელები კაია, ctrl + shift + f_ით გაასწორე კოდი
