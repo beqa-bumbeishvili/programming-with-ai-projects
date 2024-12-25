@@ -5,11 +5,11 @@ body {
     align-items: center;
     margin: 0;
     font-family: "Courier New", Courier, monospace;
-
+    /* ცარიელი ხაზი არ გინდა აქ */
 }
 
 .container {
-    
+    /* ცარიელი ხაზი არ გინდა აქ */
     background-color: pink;
     width: 500px;
     padding: 20px;
