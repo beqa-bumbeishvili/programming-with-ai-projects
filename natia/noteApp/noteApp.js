@@ -12,7 +12,7 @@
 
      // Add double-click functionality to remove the note
     newNote.addEventListener('dblclick', () => {
-         if (confirm('Are you sure you want to delete this note?')) {
+         if (confirm('Do you want to delete this note?')) {
              appContainer.removeChild(newNote);
          }
      });
