@@ -3,17 +3,16 @@ let currentInput = "";
 let startsWithDoubleSlash = false;
 
 function appendNumber(number) {
-    // თუ ვიწყებთ პირველი სლეშით
     if (currentInput === "" && number === "/") {
         startsWithDoubleSlash = false;
         currentInput = "/";
     }
-    // თუ მეორე სლეში მოდის
+
     else if (currentInput === "/" && number === "/") {
         startsWithDoubleSlash = true;
         currentInput += number;
     }
-    // სხვა ნებისმიერი სიმბოლო
+
     else {
         currentInput += number;
     }
@@ -50,11 +49,18 @@ function calculate() {
         return;
     }
 
+    const validRegex = /^[0-9+\-*/.()]+$/;
+    if (!validRegex.test(currentInput)) {
+        display.value = "Invalid input";
+        currentInput = "";
+        return;
+    }
+
     try {
-        let result = eval(currentInput);
+        const result = new Function(`return ${currentInput}`)();
         currentInput = result.toString();
         updateDisplay();
-        
+
     } catch (e) {
         return;
     }
