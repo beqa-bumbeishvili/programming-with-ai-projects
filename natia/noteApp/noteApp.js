@@ -20,3 +20,7 @@
      // Insert the new note before the button
      appContainer.insertBefore(newNote, addButton);
  });
+
+// ფიდბექი:
+//  ctrl + shift + f გაუშვი ატვირთვამდე
+// ზედმეტი კომენტარები მოაშორე, კომენტარი მარტო მაშინ გამოიყენე როცა კოდი არაა საკითხვადი
