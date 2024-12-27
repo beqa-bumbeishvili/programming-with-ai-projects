@@ -1,0 +1,96 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+}
+
+.calculator {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 400px;
+    padding: 20px;
+    margin-left: 520px;
+    margin-right: 520px;
+    border: 1px;
+    margin-top: 40px;
+    background-color: #f2f2f2;
+    border-radius: 5px;
+    border: solid 1px #ccc;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+#display {
+    height: 47.5px;
+    font-size: 24px;
+    border: none;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3) inset;
+    border-radius: 5px;
+    background-color: white;
+
+}
+
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-top: 20px;
+}
+
+button {
+    padding: 10px;
+    font-size: 24px;
+    background-color: #f0f0f0;
+    border: none;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+}
+
+#equal {
+    grid-row: span 3;
+    /* Occupy 3 rows */
+    grid-column: span 1;
+    /* Occupy 1 column */
+    background-color: #01ff70;
+    color: #fff;
+
+}
+
+#erase {
+    background-color: #ff4136;
+    color: #fff;
+}
+
+.operator {
+    background-color: #0074d9;
+    color: #fff;
+    padding: 10px;
+    font-size: 24px;
+    border: none;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+}
+
+button:hover {
+    background-color: #e0e0e0;
+}
+
+#erase:hover {
+    background-color: #e0e0e0;
+}
+
+button:active {
+    background-color: #d0d0d0;
+}
+
+#equal:hover {
+    transition: background-color 0.3s ease-;
+    background-color: #d0d0d0;
+}
