@@ -54,8 +54,8 @@ function calculate() {
         let result = eval(currentInput);
         currentInput = result.toString();
         updateDisplay();
+        
     } catch (e) {
-
         return;
     }
 }
