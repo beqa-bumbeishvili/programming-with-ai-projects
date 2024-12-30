@@ -59,8 +59,6 @@ button:hover {
     background-color: #008001;
 }
 
-
-
 .copySymbol {
     transition: fill 0.3s ease;
     cursor: pointer;
