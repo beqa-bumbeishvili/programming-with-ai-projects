@@ -7,7 +7,7 @@ if (notes.length === 0) {
 };
 
 // აქ notes ცვლადი შეგიძლია გამოიყენო getNotes() ნაცვლად
-getNotes().forEach(note => {
+notes.forEach(note => {
     let noteElement = createNoteElement(note.id, note.content);
     notesContainer.insertBefore(noteElement, addNoteButton);
 })
@@ -45,7 +45,7 @@ function createNoteElement(id, content) {
 }
 
 function addNote() {
-    let Notes = getNotes(); // ცვლადი პატარა ასოთი Notes -> notes
+    let notes = getNotes(); // ცვლადი პატარა ასოთი Notes -> notes
     let noteObject = {
         id: Math.floor(Math.random() * 1000000),
         content: ""
@@ -54,13 +54,13 @@ function addNote() {
     let noteElement = createNoteElement(noteObject.id, noteObject.content);
     notesContainer.insertBefore(noteElement, addNoteButton);
 
-    Notes.push(noteObject);
-    saveNotes(Notes);
+    notes.push(noteObject);
+    saveNotes(notes);
 }
 
 function updateNote(id, newContent) {
     let notes = getNotes();
-    let targetNote = notes.filter(note => note.id == id)[0]; //როცა ერთი ჩანაწერს-ს ეძებ მასივში .find გამოიყენე -> notes.find(note => note.id == id)
+    let targetNote = notes.find(note => note.id == id)[0]; //როცა ერთი ჩანაწერს-ს ეძებ მასივში .find გამოიყენე -> notes.find(note => note.id == id)
 
     targetNote.content = newContent;
     saveNotes(notes);
