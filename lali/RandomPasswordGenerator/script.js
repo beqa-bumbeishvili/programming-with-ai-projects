@@ -20,6 +20,7 @@ function genPassword() {
 
 function copyPassword() {
     password.select();
+
     let copiedPassword = document.getElementById("input").value;
     navigator.clipboard.writeText(copiedPassword);
 
@@ -32,6 +33,7 @@ copy.addEventListener("click", () => {
 
     if (document.getElementById("input").value) {
         alertContainer.classList.remove("active");
+
         setTimeout(() => {
             alertContainer.classList.add("active")
         }, 2000);
