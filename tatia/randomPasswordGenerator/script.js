@@ -1,3 +1,15 @@
+const button = document.querySelector('.generateButton');
+const passwordInput = document.querySelector('#input');
+
+
+button.addEventListener('click', () => {
+    const randomPassword = generateRandomPassword(14);
+    passwordInput.value = randomPassword;
+    document.getElementById('popup').innerText = randomPassword + " copied!";
+});
+
+document.querySelector('.copySymbol').addEventListener('click', copyTextToClipboard, showPopup);
+
 function generateRandomPassword(length) {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
     let password = '';
@@ -31,17 +43,6 @@ function showPopup() {
 }
 
 
-const button = document.querySelector('.generateButton');
-const passwordInput = document.querySelector('#input');
-
-
-button.addEventListener('click', () => {
-    const randomPassword = generateRandomPassword(14);
-    passwordInput.value = randomPassword;
-    document.getElementById('popup').innerText = randomPassword + " copied!";
-});
-
-document.querySelector('.copySymbol').addEventListener('click', copyTextToClipboard, showPopup);
 
 
 
