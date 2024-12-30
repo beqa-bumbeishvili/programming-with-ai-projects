@@ -4,7 +4,6 @@ body {
     margin-top: 240px;
 }
 
-/*მთლიანი კონტეინერის გასტილვა*/
 .passwordContainer {
     font-family: "Courier New", Courier, monospace;
     background-color: #fec0ca;
@@ -16,7 +15,7 @@ body {
     padding: 20px;
 }
 
-/*ველი სადაც დაგენერირდება პაროლი */
+
 .inputForm {
     align-items: center;
     border: solid 2px black;
@@ -61,17 +60,15 @@ button:hover {
 }
 
 
-/* SVG ელემენტის სტილი */
+
 .copySymbol {
     transition: fill 0.3s ease;
-    /* ფერის ტრანზიცია */
     cursor: pointer;
 }
 
-/* SVG ელემენტის ფერის შეცვლა ჰოვერის დროს */
+
 .copySymbol:hover path {
     fill: #000000;
-    /* შავი ფერი */
 }
 
 #popup {
@@ -94,7 +91,6 @@ button:hover {
     opacity: 0;  
 }
 
-/* როცა პოპაპი ხილულია*/
 .popup-show {
     opacity: 1 !important;
     animation: slideIn 2s forwards;
@@ -111,4 +107,3 @@ button:hover {
     }
 }
 
-/* ქართული კომენტარები ამოიღე  */
