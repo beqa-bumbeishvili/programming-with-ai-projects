@@ -1,36 +1,45 @@
-
 let generateButton = document.querySelector("#generate");
 let passwordInput = document.querySelector(".input");
 let copyButton=document.querySelector(".copy-button");
-let alert=document.getElementById('alert');
+let alertMessage=document.getElementById('alert');
 
-generateButton.addEventListener("click", function() {
-    passwordInput.value = generateRandomSymbols(14);
+//using alertMessage instead of alert//
+//Bellow I will use constant variables//
+//use cap letters for const variables//
+const PASSWORD_LENGTH=14;
+const SYMBOLS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+[]{}|;:,.<>?/~`-=_';
+
+//avoid using  "function"//
+//and use global variable//
+generateButton.addEventListener("click", () => {
+    passwordInput.value = generateRandomSymbols(PASSWORD_LENGTH);
     passwordInput.style.letterSpacing = '4px';
 });
 
 function generateRandomSymbols(length) {
-    const symbols = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+[]{}|;:,.<>?/~`-=_';
     let randomString = '';
     for (let i = 0; i < length; i++) {
-        randomString += symbols.charAt(Math.floor(Math.random() * symbols.length));
+        randomString += SYMBOLS.charAt(Math.floor(Math.random() * SYMBOLS.length));
     }
     return randomString; 
 }
 
-copyButton.addEventListener('click', function() {
+//avoid using "function"//
+//delete execCommand('copy') and use catch//
+copyButton.addEventListener('click', () => {
     const password = passwordInput.value;
-        if (password) {
-            passwordInput.select();
-            document.execCommand('copy');
+    if (password) {
+        navigator.clipboard.writeText(password)
+            .then(() => showAlert(password))
+            .catch(() => showAlert("Failed to copy!"));
+    }
+});  
 
-            showAlert(password); 
-            }
-});
+//avoid using "function"//
 function showAlert(copiedPassword) {
-    alert.textContent = ` ${copiedPassword} copied!`;
-    alert.style.display = 'flex'; 
-    setTimeout(function() {
-        alert.style.display = 'none';
+    alertMessage.textContent = ` ${copiedPassword} copied!`;
+    alertMessage.style.display = 'flex'; 
+    setTimeout(() => {
+        alertMessage.style.display = 'none';
     }, 3000);
-}
+};
