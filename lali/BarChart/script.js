@@ -77,12 +77,12 @@ svg.append("text")
     .text("Unemployment Rate (%)");
 
 const colors = [
-    'orange',
-    '#ffd700',  // Yellow
-    '#90EE90',  // Light green
-    '#87CEEB',  // Sky blue
-    '#9F8BC1',  // Darker purple
-    '#FF99B3'   // Darker pink
+    '#ff9d7a',  //Orange
+    '#fdd406',  // Yellow
+    '#8cfd98',  // Light green
+    '#82d0eb',  // Sky blue
+    '#996fda',  // Darker purple
+    '#ff63b4'   // Darker pink
 ];
 
 svg.selectAll("bar")
