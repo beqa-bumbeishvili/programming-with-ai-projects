@@ -19,7 +19,6 @@ const svg = d3.select("#chart-container")
     .style("font-family", "Verdana")
     .attr("transform", `translate(${margin.left},${margin.top})`);
 
-
 const x = d3.scaleBand()
     .range([0, width])
     .domain(data.map(d => d.month))
@@ -30,26 +29,14 @@ const y = d3.scaleLinear()
     .range([height, 0]);
 
 svg.append("g")
-    .attr("class", "grid")
     .attr("transform", `translate(0,${height})`)
-    .call(d3.axisBottom(x)
-        .tickSize(-height)
-        .tickFormat(""));
-
-svg.append("g")
-    .attr("class", "grid")
-    .call(d3.axisLeft(y)
-        .tickValues([1, 2, 3, 4, 5])
-        .tickSize(-width)
-        .tickFormat(""));
-
-svg.append("g")
-    .attr("transform", `translate(0,${height})`)
-    .call(d3.axisBottom(x));
+    .call(d3.axisBottom(x))
+    .selectAll("text")
+    .style("font-size", "20px");
 
 svg.append("text")
     .attr("x", width / 2)
-    .attr("y", height + 40)
+    .attr("y", height + 50)
     .attr("text-anchor", "middle")
     .style("font-size", "20px")
     .text("Month");
@@ -57,7 +44,9 @@ svg.append("text")
 svg.append("g")
     .call(d3.axisLeft(y)
         .tickValues([1, 2, 3, 4, 5])
-        .tickFormat(d => d));
+        .tickFormat(d => d))
+    .selectAll("text")
+    .style("font-size", "20px");
 
 svg.append("text")
     .attr("x", width / 2)
@@ -94,6 +83,20 @@ svg.selectAll("bar")
     .attr("height", d => height - y(d.value))
     .attr("fill", (d, i) => colors[i])
     .attr("class", "bar");
+
+svg.append("g")
+    .attr("class", "grid")
+    .attr("transform", `translate(0,${height})`)
+    .call(d3.axisBottom(x)
+        .tickSize(-height)
+        .tickFormat(""));
+
+svg.append("g")
+    .attr("class", "grid")
+    .call(d3.axisLeft(y)
+        .tickValues([1, 2, 3, 4, 5])
+        .tickSize(-width)
+        .tickFormat(""));
 
 svg.selectAll(".label")
     .data(data)
