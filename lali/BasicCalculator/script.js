@@ -41,7 +41,7 @@ function clearDisplay() {
 }
 
 function calculate() {
-
+    // აქ ცარიელი ხაზი ზედმეტია, ფუნქციის პირველივე ხაზზე უნდა დაიწყოს კოდი
     if (currentInput.startsWith("//")) {
         display.value = "undefined";
         currentInput = "";

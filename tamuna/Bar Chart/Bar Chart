@@ -1,0 +1,135 @@
+const data = [4, 3.8, 3.7, 3.6, 3.5, 3.4];
+const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
+
+const chartContainer = d3.select("#chart-container");
+const svgWidth = chartContainer.node().clientWidth;
+const svgHeight = chartContainer.node().clientHeight;
+
+const margin = { top: 50, right: 50, bottom: 50, left: 50};  
+const chartWidth = svgWidth - margin.left - margin.right;
+const chartHeight = svgHeight - margin.top - margin.bottom;
+
+const svg = chartContainer
+    .append("svg")
+    .attr("width", svgWidth)
+    .attr("height", svgHeight)
+    .style("border", "none")  // No border for the SVG container
+    .style("outline", "none") // No outline
+    .style("background", "transparent"); // Ensure background is transparent
+
+const chart = svg.append("g")
+    .attr("transform", `translate(${margin.left}, ${margin.top})`);
+
+const xScale = d3.scaleBand()
+    .domain(months)
+    .range([0, chartWidth])
+    .padding(0.2);
+
+const yScale = d3.scaleLinear()
+    .domain([0, 5])
+    .range([chartHeight, 0]);
+
+const color = d3.scaleOrdinal()
+    .domain(data) 
+    .range(["#ff9066","#ffde21","#8aea92","#ADD8E6","#b069db","#F26096"]); // Custom colors
+
+chart
+    .selectAll("rect")
+    .data(data)
+    .enter()
+    .append("rect")
+    .attr("x", (d, i) => xScale(months[i]))  
+    .attr("y", d => yScale(d))  
+    .attr("width", xScale.bandwidth())  
+    .attr("height", d => chartHeight - yScale(d))  
+    .attr("fill", function(d) { return color(d) });
+
+// **Gridlines** (modified to exclude borders)
+const xGridlines = svg.append("g")
+    .attr("transform", `translate(${margin.left}, ${margin.top})`)
+    .call(d3.axisBottom(xScale)
+        .tickSize(chartHeight)  // Make gridlines the full height
+        .tickFormat("")  // Remove tick labels
+    )
+    .selectAll(".tick line")
+    .attr("stroke", "#D3D3D3")  
+    .attr("stroke-dasharray", "0.1");
+
+// Remove gridlines on the first and last x-ticks
+xGridlines.selectAll(".tick")
+    .filter(function(d, i) {
+        return i === 0 || i === xScale.domain().length - 1;
+    })
+    .remove();
+
+// **Y Gridlines**
+const yGridlines = svg.append("g")
+    .attr("transform", `translate(${margin.left}, ${margin.top})`)
+    .call(d3.axisLeft(yScale)
+        .tickSize(-chartWidth)  // Gridlines should span the width of the chart
+        .tickFormat("")  // Remove labels
+        .tickValues([0, 1, 2, 3, 4, 5])  // Custom y ticks
+    )
+    .selectAll(".tick line")
+    .attr("stroke", "#D3D3D3")
+    .attr("stroke-dasharray", "0.1");
+
+// **Axes** (adjusting to exclude unwanted lines)
+
+const xAxis = svg.append("g")
+    .attr("transform", `translate(${margin.left}, ${chartHeight + margin.top})`)  // Position x-axis at the bottom
+    .call(d3.axisBottom(xScale).tickSize(0).tickSizeOuter(0));
+
+xAxis.selectAll(".tick line") 
+    .style("stroke", "none");  // Remove ticks for x-axis
+
+const yAxis = svg.append("g")
+    .attr("transform", `translate(${margin.left}, ${margin.top})`)  // Position y-axis at left
+    .call(d3.axisLeft(yScale).tickSize(0).tickSizeOuter(0).ticks(5));
+
+// Remove the **rightmost y-axis line** that creates the border
+yAxis.selectAll(".tick:last-of-type line")
+    .style("stroke", "none");
+
+// Remove the **topmost x-axis line** that creates the border
+xAxis.selectAll(".tick:first-of-type line")
+    .style("stroke", "none");
+
+// **Bar labels**
+chart.selectAll("text.bar-label")
+    .data(data)
+    .enter()
+    .append("text")
+    .attr("class", "bar-label")
+    .attr("x", (d, i) => xScale(months[i]) + xScale.bandwidth() / 2)  
+    .attr("y", d => yScale(d) - 5)  
+    .attr("text-anchor", "middle")  
+    .style("font-size", "12px") 
+    .style("font-family", "Arial Narrow, sans-serif") 
+    .text(d => `${d}%`); 
+
+// **Axis Titles**
+svg.append("text")
+    .attr("transform", `translate(${svgWidth / 2}, ${chartHeight + margin.top + 40})`)  
+    .style("text-anchor", "middle")
+    .style("font-size", "14px")
+    .style("font-family", "Arial Narrow, sans-serif")
+    .text("Month");
+
+chart.append("text")
+    .attr("transform", "rotate(-90)")  
+    .attr("x", -chartHeight / 2)  
+    .attr("y", -margin.left + 30)  
+    .style("text-anchor", "middle")
+    .style("font-size", "14px")
+    .style("font-family", "Arial Narrow, sans-serif")
+    .text("Unemployment rate (%)");
+
+// **Chart Title**
+svg.append("text")
+    .attr("transform", `translate(${svgWidth / 2}, ${margin.top - 10})`)  
+    .style("text-anchor", "middle")
+    .style("font-size", "18px")  
+    .style("font-family", "Arial Narrow, sans-serif")
+    .style("font-weight", "bold")  
+    .text("Monthly Unemployment Rate in the US");
