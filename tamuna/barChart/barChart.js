@@ -13,9 +13,6 @@ const svg = chartContainer
     .append("svg")
     .attr("width", svgWidth)
     .attr("height", svgHeight)
-    .style("border", "none")  // No border for the SVG container
-    .style("outline", "none") // No outline
-    .style("background", "transparent"); // Ensure background is transparent
 
 const chart = svg.append("g")
     .attr("transform", `translate(${margin.left}, ${margin.top})`);
@@ -31,7 +28,7 @@ const yScale = d3.scaleLinear()
 
 const color = d3.scaleOrdinal()
     .domain(data) 
-    .range(["#ff9066","#ffde21","#8aea92","#ADD8E6","#b069db","#F26096"]); // Custom colors
+    .range(["#ff9066","#ffde21","#8aea92","#ADD8E6","#b069db","#F26096"]); 
 
 chart
     .selectAll("rect")
@@ -44,58 +41,37 @@ chart
     .attr("height", d => chartHeight - yScale(d))  
     .attr("fill", function(d) { return color(d) });
 
-// **Gridlines** (modified to exclude borders)
 const xGridlines = svg.append("g")
     .attr("transform", `translate(${margin.left}, ${margin.top})`)
     .call(d3.axisBottom(xScale)
-        .tickSize(chartHeight)  // Make gridlines the full height
-        .tickFormat("")  // Remove tick labels
+        .tickSize(chartHeight)  
+        .tickFormat("")  
     )
     .selectAll(".tick line")
     .attr("stroke", "#D3D3D3")  
     .attr("stroke-dasharray", "0.1");
 
-// Remove gridlines on the first and last x-ticks
-xGridlines.selectAll(".tick")
-    .filter(function(d, i) {
-        return i === 0 || i === xScale.domain().length - 1;
-    })
-    .remove();
-
-// **Y Gridlines**
 const yGridlines = svg.append("g")
     .attr("transform", `translate(${margin.left}, ${margin.top})`)
     .call(d3.axisLeft(yScale)
-        .tickSize(-chartWidth)  // Gridlines should span the width of the chart
-        .tickFormat("")  // Remove labels
-        .tickValues([0, 1, 2, 3, 4, 5])  // Custom y ticks
+        .tickSize(-chartWidth)  
+        .tickFormat("")  
+        .tickValues([0, 1, 2, 3, 4, 5])  
     )
     .selectAll(".tick line")
     .attr("stroke", "#D3D3D3")
     .attr("stroke-dasharray", "0.1");
 
-// **Axes** (adjusting to exclude unwanted lines)
+svg.selectAll(".domain").remove(); 
 
 const xAxis = svg.append("g")
-    .attr("transform", `translate(${margin.left}, ${chartHeight + margin.top})`)  // Position x-axis at the bottom
-    .call(d3.axisBottom(xScale).tickSize(0).tickSizeOuter(0));
-
-xAxis.selectAll(".tick line") 
-    .style("stroke", "none");  // Remove ticks for x-axis
+    .attr("transform", `translate(${margin.left}, ${chartHeight + margin.top})`)  
+    .call(d3.axisBottom(xScale).tickSize(-5).tickSizeOuter(0));
 
 const yAxis = svg.append("g")
-    .attr("transform", `translate(${margin.left}, ${margin.top})`)  // Position y-axis at left
-    .call(d3.axisLeft(yScale).tickSize(0).tickSizeOuter(0).ticks(5));
+    .attr("transform", `translate(${margin.left}, ${margin.top})`)  
+    .call(d3.axisLeft(yScale).tickSize(-5).tickSizeOuter(0).ticks(5));
 
-// Remove the **rightmost y-axis line** that creates the border
-yAxis.selectAll(".tick:last-of-type line")
-    .style("stroke", "none");
-
-// Remove the **topmost x-axis line** that creates the border
-xAxis.selectAll(".tick:first-of-type line")
-    .style("stroke", "none");
-
-// **Bar labels**
 chart.selectAll("text.bar-label")
     .data(data)
     .enter()
@@ -108,9 +84,8 @@ chart.selectAll("text.bar-label")
     .style("font-family", "Arial Narrow, sans-serif") 
     .text(d => `${d}%`); 
 
-// **Axis Titles**
 svg.append("text")
-    .attr("transform", `translate(${svgWidth / 2}, ${chartHeight + margin.top + 40})`)  
+    .attr("transform", `translate(${svgWidth / 2}, ${chartHeight + margin.top + 30})`)  
     .style("text-anchor", "middle")
     .style("font-size", "14px")
     .style("font-family", "Arial Narrow, sans-serif")
@@ -125,7 +100,6 @@ chart.append("text")
     .style("font-family", "Arial Narrow, sans-serif")
     .text("Unemployment rate (%)");
 
-// **Chart Title**
 svg.append("text")
     .attr("transform", `translate(${svgWidth / 2}, ${margin.top - 10})`)  
     .style("text-anchor", "middle")
@@ -133,3 +107,6 @@ svg.append("text")
     .style("font-family", "Arial Narrow, sans-serif")
     .style("font-weight", "bold")  
     .text("Monthly Unemployment Rate in the US");
+
+  
+
