@@ -1,4 +1,4 @@
-
+// პირველივე ხაზიდან დაიწყე კოდის წერა
 function appendValuesToDisplay(value) {
     document.getElementById('display').value += value;
 }
@@ -16,8 +16,9 @@ function calculateTheResult() {
     const expression = document.getElementById('display').value;
 
     let numbers = expression.split(/[\+\-\*\/]/).map(num => parseFloat(num));
-    console.log(expression);
+    console.log(expression); // console.log არ დაგრჩეს კოდში ;დ
     let operators = expression.split(/[^\+\-\*\/]/).filter(op => op !== '');
+    // ცარიელი ხაზი აქ
     while (true) {
         if (operators.includes("*")) {
             let multiplyIndex = operators.indexOf("*");
@@ -36,7 +37,7 @@ function calculateTheResult() {
         }
     }
     let result = numbers[0];
-
+// ერთი ცარიელი ხაზი საკმარისია აქ
 
 
     for (let i = 0; i < operators.length; i++) {
@@ -60,6 +61,7 @@ function calculateTheResult() {
                 break;
         }
     }
+    // ერთი ხაზი გამოტოვე აქ. for, while if და მსგავსი რაღაცები ერთი ხაზით რო დააშორო ზემოთ-ქვემოთ სხვა კოდს
     result = roundToDecimals(result, 8)
 
     document.getElementById('display').value = result;

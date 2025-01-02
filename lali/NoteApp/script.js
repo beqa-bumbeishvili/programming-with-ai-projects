@@ -6,7 +6,6 @@ if (notes.length === 0) {
     saveNotes([]);
 };
 
-// აქ notes ცვლადი შეგიძლია გამოიყენო getNotes() ნაცვლად
 notes.forEach(note => {
     let noteElement = createNoteElement(note.id, note.content);
     notesContainer.insertBefore(noteElement, addNoteButton);
@@ -45,7 +44,7 @@ function createNoteElement(id, content) {
 }
 
 function addNote() {
-    let notes = getNotes(); // ცვლადი პატარა ასოთი Notes -> notes
+    let notes = getNotes(); 
     let noteObject = {
         id: Math.floor(Math.random() * 1000000),
         content: ""
@@ -72,6 +71,3 @@ function deleteNote(id, element) {
     saveNotes(notes);
     notesContainer.removeChild(element);
 };
-
-// ფოლდერების და ფაილების სახელში ადგილი არ გამოტოვო, რადგან html-თი რთულია ეგეთი სახელის წაკითხვა
-// Note App -> note-app
