@@ -48,6 +48,7 @@ function createChart() {
         .outerRadius(radius * 0.43)
         .innerRadius(radius * 0.43);
 
+        // TODO Lali - ფუნქციები ბოლოში გაიტანე კოდის
     const getLabelPosition = (index, pos) => {
         const customRadiusMultipliers = {
             0: 0.82,
