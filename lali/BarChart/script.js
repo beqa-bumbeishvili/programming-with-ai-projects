@@ -28,25 +28,12 @@ const y = d3.scaleLinear()
     .domain([0, 5])
     .range([height, 0]);
 
-svg.append("g")
-    .attr("transform", `translate(0,${height})`)
-    .call(d3.axisBottom(x))
-    .selectAll("text")
-    .style("font-size", "20px");
-
 svg.append("text")
     .attr("x", width / 2)
     .attr("y", height + 50)
     .attr("text-anchor", "middle")
     .style("font-size", "20px")
     .text("Month");
-
-svg.append("g")
-    .call(d3.axisLeft(y)
-        .tickValues([1, 2, 3, 4, 5])
-        .tickFormat(d => d))
-    .selectAll("text")
-    .style("font-size", "20px");
 
 svg.append("text")
     .attr("x", width / 2)
@@ -94,9 +81,28 @@ svg.append("g")
 svg.append("g")
     .attr("class", "grid")
     .call(d3.axisLeft(y)
-        .tickValues([1, 2, 3, 4, 5])
+        .tickValues([0, 1, 2, 3, 4, 5])
         .tickSize(-width)
         .tickFormat(""));
+
+svg.append("g")
+    .attr("transform", `translate(0,${height})`)
+    .call(d3.axisBottom(x)
+        .tickSizeInner(-6)
+        .tickSizeOuter(0))
+    .selectAll("text")
+    .style("font-size", "20px")
+    .attr("dy", "1em");;
+
+svg.append("g")
+    .call(d3.axisLeft(y)
+        .tickValues([0, 1, 2, 3, 4, 5])
+        .tickFormat(d => d)
+        .tickSizeInner(-6)
+        .tickSizeOuter(0))
+    .selectAll("text")
+    .style("font-size", "20px")
+    .attr("dx", "-0.2em");
 
 svg.selectAll(".label")
     .data(data)
