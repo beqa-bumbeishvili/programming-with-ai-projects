@@ -40,30 +40,42 @@ svg.selectAll("rect")
 
 
 svg.append("g")
-  .attr("class", "grid horizontal")
-  .style("stroke-dasharray", "1 1")
+  .attr("class", "grid")
   .call(d3.axisLeft(yScale)
     .tickSize(-width)
     .ticks(5)
-    .tickSizeuother(-7)
-    
   )
   .style("font-size", "14px")
 
+svg.append("g")
+  .attr("class", "tick-grid")
+  .call(d3.axisLeft(yScale)
+    .tickSize(-6)
+    .ticks(5)
+    .tickFormat("")
+  )
 
 
 svg.append("g")
-  .attr("class", "grid vertical")
+  .attr("class", "grid")
   .attr("transform", `translate(0,${height})`)
   .call(d3.axisBottom(xScale)
     .tickSize(-height)
-    .tickSizeInner(-7)
   )
   .selectAll("text")
   .attr("transform", "translate(0,0)rotate(0)")
   .style("text-anchor", "middle")
   .style("font-size", "14px")
 
+svg.append("g")
+  .attr("class", "tick-grid")
+  .attr("transform", `translate(0,${height})`)
+  .call(d3.axisBottom(xScale)
+    .tickSize(-6)
+    .tickFormat("")
+  )
+
+svg.selectAll(".grid .domain").remove();
 
 const texts = svg.append('g')
   .selectAll("text")

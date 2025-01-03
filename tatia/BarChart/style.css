@@ -25,7 +25,7 @@ p {
 
 
 .grid line {
-    stroke: #D0D0D0;
-    stroke-dasharray: 5, 5;
+    stroke: #a7a3a3;
+    stroke-dasharray: 6, 6;
     opacity: 0.5;
 }
