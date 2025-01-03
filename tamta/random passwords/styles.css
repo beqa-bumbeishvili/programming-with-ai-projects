@@ -1,0 +1,101 @@
+body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  background-color: #f8f8f8;
+}
+
+.container {
+  background-color: #ffc0cb;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.container h1 {
+  font-family: 'Courier New', Courier, monospace;
+  margin-bottom: 20px;
+}
+
+.password-container {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.password {
+  width: calc(100% - 40px);
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding-right: 40px; 
+  letter-spacing: 3px; 
+  
+}
+
+.generate-btn {
+  position: relative;
+  background-color: #000;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+  left: -170px;
+  
+}
+
+.generate-btn:hover {
+  background-color: #4CAF50; 
+}
+
+.copy-btn {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.copy-btn svg {
+  fill: #774b4b;
+  transition: fill 0.2s ease;
+}
+
+.copy-btn:hover svg {
+  fill: #333;
+}
+.copy-notification {
+  position: fixed;
+  bottom: 30px;
+  right: 20px;
+  background-color: #4CAF50; 
+  color: white;
+  padding: 15px 30px;
+  border-radius: 4px;
+  z-index: 1000;
+  animation: slideIn 0.3s ease-in-out;
+  font-family: monospace;
+  box-shadow: 0 4px 9px rgba(0,0,0,0.2);
+}
+
+@keyframes slideIn {
+  from {
+      transform: translateX(100%);
+      opacity: 0;
+  }
+  to {
+      transform: translateX(0);
+      opacity: 1;
+  }
+}
