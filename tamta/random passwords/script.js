@@ -20,12 +20,13 @@ function copyPassword() {
   const notification = document.createElement("div");
   notification.classList.add("copy-notification");
   notification.innerHTML = `${passwordField.value} copied!`; 
-  
+  let a;
   document.body.appendChild(notification);
   
   setTimeout(() => {
       notification.remove();
   }, 3000);
+
 }
 
 
