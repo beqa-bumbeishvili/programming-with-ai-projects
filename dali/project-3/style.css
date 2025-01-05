@@ -2,7 +2,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin:0;
+    margin: 0;
 }
 
 #mainbox {
@@ -24,7 +24,6 @@ button {
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-   
 }
 
 .btn {
@@ -46,32 +45,25 @@ button {
 .num {
     background-color: #fff;
     color: #333;
-    
 }
 
 .operator {
     background-color: #0074d9;
     color: #fff;
-    
 }
 
 #delete {
     background-color: #ff4136;
     color: #fff;
-   
 }
 
 #equal {
     background-color: #01ff70;
     grid-row: span 3;
     color: #fff;
-    
-}   
+}
 
 #point {
     background-color: #fff;
     color: #333;
-    
 }
-
-    
