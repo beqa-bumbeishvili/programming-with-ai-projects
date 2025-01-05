@@ -1,4 +1,4 @@
-// Data with current and previous year values
+// Data with current and previous year values - კომენტარი ზედმეტია, დატაში ისედაც წერია currentMonth, previousMonth
 const data = [
     { name: '50', currentMonth: 15000, previousMonth: 14625 },
     { name: '100', currentMonth: 32000, previousMonth: 31200 },
@@ -49,7 +49,7 @@ svg.selectAll(".bar-bg")
     .data(data)
     .enter()
     .append("rect")
-    .attr("class", "bar-bg")
+    .attr("class", "bar-bg") // ჯობს გამოიყენო .classed('bar-bg', true), ქვევით რო სხვა კლასი გამოაცხადოს, თავზე რომ არ გადაეწრროს არსებულს
     .attr("x", d => x(d.name))
     .attr("width", x.bandwidth())
     .attr("y", d => y(d.currentMonth))
@@ -68,7 +68,7 @@ svg.selectAll(".bar-fg")
     .attr("height", d => (height - y(d.previousMonth)) * (d.percentage / 100))
     .attr("rx", 0.1)
     .attr("fill", "#bff1cc");
-
+// ორიც ცარიელი ხაზი ზედმეტია
 
 // Add X axis
 svg.append("g")
@@ -88,6 +88,12 @@ svg.selectAll(".bar-bg, .bar-fg")
         tooltip.transition()
             .duration(200)
             .style("opacity", 1);
+
+// ჩაიხლართა კოდი, ჯობს ცვლადები გამოაცხადო და ისინი ჩასვა თულტიპში:
+// const currentMonth = d.currentMonth.toLocaleString();
+// const previousMonth = d.previousMonth.toLocaleString();
+// const percentage = d.percentage.toFixed(1);
+
         tooltip.html(`Current: $${d.currentMonth.toLocaleString()}<br>Previous: $${d.previousMonth.toLocaleString()}<br>Percentage: ${d.percentage.toFixed(1)}%`)
             .style("left", (event.pageX + 10) + "px")
             .style("top", (event.pageY - 28) + "px");
@@ -98,7 +104,7 @@ svg.selectAll(".bar-bg, .bar-fg")
             .style("opacity", 0);
     });
 
-// Export functionality
+// d3-ის ფუნქციები გამოიყენე getElementById და addEventListener ნაცვლად
 document.getElementById('exportBtn').addEventListener('click', function () {
     const svgData = document.querySelector('svg');
     const serializer = new XMLSerializer();
