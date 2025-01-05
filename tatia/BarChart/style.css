@@ -1,0 +1,31 @@
+body {
+    margin-top: 60px;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+h1 {
+    display: flex;
+    justify-content: center;
+    margin: 0px;
+    font-size: 20px;
+}
+
+p {
+    display: flex;
+    justify-content: center;
+    margin: 0px;
+    font-weight: 200;
+}
+
+#chart {
+    display: flex;
+    justify-content: center;
+}
+
+
+
+.grid line {
+    stroke: #a7a3a3;
+    stroke-dasharray: 6, 6;
+    opacity: 0.5;
+}
