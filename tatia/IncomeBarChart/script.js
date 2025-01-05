@@ -55,7 +55,7 @@ svg.selectAll(".bar-bg")
     .attr("y", d => y(d.currentMonth))
     .attr("height", d => height - y(d.currentMonth))
     .attr("rx", 0.1)
-    .attr("fill", "#2acf56");
+    .attr("fill", "#bff1cc");
 
 svg.selectAll(".bar-fg")
     .data(data)
@@ -64,10 +64,11 @@ svg.selectAll(".bar-fg")
     .attr("class", "bar-fg")
     .attr("x", d => x(d.name))
     .attr("width", x.bandwidth())
-    .attr("y", d => height - (height - y(d.previousMonth)) * (d.percentage / 100)) // ახალი y პოზიცია
-    .attr("height", d => (height - y(d.previousMonth)) * (d.percentage / 100))
+    .attr("y", d => y(d.currentMonth)) // ახალი y პოზიცია
+    .attr("height",3)
     .attr("rx", 0.1)
-    .attr("fill", "#bff1cc");
+    .attr("fill", "#2acf56");
+    
 
 
 // Add X axis
