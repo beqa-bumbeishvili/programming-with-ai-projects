@@ -184,3 +184,7 @@ document.getElementById('Export').addEventListener('click', function () {
     };
     img.src = svgUrl;
 });
+
+
+// feedback
+// getElementById, addEventListener, createElement არ გამოიყენო ვაფშე, d3-ის შესაბამისი მეთოდებით ჩაანაცვლე
