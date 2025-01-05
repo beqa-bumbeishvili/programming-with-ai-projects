@@ -105,7 +105,7 @@ chart
   .append("g")
   .attr("class", "grid")
   .selectAll("line")
-  .data([0, 1, 2, 3, 4, 5]) // Use the explicit tick values (0, 1, 2, 3, 4, 5)
+  .data([1, 2, 3, 4, 5]) // Use the explicit tick values (0, 1, 2, 3, 4, 5)
   .enter()
   .append("line")
   .attr("x1", 0) // Start the grid line at the left side of the chart
