@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Income Dashboard</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<link rel="stylesheet" href="style.css">
+
+<body>
+    <div class="dashboard">
+        <div class="header">
+            <div>
+                <h2 class="title">Income</h2>
+                <div style="display: flex; align-items: center;">
+                    <span class="income">$32,134</span>
+                    <span class="change">↑2.5%</span>
+                    <span class="comparison"> Compared to $21,340 last month</span>
+                </div>
+            </div>
+            <button class="export-btn" id="exportBtn">Export</button>
+        </div>
+        <div id="chart"></div>
+    </div>
+
+</body>
+<script src="script.js"></script>
+
+</html>
