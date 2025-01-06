@@ -2,7 +2,7 @@ const data = [4, 3.8, 3.7, 3.6, 3.5, 3.4];
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
 const colors = ["#FFA07A","#FFD700","#98FB98","#87CEEB","#9370DB","#FF69B4",];
 
-const margin = { top: 50, right: 20, bottom: 40, left: 80 };
+const margin = { top: 70, right: 20, bottom: 40, left: 80 };
 
 const chartWidth = 700 - margin.left - margin.right;
 const chartHeight = 500 - margin.top - margin.bottom;
@@ -134,8 +134,8 @@ chart
 svg
   .append("text")
   .attr("x", chartWidth / 2 + margin.left) // Position it at the center of the chart width
-  .attr("y", margin.top - 20) // Position it above the chart (10px from the top)
+  .attr("y", margin.top - 50) // Position it above the chart (10px from the top)
   .attr("text-anchor", "middle") // Center align the text
-  .style("font-size", "20px") // Set the font size
+  .style("font-size", "30px") // Set the font size
   .style("font-weight", "bold") // Make the title bold
   .text("Monthly Unemployment Rate in the US"); // Set the title text
