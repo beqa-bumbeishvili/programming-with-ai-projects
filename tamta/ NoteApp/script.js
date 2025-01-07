@@ -11,6 +11,27 @@ document.addEventListener('DOMContentLoaded', () => {
         note.className = 'note';
         note.textContent = 'Empty Note';
         
+        
+        note.addEventListener('click', function(e) {
+            
+            if (e.detail === 1) { 
+              
+                if (this.textContent === 'Empty Note') {
+                    this.textContent = '';
+                }
+                this.contentEditable = true;
+                this.focus();
+            }
+        });
+        
+        note.addEventListener('blur', function() {
+         
+            if (this.textContent.trim() === '') {
+                this.textContent = 'Empty Note';
+            }
+            this.contentEditable = false;
+        });
+        
         note.addEventListener('dblclick', () => {
             noteToDelete = note;
             modal.style.display = 'flex';
@@ -44,8 +65,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Add event listeners to initial example notes
+    
     document.querySelectorAll('.note').forEach(note => {
+        note.addEventListener('click', function(e) {
+            if (e.detail === 1) {
+                if (this.textContent === 'Empty Note') {
+                    this.textContent = '';
+                }
+                this.contentEditable = true;
+                this.focus();
+            }
+        });
+        
+        note.addEventListener('blur', function() {
+            if (this.textContent.trim() === '') {
+                this.textContent = 'Empty Note';
+            }
+            this.contentEditable = false;
+        });
+        
         note.addEventListener('dblclick', () => {
             noteToDelete = note;
             modal.style.display = 'flex';

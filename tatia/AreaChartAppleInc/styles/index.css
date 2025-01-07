@@ -1,0 +1,91 @@
+body {
+  background-color: #FAFAFA;
+  margin-left: 250px;
+  margin-right: 250px;
+}
+
+.chart .grid .domain {
+  stroke: none
+}
+
+.y-axis .tick line {
+  opacity: 0;
+
+}
+
+.y-axis .domain {
+  stroke: none
+}
+
+.x-axis .domain {
+  stroke-width: 2px;
+  stroke: lightgray;
+}
+
+.x-axis .tick line {
+  opacity: 0;
+}
+
+.stock-container {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  padding: 20px;
+}
+
+.title {
+  font-size: 18px;
+  margin-top: 15px;
+
+}
+
+.current-price {
+  font-size: 45px;
+  font-weight: 6px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.price-change {
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.positive {
+  font-size: 19px;
+  color: #22c55e;
+}
+
+.negative {
+  font-size: 19px;
+  color: #ef4444;
+}
+
+.pre-market {
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 40px;
+  margin-top: 10px;
+
+}
+
+.price-change .text {
+  color: black;
+}
+
+.price-change .positive {
+  color: #22c55e;
+  font-size: 18px;
+
+
+}
+
+.price-change .negative {
+  color: red;
+}
+
+.period-text {
+  color: black;
+  font-size: larger;
+  margin-left: 8px;
+  font-weight: 300;
+}

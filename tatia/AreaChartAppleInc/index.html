@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Chart</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/index.css" />
+    <script src="libs/d3.v7.js"></script>
+</head>
+
+<body translate="no">
+    <div class="stock-container">
+        <text class="title">Apple Inc (AAPL)</text>
+        <div id="price-display"></div>
+    </div>
+
+
+    <div class="page-container">
+        <div id="graph-container"></div>
+    </div>
+
+    <script src="scripts/d3chart.js"></script>
+    <script src="scripts/stockContainer.js"></script>
+
+    <script>
+        let chart;
+        d3.json('data/data.json')
+            .then(data => {
+                data.forEach(obj => {
+                    obj.date = new Date(obj.date);
+                });
+
+                displayStockData(data); //ერთი ხაზი გამოტოვე ქვევით, ლოგიკურად სხვადასხვა მონაკვეთები ხაზით დააშორე ერთმანეთს
+                chart = new Chart()
+                    .container('#graph-container')
+                    .data(data)
+                    .render()
+                console.log(chart.getState()); //console.log არ დაგრჩეს კოდში რომელსაც ლაივზე ტვირთავ
+            })
+    </script>
+
+</body>
+
+</html>
