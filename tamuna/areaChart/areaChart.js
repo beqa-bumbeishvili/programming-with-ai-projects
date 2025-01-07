@@ -13,6 +13,7 @@ class AreaChart {
             marginLeft: 40,
             defaultTextFill: "#2C3E50",
             defaultFont: "Helvetica",
+            data: [],
             mainContainerStyles: {
                 display: "flex",
                 justifyContent: "center",
@@ -95,7 +96,7 @@ class AreaChart {
                 stroke: "#39A93B",
                 strokeWidth: 2
             },
-            
+            //  ხაზი ზედმეტია აქ
             grid: {
                 horizontal: {
                     stroke: "lightgrey",
@@ -134,9 +135,9 @@ class AreaChart {
             }
         };
 
+        // ესენი ორი ხაზი calc-ში გაიტანე, როგორც შაბლონშია getCalculatedProperties
         attrs.width = attrs.svgWidth - attrs.marginLeft - attrs.marginRight;
         attrs.height = attrs.svgHeight - attrs.marginTop - attrs.marginBottom;
-        attrs.data = [];  
 
         this.attrs = attrs;
 
@@ -154,7 +155,7 @@ class AreaChart {
 
     render() {
         const attrs = this.getState();
-        console.log('Rendering with data:', attrs.data);
+        console.log('Rendering with data:', attrs.data); // console.log არ დატოვო კოდში რომელსაც ლაივზე ტვირთავს
         const margin = { 
             top: attrs.marginTop, 
             right: attrs.marginRight, 
@@ -162,6 +163,7 @@ class AreaChart {
             left: attrs.marginLeft 
         };
         
+        // ამათი გამოთვლა გიწერია უკვე ზევით
         const width = attrs.svgWidth - margin.left - margin.right;
         const height = attrs.svgHeight - margin.top - margin.bottom;
 
@@ -178,6 +180,8 @@ class AreaChart {
         const attrs = this.getState();
 
         d3.select(attrs.container).selectAll("*").remove();
+
+        // ._add გამოიყენე append-ის ნაცვლად ყველგან
 
         const mainContainer = d3.select(attrs.container)
             .append("div")
@@ -210,7 +214,7 @@ class AreaChart {
             .attr("width", "100%")
             .attr("height", "100%")
             .attr("viewBox", `0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`)
-            .attr("preserveAspectRatio", "xMidYMid meet")
+            .attr("preserveAspectRatio", "xMidYMid meet") // attrs-ში ეს
             .append("g")
             .attr("transform", `translate(${margin.left},${margin.top})`);
 
@@ -225,12 +229,13 @@ class AreaChart {
             .range([0, width]);
 
         const y = d3.scaleLinear()
-            .domain([246, 256])
+            .domain([246, 256]) //ეს რიცხვები საიდან მოვიდა, data-დან უნდა წაიკითხო value-ები და ისინი ჩასვა
             .range([height, 0]);
 
         this.setState({ x, y });
     }
 
+    // width ტყუილად გაქ გადაცემული არგუმენტად, ფუნქციაში არსად არ იყენებ
     drawAxes(width, height) {
         const attrs = this.getState();
         const { svg, x, y } = attrs;
@@ -240,7 +245,7 @@ class AreaChart {
             .tickSize(0)
             .tickFormat((d, i) => {
                 const formattedDate = d3.timeFormat("%b %d")(d);
-                return formattedDate === "Dec 15" ? "" : formattedDate;
+                return formattedDate === "Dec 15" ? "" : formattedDate;  //15 dec საიდან მოვიდა? ცვლადს მიანიჭე ეგ რო იკითხებოდეს რას ნიშნავს
             });
 
         svg.append("g")
@@ -257,7 +262,7 @@ class AreaChart {
         svg.select("g").select("path").remove();
 
         const yAxis = d3.axisLeft(y)
-            .tickValues([246, 248, 250, 252, 254, 256])
+            .tickValues([246, 248, 250, 252, 254, 256]) //ეს რიცხვები საიდან მოვიდა, data-დან უნდა წაიკითხო value-ები და ისინი ჩასვა
             .tickSize(0);
 
         svg.append("g")
@@ -278,7 +283,7 @@ class AreaChart {
         const { svg, data, x, y } = attrs;
 
         if (!attrs.area) {
-            attrs.area = {
+            attrs.area = {  //attrs-ში წაიღე ესენი ზევით
                 gradient: {
                     top: { color: "#39A93B", opacity: 0.4 },
                     bottom: { color: "#39A93B", opacity: 0 }
@@ -295,14 +300,15 @@ class AreaChart {
             .attr("y1", "0%")
             .attr("x2", "0%")
             .attr("y2", "100%");
+            // attrs-ში ესენი
 
         gradient.append("stop")
-            .attr("offset", "0%")
+            .attr("offset", "0%") // attrs-ში
             .attr("stop-color", attrs.area.gradient.top.color)
             .attr("stop-opacity", attrs.area.gradient.top.opacity);
 
         gradient.append("stop")
-            .attr("offset", "100%")
+            .attr("offset", "100%") // attrs-ში
             .attr("stop-color", attrs.area.gradient.bottom.color)
             .attr("stop-opacity", attrs.area.gradient.bottom.opacity);
 
@@ -329,6 +335,8 @@ class AreaChart {
             .style("stroke", "#39A93B")
             .style("stroke-width", "2px");
 
+            // attrs-ში ესენი
+
         this.drawGridlines(width);
     }
 
@@ -337,9 +345,10 @@ class AreaChart {
 
         const makeGridlines = () => {
             return d3.axisLeft(y)
-                .tickValues([246, 248, 250, 252, 254, 256]);
+                .tickValues([246, 248, 250, 252, 254, 256]); //ეს რიცხვები საიდან მოვიდა, data-დან უნდა წაიკითხო value-ები და ისინი ჩასვა
         };
 
+        // attrs-ში ესენი
         svg.append("g")
             .attr("class", "grid")
             .style("stroke", "lightgrey")
@@ -417,6 +426,8 @@ class AreaChart {
         
         window._chartResizeHandler = resizeHandler;
         window.addEventListener('resize', resizeHandler);
+
+        // addEventListener-ის ნაცვლად დ3-ით მოუსმინე resize-ს
 
         return this;
     }
