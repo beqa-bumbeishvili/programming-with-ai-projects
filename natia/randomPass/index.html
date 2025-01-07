@@ -1,46 +1,33 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+  </head>
 
-<head>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
-</head>
-
-<body>
+  <body>
     <div class="container">
+      <h2>Random Password Generator</h2>
 
-        <h2>Random Password Generator</h2>
+      <div class="input_container">
+        <input
+          type="text"
+          id="input"
+          class="input"
+          placeholder="Create Password"
+          readonly
+        />
+        <i class="far fa-copy fa-2x" id="copy-icon"></i>
+      </div>
 
-        <div class="input_container">
-
-            <input type="text" id="input" class="input" placeholder="Create Password" readonly>
-            <i class="far fa-copy fa-2x" id="copy-icon"></i>
-
-        </div>
-
-        <button class="btn"> Generate </button>
-
+      <button class="btn">Generate</button>
     </div>
 
-    <div class="alert-container active"> Password Copied </div>
+    <div class="alert-container active">Password Copied</div>
 
     <script src="script.js"></script>
-
-
-</body>
-
+  </body>
 </html>
-
-<!-- ფიდბექი HTML:
-1. ქველა ელემენტის შემდეგ ერთი ხაზის გამოტოვება არაა აუცილებელი, მაგ. ეს მონაკვეთი ასე გამოჩნდებოდა უკეთ:
-
-        <h2>Random Password Generator</h2>
-
-        <div class="input_container">
-            <input type="text" id="input" class="input" placeholder="Create Password" readonly>
-            <i class="far fa-copy fa-2x" id="copy-icon"></i>
-        </div>
-
-        <button class="btn"> Generate </button>
--->

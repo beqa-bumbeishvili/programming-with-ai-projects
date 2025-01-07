@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Area Chart</title>
+        <script src="https://d3js.org/d3.v7.min.js"></script>
+    </head>
+    <body>
+        <div id="chart"></div>
+        <script src="areaChart.js"></script>
+        <script>
+            const parseDate = d3.timeParse("%b %d %H:%M");
+            d3.csv('./data.csv')
+             .then(rawData => {
+                const data = rawData.map(d => ({
+                    date: parseDate(d.date),
+                    price: +d.value
+                }));
+                const chart = new AreaChart();
+                chart
+                    .container('#chart')
+                    .data(data)
+                    .setDynamicContainer()
+                    .render();
+            }); 
+         </script>
+    </body>
+</html>
