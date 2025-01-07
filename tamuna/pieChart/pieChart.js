@@ -22,9 +22,9 @@ data = data.filter(d => d.expenses_percent > 0);
 
 const chartContainer = d3.select("#chart-container");
 const svgWidth = chartContainer.node().clientWidth*1;
-const svgHeight = chartContainer.node().clientHeight*1.2;
+const svgHeight = chartContainer.node().clientHeight*1.3;
 
-const radius = Math.min(400, 400) / 2;
+const radius = Math.min(500, 500) / 2;
 
 const colorScale = d3.scaleOrdinal()
      .range(["#FB9A99", "#33A02C", "#B2DF8A", "#1F78B4", "#A7CEE3", "#FF7F00", "#FDBF6F", "#E31A1C"]);
@@ -93,9 +93,9 @@ arcs.append("text")
 
 svg.append("text")
      .attr("x", svgWidth / 2)  
-     .attr("y", 30)  
+     .attr("y", 20)  
      .attr("text-anchor", "middle")  
-     .style("font-size", "14px")  
+     .style("font-size", "16px")  
      .style("font-weight", "bold")  
      .style("font-family", "Helvetica")  
      .text("Average Household Expenses");  
