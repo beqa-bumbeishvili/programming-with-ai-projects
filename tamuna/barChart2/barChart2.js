@@ -3,10 +3,10 @@ photoElement.style.width="1160px";
 photoElement.style.backgroundColor = "white";
 photoElement.style.borderRadius = "8px";
 photoElement.style.marginTop = "30px";
-photoElement.style.marginBottom = "50px";
-photoElement.style.marginLeft = "30px";
+photoElement.style.marginBottom = "10px";
+photoElement.style.marginLeft = "40px";
 photoElement.style.marginRight = "30px";
-photoElement.style.padding = "20px";
+photoElement.style.padding = "10px";
 
 const all = document.getElementById("all");
 all.style.display = "flex";
@@ -24,7 +24,7 @@ header.style.fontFamily = "Helvetica";
 header.style.fontSize = '24px';
 header.style.fontWeight = "800";
 header.style.color = '#606060';
-header.style.paddingTop = "20px";
+header.style.paddingTop = "30px";
 header.style.paddingLeft= "40px";
 header.style.paddingBottom= "0px";
 
@@ -86,12 +86,14 @@ for (let i = 0; i < length; i++) {
 
 const margin = { top: 50, right: 30, bottom: 40, left: 30 };
 const width = 1150 - margin.left - margin.right;
-const height = 500 - margin.top - margin.bottom;
+const height = 450 ;
 
 const svg = d3.select("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
-   
+    .attr("transform", "translate(" + 0 + "," + margin.top + ")");
+
+
 const histogram = d3.histogram()
     .domain([0, 1080])   
     .thresholds(d3.range(0, 1150, 10)); 
