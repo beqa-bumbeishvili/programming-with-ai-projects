@@ -27,10 +27,10 @@ const groupedAttrs = {
 	},
 
 	margin: {
-		top: 20,
-		right: 20,
-		bottom: 20,
-		left: 20
+		top: 50,
+		right: 100,
+		bottom: 50,
+		left: 100
 	},
 
 	svg: {
@@ -160,7 +160,7 @@ const groupedAttrs = {
 
 	text: {
 		wrap: {
-			lineHeight: 1.4  // ems
+			lineHeight: 1.4  
 		}
 	},
 
@@ -169,7 +169,7 @@ const groupedAttrs = {
 		levels: 5,
 		roundStrokes: true,
 		Format: d3.format('.0%'),
-		labelFactor: 1.2,
+		labelFactor: 1.25,
 		wrapWidth: 60,
 		strokeWidth: 1,
 		radiusScaleFactor: 1.1  
@@ -377,10 +377,8 @@ function RadarChart(id, data, options) {
 		.style("fill", function(d, i, j) { return groupedAttrs.theme.color(d3.select(this.parentNode).datum()); })
 		.style("fill-opacity", groupedAttrs.blob.circle.fillOpacity);
 
-	// Set up the tooltip with grouped attributes
 	var tooltip = g.append("text")
 		.attr("class", groupedAttrs.tooltip.class)
-		// Apply styles individually since d3.styles() might not be available
 		.style("opacity", groupedAttrs.tooltip.styles.opacity)
 		.style("font-family", groupedAttrs.tooltip.styles["font-family"])
 		.style("font-size", groupedAttrs.tooltip.styles["font-size"])
@@ -388,7 +386,6 @@ function RadarChart(id, data, options) {
 		.style("pointer-events", groupedAttrs.tooltip.styles["pointer-events"])
 		.style("font-weight", groupedAttrs.tooltip.styles["font-weight"]);
 
-	// Update the invisible circles and tooltip behavior
 	const blobCircleWrapper = g.selectAll(".radarCircleWrapper")
 		.data(data)
 		.enter().append("g")
@@ -426,7 +423,7 @@ function RadarChart(id, data, options) {
 			word,
 			line = [],
 			lineNumber = 0,
-			lineHeight = 1.4, // ems
+			lineHeight = 1.4, 
 			y = text.attr("y"),
 			x = text.attr("x"),
 			dy = parseFloat(text.attr("dy")),
@@ -457,7 +454,6 @@ class RadarChartClass {
 		this._attrs = groupedAttrs;
 	}
 
-	// Chainable setters
 	width(value) {
 		this._width = value;
 		return this;
@@ -493,7 +489,6 @@ class RadarChartClass {
 			return this;
 		}
 
-		// Apply styles from attrs
 		const container = d3.select(this._container);
 		Object.entries(this._attrs.containerStyles).forEach(([property, value]) => {
 			container.style(property, value);
