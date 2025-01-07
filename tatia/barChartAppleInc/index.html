@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Chart</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/index.css" />
+    <script src="libs/d3.v7.js"></script>
+</head>
+
+<body translate="no">
+    <div class="header">Apple Inc (AAPL)</div>
+
+    <div class="container">
+        <div class="price-info">
+            <div>
+                <h3>$</h3>
+                <p id="firstPrice"></p>
+            </div>
+            <div class="difference">
+
+                <p id="priceDifference"></p>
+                <p id="percentageChange"></p>
+                <p>Past 5 days</p>
+            </div>
+
+            <div>
+                <h3>საბოლოო ფასი:</h3>
+                <p id="lastPrice"></p>
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+
+    <div class="page-container">
+        <div id="graph-container"></div>
+    </div>
+
+    <script src="scripts/d3chart.js"></script>
+
+    <script>
+        let chart;
+        d3.json('data/data.json')
+            .then(data => {
+                data.forEach(obj => {
+                    obj.date = new Date(obj.date);
+
+                });
+                chart = new Chart()
+                    .svgHeight(window.innerHeight - 30)
+                    .svgWidth(window.innerWidth - 30)
+                    .container('#graph-container')
+                    .data(data)
+                    .render()
+                console.log(chart.getState());
+            })
+    </script>
+
+</body>
+
+</html>
