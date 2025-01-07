@@ -1,0 +1,112 @@
+body {
+  background-color: #FAFAFA;
+}
+
+svg {
+  background-color: #FAFAFA;
+}
+
+.area-path {
+    transition: all 0.3s ease;
+}
+
+.line-path {
+    transition: all 0.3s ease;
+}
+
+.x-axis, .y-axis {
+    color: #666;
+    font-size: 12px;
+}
+
+.x-axis line, .y-axis line {
+    stroke: #ddd;
+}
+
+.x-axis path, .y-axis path {
+    stroke: #ddd;
+}
+
+.grid-lines line {
+    stroke: #e5e5e5;
+    stroke-opacity: 0.7;
+    shape-rendering: crispEdges;
+}
+
+.grid-lines .domain {
+    display: none;
+}
+
+.x-axis path {
+    stroke: #a5a2a2;
+    stroke-width: 1.5px;
+}
+
+.x-axis line {
+    display: none;
+}
+
+.x-axis text {
+    font-weight: 500;
+    font-size: 16px;
+    transform: translate(-8px, 15px);
+}
+
+.y-axis-labels line {
+    display: none;
+}
+
+.y-axis-labels .domain {
+    display: none;
+}
+
+.y-axis-labels text {
+    font-weight: 500;
+    font-size: 18px;
+}
+
+.company-name {
+    font-size: 18px;
+    font-weight: 400;
+}
+
+.main-price {
+    font-size: 48px;
+    font-weight: 500;
+}
+
+.price-change {
+    font-size: 16px;
+}
+
+.price-change.positive {
+    fill: #30A632;
+}
+
+.black-text {
+    fill: #000000;
+}
+
+.pre-market-change {
+    fill: #EF4444;
+}
+
+.days-text {
+    fill: #000000;
+}
+
+.pre-market {
+    font-size: 16px;
+}
+
+.pre-market.negative {
+    fill: #EF4444;
+}
+
+.bold-text {
+    font-weight: 700;
+}
+
+.negative {
+    fill: #EF4444;
+}
