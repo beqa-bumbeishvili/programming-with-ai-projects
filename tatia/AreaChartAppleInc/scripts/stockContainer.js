@@ -5,7 +5,7 @@ function displayStockData(data) {
 
     const difference = newestPrice - oldestPrice;
     const percentChange = ((difference / oldestPrice) * 100).toFixed(2);
-
+// ორი ხაზი ზედმეტია
 
     const priceHTML = `
       <div class="current-price">$${newestPrice.toFixed(2)}</div>
