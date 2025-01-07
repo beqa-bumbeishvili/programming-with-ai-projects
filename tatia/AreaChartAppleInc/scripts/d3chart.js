@@ -1,12 +1,12 @@
+
 class Chart {
     constructor() {
-        // Defining state attributes
         const attrs = {
             id: "ID" + Math.floor(Math.random() * 1000000),
             svgWidth: 400,
-            svgHeight: 200,
+            svgHeight: 450,
             marginTop: 5,
-            marginBottom: 30,
+            marginBottom: 50,
             marginRight: 70,
             marginLeft: 70,
             container: "body",
@@ -17,13 +17,11 @@ class Chart {
             chartHeight: null,
         };
 
-        // Defining accessors
+
         this.getState = () => attrs;
         this.setState = (d) => Object.assign(attrs, d);
 
-        // Automatically generate getter and setters for chart object based on the state properties;
         Object.keys(attrs).forEach((key) => {
-            //@ts-ignore
             this[key] = function (_) {
                 if (!arguments.length) {
                     return attrs[key];
@@ -34,7 +32,6 @@ class Chart {
         });
 
 
-        // Custom enter exit update pattern initialization (prototype method)
         this.initializeEnterExitUpdatePattern();
     }
     render() {
@@ -42,7 +39,7 @@ class Chart {
         this.calculateProperties();
         this.drawSvgAndWrappers();
         this.drawChart();
-        
+
         return this;
     }
 
@@ -56,7 +53,6 @@ class Chart {
             svgHeight
         } = this.getState();
 
-        //Calculated properties
         var calc = {
             id: null,
             chartTopMargin: null,
@@ -64,7 +60,7 @@ class Chart {
             chartWidth: null,
             chartHeight: null
         };
-        calc.id = "ID" + Math.floor(Math.random() * 1000000); // id for event handlings
+        calc.id = "ID" + Math.floor(Math.random() * 1000000);
         calc.chartLeftMargin = marginLeft;
         calc.chartTopMargin = marginTop;
         const chartWidth = svgWidth - marginRight - calc.chartLeftMargin;
@@ -74,26 +70,28 @@ class Chart {
     }
 
     drawChart() {
-       const { chart, chartWidth, chartHeight, data, firstRender } = this.getState();
+        const { chart, chartWidth, chartHeight, data, firstRender } = this.getState();
+        const maxValue = d3.max(data, d => d.price);
+        const minValue = d3.min(data, d => d.price);
 
-
+        const extent = d3.extent(data, d => d.date);
         const x = d3.scaleTime()
-            .domain(d3.extent(data, d => d.date))
+            .domain(extent)
             .range([0, chartWidth]);
 
         const y = d3.scaleLinear()
-            .domain([246, 256])
+            .domain([minValue * 0.999, maxValue])
             .range([chartHeight, 0]);
 
         chart._add({
             tag: "g",
             className: "grid"
         })
-        .call(d3.axisLeft(y)
-            .ticks(5)
-            .tickSize(-chartWidth)
-            .tickFormat(""))
-        .selectAll("line")
+            .call(d3.axisLeft(y)
+                .ticks(4)
+                .tickSize(-chartWidth)
+                .tickFormat(""))
+            .selectAll("line")
             .style("stroke", "lightgrey")
             .style("stroke-opacity", 0.7);
 
@@ -101,29 +99,31 @@ class Chart {
             tag: "g",
             className: "x-axis"
         })
-        .attr("transform", `translate(0,${y(246)})`)
-        .call(d3.axisBottom(x)
-            .ticks(5)
-            .tickFormat(d3.timeFormat("Dec %d")))
-        .selectAll("text")
-            .style("font-size", "12px")
+            .attr("transform", `translate(0,${chartHeight})`)
+            .call(d3.axisBottom(x)
+                .ticks(5)
+                .tickFormat(d3.timeFormat("Dec %d")))
+            .selectAll("text")
+            .style("font-size", "16px")
             .style("fill", "#666")
-            .attr("dy", "1em");
+            .attr("dy", "1em")
+            .style("text-anchor", "end");
+
 
         chart._add({
             tag: "g",
             className: "y-axis"
         })
-        .call(d3.axisLeft(y).ticks(5))
-        .selectAll("text")
-            .style("font-size", "12px")
+            .call(d3.axisLeft(y).ticks(4))
+            .selectAll("text")
+            .style("font-size", "16px")
             .style("fill", "#666");
 
         const gradient = chart._add({
             tag: "defs",
             className: "gradient-def"
         })
-        .append("linearGradient")
+            .append("linearGradient")
             .attr("id", "area-gradient")
             .attr("x1", "0%")
             .attr("x2", "0%")
@@ -142,7 +142,7 @@ class Chart {
 
         const area = d3.area()
             .x(d => x(d.date))
-            .y0(y(246))
+            .y0(y(minValue))
             .y1(d => y(d.price))
             .curve(d3.curveLinear);
 
@@ -151,23 +151,25 @@ class Chart {
             className: "area",
             data: [data]
         })
-        .attr("d", area)
-        .style("fill", "url(#area-gradient)");
+            .attr("d", area)
+            .style("fill", "url(#area-gradient)");
 
         const line = d3.line()
             .x(d => x(d.date))
             .y(d => y(d.price))
             .curve(d3.curveLinear);
 
+
         chart._add({
             tag: "path",
             className: "line",
             data: [data]
         })
-        .attr("d", line)
-        .style("fill", "none")
-        .style("stroke", "#34a853")
-        .style("stroke-width", 2);
+            .attr("d", line)
+            .style("fill", "none")
+            .style("stroke", "#34a853")
+            .style("stroke-width", 4)
+            .style("stroke-linejoin", "round");
 
 
     }
@@ -184,7 +186,6 @@ class Chart {
             chartHeight
         } = this.getState();
 
-        // Draw SVG
         const svg = d3Container
             ._add({
                 tag: "svg",
@@ -194,7 +195,6 @@ class Chart {
             .attr("height", svgHeight)
             .attr("font-family", defaultFont);
 
-        //Add container g element
         var chart = svg
             ._add({
                 tag: "g",
@@ -204,7 +204,7 @@ class Chart {
                 "transform",
                 "translate(" + calc.chartLeftMargin + "," + calc.chartTopMargin + ")"
             );
-;
+        ;
 
         this.setState({ chart, svg });
     }
@@ -216,7 +216,6 @@ class Chart {
             var data = params.data || [className];
             var exitTransition = params.exitTransition || null;
             var enterTransition = params.enterTransition || null;
-            // Pattern in action
             var selection = container.selectAll("." + className).data(data, (d, i) => {
                 if (typeof d === "object") {
                     if (d.id) {
@@ -244,7 +243,7 @@ class Chart {
     setDynamicContainer() {
         const attrs = this.getState();
 
-        //Drawing containers
+
         var d3Container = d3.select(attrs.container);
         var containerRect = d3Container.node().getBoundingClientRect();
         if (containerRect.width > 0) attrs.svgWidth = containerRect.width;

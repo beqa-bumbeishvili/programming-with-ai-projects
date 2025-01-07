@@ -11,31 +11,10 @@
 </head>
 
 <body translate="no">
-    <div class="header">Apple Inc (AAPL)</div>
-
-    <div class="container">
-        <div class="price-info">
-            <div>
-                <h3>$</h3>
-                <p id="firstPrice"></p>
-            </div>
-            <div class="difference">
-
-                <p id="priceDifference"></p>
-                <p id="percentageChange"></p>
-                <p>Past 5 days</p>
-            </div>
-
-            <div>
-                <h3>საბოლოო ფასი:</h3>
-                <p id="lastPrice"></p>
-            </div>
-        </div>
-
+    <div class="stock-container">
+        <text class="title">Apple Inc (AAPL)</text>
+        <div id="price-display"></div>
     </div>
-
-
-
 
 
     <div class="page-container">
@@ -43,6 +22,7 @@
     </div>
 
     <script src="scripts/d3chart.js"></script>
+    <script src="scripts/stockContainer.js"></script>
 
     <script>
         let chart;
@@ -50,11 +30,10 @@
             .then(data => {
                 data.forEach(obj => {
                     obj.date = new Date(obj.date);
-
                 });
+
+                displayStockData(data);
                 chart = new Chart()
-                    .svgHeight(window.innerHeight - 30)
-                    .svgWidth(window.innerWidth - 30)
                     .container('#graph-container')
                     .data(data)
                     .render()
