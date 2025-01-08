@@ -1,0 +1,70 @@
+body {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 300;
+    fill: #242424;
+    text-align: center;
+    text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff, 0 -1px 0 #fff;
+    cursor: default;
+}
+
+.legend {
+    font-family: 'Raleway', sans-serif;
+    fill: #333333;
+}
+
+.gridCircle {
+    fill: #CDCDCD;
+    stroke: #CDCDCD;
+    fill-opacity: 0.1;
+    filter: url(#glow);
+}
+
+.axisLabel {
+    font-size: 11px;
+    fill: #737373;
+}
+
+.axis .line {
+    stroke:  #CDCDCD;
+    stroke-width: 1px;
+}
+
+.radarArea {
+    fill-opacity: 0.35;
+}
+
+.radarStroke {
+    fill: none;
+    stroke-width: 2px;
+    filter: url(#glow);
+}
+
+.radarCircle {
+    fill-opacity: 0.8;
+    fill: #CDCDCD;
+    stroke:#CDCDCD;
+
+}
+
+.radarArea:hover {
+    fill-opacity: 0.7;
+}
+
+.radarArea.dimmed {
+    fill-opacity: 0.1;
+}
+#graph-container {
+    position: relative;
+    width: 450px;  
+    height: 450px; 
+    margin: auto;
+}
+
+.radarInvisibleCircle {
+    pointer-events: all;
+    fill: none;
+    r: 6;  
+}
+
+
