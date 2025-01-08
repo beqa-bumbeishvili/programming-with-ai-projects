@@ -1,0 +1,32 @@
+{
+  "datasets": [
+    {
+      "name": "Tatia",
+      "color": "#d9d2e9",
+      "values": [
+        {"axis": "Creativity", "value": 80},
+        {"axis": "Adaptability", "value": 90},
+        {"axis": "Humor", "value": 100},
+        {"axis": "Adventurousness", "value": 20},
+        {"axis": "Resilience", "value": 80},
+        {"axis": "Charisma", "value": 70},
+        {"axis": "Patience", "value": 60},
+        {"axis": "Organization", "value": 90}
+      ]
+    },
+    {
+      "name": "Keti",
+      "color": "#d5a6bd",
+      "values": [
+        {"axis": "Creativity", "value": 85},
+        {"axis": "Adaptability", "value": 80},
+        {"axis": "Humor", "value": 90},
+        {"axis": "Adventurousness", "value": 50},
+        {"axis": "Resilience", "value": 90},
+        {"axis": "Charisma", "value": 100},
+        {"axis": "Patience", "value": 75},
+        {"axis": "Organization", "value": 80}
+      ]
+    }
+  ]
+}
