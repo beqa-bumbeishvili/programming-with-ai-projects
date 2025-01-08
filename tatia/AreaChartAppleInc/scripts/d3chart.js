@@ -60,9 +60,11 @@ class Chart {
             chartWidth: null,
             chartHeight: null
         };
+
         calc.id = "ID" + Math.floor(Math.random() * 1000000);
         calc.chartLeftMargin = marginLeft;
         calc.chartTopMargin = marginTop;
+
         const chartWidth = svgWidth - marginRight - calc.chartLeftMargin;
         const chartHeight = svgHeight - marginBottom - calc.chartTopMargin;
 
@@ -70,11 +72,11 @@ class Chart {
     }
 
     drawChart() {
-        const { chart, chartWidth, chartHeight, data, firstRender } = this.getState();
+        const { chart, chartWidth, chartHeight, data, firstRender } = this.getState(); //firstRender ამოიღე ვაფშე, არსად არ გამოიყენება
         const maxValue = d3.max(data, d => d.price);
         const minValue = d3.min(data, d => d.price);
 
-        const extent = d3.extent(data, d => d.date);
+        const extent = d3.extent(data, d => d.date); //extent იმავეს აკეთებს რასაც minValue და maxValue. ან extent დატოვე, ან minValue და maxValue
         const x = d3.scaleTime()
             .domain(extent)
             .range([0, chartWidth]);
@@ -95,6 +97,8 @@ class Chart {
             .style("stroke", "lightgrey")
             .style("stroke-opacity", 0.7);
 
+            // attrs-ში წაიღე lightgray, 0.7 და 4
+
         chart._add({
             tag: "g",
             className: "x-axis"
@@ -102,12 +106,14 @@ class Chart {
             .attr("transform", `translate(0,${chartHeight})`)
             .call(d3.axisBottom(x)
                 .ticks(5)
-                .tickFormat(d3.timeFormat("Dec %d")))
+                .tickFormat(d3.timeFormat("Dec %d"))) // ეს არასწორია, data-ში ნოემბრის მონაცემები რო იყოს მაინც დეკემბერს აჩვენებს
             .selectAll("text")
             .style("font-size", "16px")
             .style("fill", "#666")
             .attr("dy", "1em")
             .style("text-anchor", "end");
+
+            // attrs-ში წაიღე 16px, 666, 1em, end
 
 
         chart._add({
@@ -118,6 +124,7 @@ class Chart {
             .selectAll("text")
             .style("font-size", "16px")
             .style("fill", "#666");
+            // attrs-ში ესენი
 
         const gradient = chart._add({
             tag: "defs",
@@ -129,16 +136,21 @@ class Chart {
             .attr("x2", "0%")
             .attr("y1", "0%")
             .attr("y2", "100%");
+            // attrs-ში ესენი
+
 
         gradient.append("stop")
             .attr("offset", "0%")
             .attr("stop-color", "#34a853")
             .attr("stop-opacity", 0.3);
+            // attrs-ში ესენი
+            
 
         gradient.append("stop")
             .attr("offset", "100%")
             .attr("stop-color", "#34a853")
-            .attr("stop-opacity", 0.0);
+            .attr("stop-opacity", 0.0); //0-იც საკმარისია ;დ
+            // attrs-ში ესენი
 
         const area = d3.area()
             .x(d => x(d.date))
@@ -170,7 +182,7 @@ class Chart {
             .style("stroke", "#34a853")
             .style("stroke-width", 4)
             .style("stroke-linejoin", "round");
-
+// attrs-ში ესენი
 
     }
 

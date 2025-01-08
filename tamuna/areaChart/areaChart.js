@@ -1,3 +1,7 @@
+d3.selection.prototype._add = function(tagName) {
+    return this.append(tagName);
+};
+
 class AreaChart {
     constructor() {
         const attrs = {
@@ -45,6 +49,9 @@ class AreaChart {
                 margin: "0",
                 marginTop: "10px"
             },
+            timeframeWeight: "300",
+            preMarketLabelWeight: "300",
+            preMarketDeltaWeight: "300",
             priceDeltaStyles: {
                 position: "absolute",
                 left: "0",
@@ -53,7 +60,16 @@ class AreaChart {
                 fontFamily: "Arial, sans-serif",
                 color: "#39A93B",
                 margin: "0",
-                marginTop: "20px"
+                marginTop: "20px",
+                priceDelta: "+$2.14",
+                priceDeltaPercent: "0.86",
+                timeframeText: "Past 5 days",
+                timeframeStyles: {
+                    color: "black",
+                    fontFamily: "Helvetica",
+                    fontWeight: "200",
+                    marginLeft: "10px"
+                }
             },
             preMarketStyles: {
                 position: "absolute",
@@ -62,9 +78,13 @@ class AreaChart {
                 fontSize: "14px",
                 fontFamily: "Arial, sans-serif",
                 color: "black",
-                fontWeight: "400",
                 marginTop: "75px",
-                marginBottom: "60px"
+                marginBottom: "60px",
+                deltaFontWeight: "200",
+                labelFontWeight: "200",
+                deltaSpanStyles: {
+                    marginLeft: "10px"
+                }
             },
             xAxisTextStyles: {
                 fontSize: "14px",
@@ -96,7 +116,6 @@ class AreaChart {
                 stroke: "#39A93B",
                 strokeWidth: 2
             },
-            //  ხაზი ზედმეტია აქ
             grid: {
                 horizontal: {
                     stroke: "lightgrey",
@@ -132,12 +151,53 @@ class AreaChart {
                 ticks: {
                     number: 5
                 }
+            },
+            svg: {
+                preserveAspectRatio: "xMidYMid meet"
+            },
+            area: {
+                gradient: {
+                    top: { color: "#39A93B", opacity: 0.4 },
+                    bottom: { color: "#39A93B", opacity: 0 }
+                },
+                path: {}
+            },
+            gradient: {
+                x1: "0%",
+                y1: "0%",
+                x2: "0%",
+                y2: "100%",
+                stops: {
+                    start: { offset: "0%" },
+                    end: { offset: "100%" }
+                }
+            },
+            gridlines: {
+                class: "grid",
+                style: {
+                    stroke: "lightgrey",
+                    opacity: "0.1"
+                },
+                ticks: 5,
+                domain: false
+            },
+            preMarketPrice: "$247.32",
+            preMarketDelta: "-$2.47",
+            preMarketDeltaPercent: "-0.99",
+            preMarketDeltaColor: "red",
+            timeframeStyles: {
+                color: "black",
+                fontFamily: "Helvetica",
+                fontWeight: "${attrs.timeframeWeight}",
+                marginLeft: "10px"
+            },
+            preMarketLabelStyles: {
+                color: "black",
+                fontFamily: "Helvetica",
+                fontWeight: "${attrs.preMarketLabelWeight}",
+                marginLeft: "10px"
             }
         };
-
-        // ესენი ორი ხაზი calc-ში გაიტანე, როგორც შაბლონშია getCalculatedProperties
-        attrs.width = attrs.svgWidth - attrs.marginLeft - attrs.marginRight;
-        attrs.height = attrs.svgHeight - attrs.marginTop - attrs.marginBottom;
 
         this.attrs = attrs;
 
@@ -153,9 +213,20 @@ class AreaChart {
         });
     }
 
+    calc(props) {
+        const attrs = this.getState();
+
+        attrs.width = attrs.svgWidth - attrs.marginLeft - attrs.marginRight;
+        attrs.height = attrs.svgHeight - attrs.marginTop - attrs.marginBottom;
+
+        return this;
+    }
+
     render() {
         const attrs = this.getState();
-        console.log('Rendering with data:', attrs.data); // console.log არ დატოვო კოდში რომელსაც ლაივზე ტვირთავს
+        
+        this.calc();
+        
         const margin = { 
             top: attrs.marginTop, 
             right: attrs.marginRight, 
@@ -163,14 +234,10 @@ class AreaChart {
             left: attrs.marginLeft 
         };
         
-        // ამათი გამოთვლა გიწერია უკვე ზევით
-        const width = attrs.svgWidth - margin.left - margin.right;
-        const height = attrs.svgHeight - margin.top - margin.bottom;
-
-        this.createContainers(width, height, margin);
-        this.setupScales(width, height);
-        this.drawAxes(width, height);
-        this.drawChart(width, height);
+        this.createContainers(attrs.width, attrs.height, margin);
+        this.setupScales();
+        this.drawAxes();
+        this.drawChart();
         this.updatePriceInfo();
 
         return this;
@@ -181,74 +248,78 @@ class AreaChart {
 
         d3.select(attrs.container).selectAll("*").remove();
 
-        // ._add გამოიყენე append-ის ნაცვლად ყველგან
-
         const mainContainer = d3.select(attrs.container)
-            .append("div")
-            .style("display",attrs.mainContainerStyles.display)
-            .style("justify-content",attrs.mainContainerStyles.justifyContent)
-            .style("align-items",attrs.mainContainerStyles.alignItems)
+            ._add("div")
+            .style("display", attrs.mainContainerStyles.display)
+            .style("justify-content", attrs.mainContainerStyles.justifyContent)
+            .style("align-items", attrs.mainContainerStyles.alignItems)
             .style("width", attrs.mainContainerStyles.width)
             .style("margin", attrs.mainContainerStyles.margin)
-            .style("margin-top",attrs.mainContainerStyles.marginTop);
+            .style("margin-top", attrs.mainContainerStyles.marginTop);
 
-        const contentContainer = mainContainer.append("div")
+        const contentContainer = mainContainer._add("div")
             .style("width", attrs.contentContainerStyles.width);
 
         const titleGroup = contentContainer
             .insert("div", "svg")
             .style("margin-bottom", attrs.titleGroupStyles.marginBottom);
 
-        titleGroup.append("div")
+        titleGroup._add("div")
             .style("font-size", attrs.companyTitleStyles.fontSize)
             .style("font-family", attrs.companyTitleStyles.fontFamily)
             .style("margin-left", attrs.companyTitleStyles.marginLeft)
             .style("opacity", attrs.companyTitleStyles.opacity)
             .text("Apple Inc (AAPL)");
 
-        const priceGroup = titleGroup.append("div")
+        const priceGroup = titleGroup._add("div")
             .style("position", attrs.priceGroupStyles.position)
             .style("margin-left", attrs.priceGroupStyles.marginLeft);
 
-        const svg = contentContainer.append("svg")
+        const svg = contentContainer._add("svg")
             .attr("width", "100%")
             .attr("height", "100%")
             .attr("viewBox", `0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`)
-            .attr("preserveAspectRatio", "xMidYMid meet") // attrs-ში ეს
-            .append("g")
+            .attr("preserveAspectRatio", attrs.svg.preserveAspectRatio)
+            ._add("g")
             .attr("transform", `translate(${margin.left},${margin.top})`);
 
         this.setState({ svg, priceGroup });
     }
 
-    setupScales(width, height) {
-        const { data } = this.getState();
+    setupScales() {
+        const attrs = this.getState();
+        const { data, width, height } = attrs;
 
         const x = d3.scaleTime()
             .domain([d3.min(data, d => d.date), d3.max(data, d => d.date)])
             .range([0, width]);
 
+        const minPrice = d3.min(data, d => d.price);
         const y = d3.scaleLinear()
-            .domain([246, 256]) //ეს რიცხვები საიდან მოვიდა, data-დან უნდა წაიკითხო value-ები და ისინი ჩასვა
+            .domain([
+                minPrice - 1,  
+                minPrice + 9   
+            ])
             .range([height, 0]);
 
         this.setState({ x, y });
     }
 
-    // width ტყუილად გაქ გადაცემული არგუმენტად, ფუნქციაში არსად არ იყენებ
-    drawAxes(width, height) {
+    drawAxes() {
         const attrs = this.getState();
-        const { svg, x, y } = attrs;
+        const { svg, x, y, height, data } = attrs;
+
+        const lastDate = d3.max(data, d => d.date);
 
         const xAxis = d3.axisBottom(x)
             .ticks(5)
             .tickSize(0)
             .tickFormat((d, i) => {
                 const formattedDate = d3.timeFormat("%b %d")(d);
-                return formattedDate === "Dec 15" ? "" : formattedDate;  //15 dec საიდან მოვიდა? ცვლადს მიანიჭე ეგ რო იკითხებოდეს რას ნიშნავს
+                return d.getTime() === lastDate.getTime() ? "" : formattedDate;
             });
 
-        svg.append("g")
+        svg._add("g")
             .attr("transform", `translate(0,${height})`)
             .call(xAxis)
             .selectAll("text")
@@ -262,10 +333,10 @@ class AreaChart {
         svg.select("g").select("path").remove();
 
         const yAxis = d3.axisLeft(y)
-            .tickValues([246, 248, 250, 252, 254, 256]) //ეს რიცხვები საიდან მოვიდა, data-დან უნდა წაიკითხო value-ები და ისინი ჩასვა
+            .ticks(5)  
             .tickSize(0);
 
-        svg.append("g")
+        svg._add("g")
             .call(yAxis)
             .attr("class", "y-axis")
             .selectAll("text")
@@ -278,37 +349,26 @@ class AreaChart {
         d3.select(".y-axis").selectAll("path, line").remove();
     }
 
-    drawChart(width, height) {
+    drawChart() {
         const attrs = this.getState();
-        const { svg, data, x, y } = attrs;
-
-        if (!attrs.area) {
-            attrs.area = {  //attrs-ში წაიღე ესენი ზევით
-                gradient: {
-                    top: { color: "#39A93B", opacity: 0.4 },
-                    bottom: { color: "#39A93B", opacity: 0 }
-                },
-                path: {}
-            };
-        }
+        const { svg, data, x, y, width, height } = attrs;
 
         const gradientId = `area-gradient-${attrs.id}`;
-        const gradient = svg.append("defs")
-            .append("linearGradient")
+        const gradient = svg._add("defs")
+            ._add("linearGradient")
             .attr("id", gradientId)
-            .attr("x1", "0%")
-            .attr("y1", "0%")
-            .attr("x2", "0%")
-            .attr("y2", "100%");
-            // attrs-ში ესენი
+            .attr("x1", attrs.gradient.x1)
+            .attr("y1", attrs.gradient.y1)
+            .attr("x2", attrs.gradient.x2)
+            .attr("y2", attrs.gradient.y2);
 
-        gradient.append("stop")
-            .attr("offset", "0%") // attrs-ში
+        gradient._add("stop")
+            .attr("offset", attrs.gradient.stops.start.offset)
             .attr("stop-color", attrs.area.gradient.top.color)
             .attr("stop-opacity", attrs.area.gradient.top.opacity);
 
-        gradient.append("stop")
-            .attr("offset", "100%") // attrs-ში
+        gradient._add("stop")
+            .attr("offset", attrs.gradient.stops.end.offset)
             .attr("stop-color", attrs.area.gradient.bottom.color)
             .attr("stop-opacity", attrs.area.gradient.bottom.opacity);
 
@@ -317,7 +377,7 @@ class AreaChart {
             .y0(height)
             .y1(d => y(d.price));
 
-        svg.append("path")
+        svg._add("path")
             .datum(data)
             .attr("class", "area")
             .attr("d", area)
@@ -327,46 +387,44 @@ class AreaChart {
             .x(d => x(d.date))
             .y(d => y(d.price));
 
-        svg.append("path")
+        svg._add("path")
             .datum(data)
             .attr("class", "line")
             .attr("d", line)
             .style("fill", "none")
-            .style("stroke", "#39A93B")
-            .style("stroke-width", "2px");
-
-            // attrs-ში ესენი
+            .style("stroke", attrs.lineStyles.stroke)
+            .style("stroke-width", attrs.lineStyles.strokeWidth + "px");
 
         this.drawGridlines(width);
     }
 
     drawGridlines(width) {
-        const { svg, y } = this.getState();
+        const attrs = this.getState();
+        const { svg, y, gridlines } = attrs;
 
         const makeGridlines = () => {
             return d3.axisLeft(y)
-                .tickValues([246, 248, 250, 252, 254, 256]); //ეს რიცხვები საიდან მოვიდა, data-დან უნდა წაიკითხო value-ები და ისინი ჩასვა
+                .ticks(gridlines.ticks);
         };
 
-        // attrs-ში ესენი
-        svg.append("g")
-            .attr("class", "grid")
-            .style("stroke", "lightgrey")
-            .style("opacity", "0.1")
+        svg._add("g")
+            .attr("class", gridlines.class)
+            .style("stroke", gridlines.style.stroke)
+            .style("opacity", gridlines.style.opacity)
             .call(makeGridlines()
                 .tickSize(-width)
                 .tickFormat("")
             )
             .select(".domain").remove();
 
-        svg.select(".grid").lower();
+        svg.select(`.${gridlines.class}`).lower();
     }
 
     updatePriceInfo() {
         const attrs = this.getState();
         const { priceGroup } = attrs;
 
-        priceGroup.append("h1")
+        priceGroup._add("h1")
             .style("font-size", attrs.mainPriceStyles.fontSize)
             .style("font-family", attrs.mainPriceStyles.fontFamily)
             .style("font-weight", attrs.mainPriceStyles.fontWeight)
@@ -374,27 +432,28 @@ class AreaChart {
             .style("margin-top", attrs.mainPriceStyles.marginTop)
             .text("$249.79");
 
-        priceGroup.append("h2")
+        priceGroup._add("h2")
             .style("font-size", attrs.priceDeltaStyles.fontSize)
             .style("font-family", attrs.priceDeltaStyles.fontFamily)
             .style("color", attrs.priceDeltaStyles.color)
             .style("margin", attrs.priceDeltaStyles.margin)
             .style("margin-top", attrs.priceDeltaStyles.marginTop)
-            .html("+$2.14 (0.86%) <span style='color: black;\
-                font-family: Helvetica; font-weight: 300; margin-left: 10px'> Past 5 days</span>");
+            .html(`${attrs.priceDeltaStyles.priceDelta} (${attrs.priceDeltaStyles.priceDeltaPercent}%) <span style='color: ${attrs.timeframeStyles.color}; \
+                font-family: ${attrs.timeframeStyles.fontFamily}; \
+                font-weight: ${attrs.timeframeWeight}; \
+                margin-left: ${attrs.timeframeStyles.marginLeft}'>${attrs.priceDeltaStyles.timeframeText}</span>`);
 
-        priceGroup.append("h3")
+        priceGroup._add("h3")
             .style("position", attrs.preMarketStyles.position)
             .style("left", attrs.preMarketStyles.left)
             .style("top", attrs.preMarketStyles.top)
             .style("font-size", attrs.preMarketStyles.fontSize)
             .style("font-family", attrs.preMarketStyles.fontFamily)
             .style("color", attrs.preMarketStyles.color)
-            .style("font-weight", attrs.preMarketStyles.fontWeight)
             .style("margin-top", attrs.preMarketStyles.marginTop)
-            .html(`$247.32 <span style='color: red; font-family: Helvetica;\
-                 font-weight:350; margin-left: 10px'> -$2.47 (-0.99%)</span><span \
-                 style='color: black; font-family: Helvetica; font-weight:300;margin-left: 10px'> Pre-Market</span>`);
+            .html(`${attrs.preMarketPrice} <span style='color: ${attrs.preMarketDeltaColor}; font-family: ${attrs.defaultFont}; \
+                font-weight: ${attrs.preMarketDeltaWeight}; margin-left: ${attrs.preMarketStyles.deltaSpanStyles.marginLeft}'> ${attrs.preMarketDelta} (${attrs.preMarketDeltaPercent}%)</span><span \
+                style='color: ${attrs.preMarketLabelStyles.color}; font-family: ${attrs.preMarketLabelStyles.fontFamily}; font-weight: ${attrs.preMarketLabelWeight}; margin-left: ${attrs.preMarketLabelStyles.marginLeft}'> Pre-Market</span>`);
     }
 
     setDynamicContainer() {
@@ -421,13 +480,10 @@ class AreaChart {
         };
 
         if (window._chartResizeHandler) {
-            window.removeEventListener('resize', window._chartResizeHandler);
+            d3.select(window).on('resize.' + attrs.id, null);
         }
         
-        window._chartResizeHandler = resizeHandler;
-        window.addEventListener('resize', resizeHandler);
-
-        // addEventListener-ის ნაცვლად დ3-ით მოუსმინე resize-ს
+        d3.select(window).on('resize.' + attrs.id, resizeHandler);
 
         return this;
     }

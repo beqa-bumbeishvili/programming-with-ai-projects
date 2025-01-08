@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/ >
+		<title>Radar Chart</title>
+		        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+	</head>
+	<body>
+		<div id="radar-container"></div>
+		<script src="radarChart.js"></script>
+		<script>
+			const chart = new RadarChartClass();
+			
+			chart
+				.width(window.innerWidth - 100)
+				.height(window.innerHeight - 100)
+				.container('#radar-container')
+				.guiEnabled(true)
+				.loadCSV('data.csv')
+				.then(() => chart.render());
+		</script>
+	</body>
+</html>

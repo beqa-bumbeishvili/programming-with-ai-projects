@@ -32,12 +32,12 @@
                     obj.date = new Date(obj.date);
                 });
 
-                displayStockData(data);
+                displayStockData(data); //ერთი ხაზი გამოტოვე ქვევით, ლოგიკურად სხვადასხვა მონაკვეთები ხაზით დააშორე ერთმანეთს
                 chart = new Chart()
                     .container('#graph-container')
                     .data(data)
                     .render()
-                console.log(chart.getState());
+                console.log(chart.getState()); //console.log არ დაგრჩეს კოდში რომელსაც ლაივზე ტვირთავ
             })
     </script>
 
