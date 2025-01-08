@@ -10,7 +10,7 @@ const groupedAttrs = {
 		firstRender: true,
 		guiEnabled: false,
 	},
-
+// არ გინდა აქ ხაზების გამოტოვება
 	containerStyles: {
 		display: 'flex',
 		justifyContent: 'center',
