@@ -77,22 +77,22 @@ class Chart {
         
         chart.selectAll('*').remove();
         
-        const minSize = 300;
-        const effectiveWidth = Math.max(minSize, chartWidth);
-        const effectiveHeight = Math.max(minSize, chartHeight);
+        const minSize = 300; //attrs-ში
+        const effectiveWidth = Math.max(minSize, chartWidth); //calc-ში
+        const effectiveHeight = Math.max(minSize, chartHeight);//calc-ში
         
-        const angleSlice = (Math.PI * 2) / data.features.length;
-        const radius = Math.min(effectiveWidth, effectiveHeight) / 2.8;
+        const angleSlice = (Math.PI * 2) / data.features.length;//calc-ში
+        const radius = Math.min(effectiveWidth, effectiveHeight) / 2.8; //calc-ში
         
-        const fontSize = Math.max(12, Math.min(14, radius / 10));
+        const fontSize = Math.max(12, Math.min(14, radius / 10)); //calc-ში
         
-        const labelDistance = radius * 1.2;
+        const labelDistance = radius * 1.2; //calc-ში
         
         const rScale = d3.scaleLinear()
             .range([0, radius])
-            .domain([0, 100]);
+            .domain([0, 100]); //attrs-ში
 
-        const levels = [0, 20, 40, 60, 80, 100];
+        const levels = [0, 20, 40, 60, 80, 100]; //attrs-ში
         const axisGrid = chart._add({
             tag: 'g',
             className: 'axis-grid'
@@ -104,6 +104,7 @@ class Chart {
                 .style('fill', 'none')
                 .style('stroke', '#CDCDCD')
                 .style('stroke-width', '0.5px');
+                //attrs-ში
 
             if (level > 0) {
                 const angle = -Math.PI / 2;
@@ -117,6 +118,7 @@ class Chart {
                     .style('font-size', `${fontSize}px`)
                     .style('text-anchor', 'middle')
                     .text(level.toString());
+                    //attrs-ში
             }
         });
 
@@ -136,6 +138,7 @@ class Chart {
             .attr('y2', (d, i) => rScale(100) * Math.sin(angleSlice * i - Math.PI / 2))
             .style('stroke', '#999')
             .style('stroke-width', '1px');
+            //attrs-ში
 
         axes.selectAll('.axis-label')
             .data(data.features)
@@ -162,8 +165,9 @@ class Chart {
             .style('font-weight', '500')
             .text(d => d)
             .call(wrap, 60);
+            //attrs-ში
 
-        const colors = ['#ca8cf0', '#7FFFD4'];  
+        const colors = ['#ca8cf0', '#7FFFD4'];  //attrs-ში
         
         data.persons.forEach((person, personIndex) => {
             const points = person.scores.map((score, i) => {
@@ -187,6 +191,7 @@ class Chart {
             .style('fill-opacity', 0.3)
             .style('stroke', colors[personIndex])
             .style('stroke-width', '2px');
+            //attrs-ში
 
             chart._add({
                 tag: 'g',
