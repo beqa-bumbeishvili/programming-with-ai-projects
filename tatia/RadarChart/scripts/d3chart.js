@@ -64,7 +64,7 @@ class Chart {
         };
         calc.id = "ID" + Math.floor(Math.random() * 1000000); 
         calc.chartLeftMargin = marginLeft;
-        calc.chartTopMargin = marginTop;
+        calc.chartTopMargin = marginTop;  //ერთი ხაზი გამოტოვე აქ ლოგიკურად ახალ მონაკვეთს იწყებ
         const chartWidth = svgWidth - marginRight - calc.chartLeftMargin;
         const chartHeight = svgHeight - marginBottom - calc.chartTopMargin;
 
@@ -78,10 +78,10 @@ class Chart {
             levels: 5,
             maxValue: 100,
             labelFactor: 1.25
-        };
+        }; //attrs-ში ეს
         
-        const total = data.datasets[0].values.length;
-        const angleSlice = (Math.PI * 2) / total;
+        const total = data.datasets[0].values.length; // calc-ში
+        const angleSlice = (Math.PI * 2) / total; // calc-ში
         
         const rScale = d3.scaleLinear()
             .range([0, config.radius])
@@ -99,6 +99,7 @@ class Chart {
             .attr('y2', (d, i) => rScale(config.maxValue * 1.1) * Math.sin(angleSlice * i - Math.PI / 2))
             .style('stroke', '#999')
             .style('stroke-width', '1px');
+            // attrs-ში
             
         const levels = chart.selectAll('.levels')
             .data(d3.range(1, config.levels + 1).reverse())
@@ -112,6 +113,7 @@ class Chart {
             .style('fill', '#CDCDCD')
             .style('stroke', '#999')
             .style('fill-opacity', 0.1);
+            // attrs-ში
 
         levels.append('text')
             .attr('class', 'levelValue')
@@ -121,6 +123,8 @@ class Chart {
             .style('font-size', '10px')
             .style('fill', '#737373')
             .text(d => Math.round(config.maxValue * d / config.levels) + '%');
+            // attrs-ში
+
         
         const axisLabels = chart.selectAll('.axisLabel')
             .data(data.datasets[0].values)
@@ -132,6 +136,7 @@ class Chart {
             .text(d => d.axis)
             .style('font-size', '11px')
             .attr('text-anchor', 'middle');
+            // attrs-ში
         
         data.datasets.forEach((dataset, i) => {
             const points = dataset.values.map((d, j) => {
@@ -158,6 +163,8 @@ class Chart {
                 .style('fill-opacity', 0.3)
                 .style('stroke', dataset.color)
                 .style('stroke-width', '2px');
+            // attrs-ში
+
         });
         
         chart.attr('transform', `translate(${chartWidth/2},${chartHeight/2})`);
