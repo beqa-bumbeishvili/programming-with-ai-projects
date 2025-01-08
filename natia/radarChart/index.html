@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Radar Chart</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+  </head>
+  <body>
+    <div id="radar-chart"></div>
+
+    <!-- Load the script with RadarChart class first -->
+    <script src="./scripts/script.js"></script>
+
+    <!-- Then load and initialize data -->
+    <script>
+      let chart;
+      d3.json("./data/data.json")
+        .then((jsonData) => {
+          chart = new RadarChart(jsonData.people)
+            .container("#radar-chart")
+            .render();
+        })
+        .catch((error) => console.error("Error loading the data:", error));
+    </script>
+  </body>
+</html>
