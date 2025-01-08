@@ -75,8 +75,18 @@ class Chart {
     drawRadarChart() {
         const { chart, data, chartWidth, chartHeight } = this.getState();
         
-        const radius = Math.min(chartWidth, chartHeight) / 3;
+        chart.selectAll('*').remove();
+        
+        const minSize = 300;
+        const effectiveWidth = Math.max(minSize, chartWidth);
+        const effectiveHeight = Math.max(minSize, chartHeight);
+        
         const angleSlice = (Math.PI * 2) / data.features.length;
+        const radius = Math.min(effectiveWidth, effectiveHeight) / 2.8;
+        
+        const fontSize = Math.max(12, Math.min(14, radius / 10));
+        
+        const labelDistance = radius * 1.2;
         
         const rScale = d3.scaleLinear()
             .range([0, radius])
@@ -96,11 +106,15 @@ class Chart {
                 .style('stroke-width', '0.5px');
 
             if (level > 0) {
+                const angle = -Math.PI / 2;
+                const x = rScale(level) * Math.cos(angle);
+                const y = rScale(level) * Math.sin(angle);
+                
                 axisGrid.append('text')
-                    .attr('x', 0)
-                    .attr('y', -rScale(level))
-                    .attr('dy', '1em')
-                    .style('font-size', '10px')
+                    .attr('x', x)
+                    .attr('y', y)
+                    .attr('dy', '-0.5em')
+                    .style('font-size', `${fontSize}px`)
                     .style('text-anchor', 'middle')
                     .text(level.toString());
             }
@@ -128,12 +142,28 @@ class Chart {
             .enter()
             .append('text')
             .attr('class', 'axis-label')
-            .attr('x', (d, i) => rScale(120) * Math.cos(angleSlice * i - Math.PI / 2))
-            .attr('y', (d, i) => rScale(120) * Math.sin(angleSlice * i - Math.PI / 2))
-            .style('text-anchor', 'middle')
-            .text(d => d);
+            .attr('x', (d, i) => {
+                const angle = angleSlice * i - Math.PI / 2;
+                const distance = labelDistance;
+                return distance * Math.cos(angle);
+            })
+            .attr('y', (d, i) => {
+                const angle = angleSlice * i - Math.PI / 2;
+                const distance = labelDistance;
+                return distance * Math.sin(angle);
+            })
+            .style('text-anchor', (d, i) => {
+                const angle = angleSlice * i - Math.PI / 2;
+                if (Math.abs(Math.cos(angle)) < 0.1) return 'middle';
+                return Math.cos(angle) > 0 ? 'start' : 'end';
+            })
+            .style('dominant-baseline', 'central')
+            .style('font-size', `${fontSize}px`)
+            .style('font-weight', '500')
+            .text(d => d)
+            .call(wrap, 60);
 
-        const colors = ['#ca8cf0', '#79efea'];  
+        const colors = ['#ca8cf0', '#7FFFD4'];  
         
         data.persons.forEach((person, personIndex) => {
             const points = person.scores.map((score, i) => {
@@ -254,15 +284,54 @@ class Chart {
         if (containerRect.width > 0) attrs.svgWidth = containerRect.width;
 
         let self = this;
-
+        
+        let resizeTimeout;
         d3.select(window).on("resize." + attrs.id, function () {
-            var containerRect = d3Container.node().getBoundingClientRect();
-            if (containerRect.width > 0) attrs.svgWidth = containerRect.width;
-
-            self.render();
+            if (resizeTimeout) clearTimeout(resizeTimeout);
+            
+            resizeTimeout = setTimeout(() => {
+                var containerRect = d3Container.node().getBoundingClientRect();
+                if (containerRect.width > 0) attrs.svgWidth = containerRect.width;
+                
+                d3Container.selectAll("*").remove();
+                
+                self.render();
+            }, 250); 
         });
 
         this.setState({ d3Container });
     }
 
+}
+
+function wrap(text, width) {
+    text.each(function() {
+        const text = d3.select(this);
+        const words = text.text().split(/\s+/).reverse();
+        let word;
+        let line = [];
+        let lineNumber = 0;
+        const lineHeight = 1.1;
+        const y = text.attr("y");
+        const dy = parseFloat(text.attr("dy") || 0);
+        let tspan = text.text(null).append("tspan")
+            .attr("x", text.attr("x"))
+            .attr("y", y)
+            .attr("dy", dy + "em");
+        
+        while (word = words.pop()) {
+            line.push(word);
+            tspan.text(line.join(" "));
+            if (tspan.node().getComputedTextLength() > width) {
+                line.pop();
+                tspan.text(line.join(" "));
+                line = [word];
+                tspan = text.append("tspan")
+                    .attr("x", text.attr("x"))
+                    .attr("y", y)
+                    .attr("dy", ++lineNumber * lineHeight + dy + "em")
+                    .text(word);
+            }
+        }
+    });
 }
