@@ -252,6 +252,7 @@ class Chart {
       .append("stop")
       .attr("offset", "100%")
       .attr("stop-color", "rgba(0, 128, 0, 0.3)");
+      // attrs-ში გაიტანე ზევით რაებიც წერია
 
     // Add area with styles
     svg
@@ -280,6 +281,7 @@ class Chart {
       .style("stroke-width", "0.5")
       .call((g) => g.selectAll(".tick line").style("stroke", "#e5e5e5"))
       .call((g) => g.select(".domain").remove());
+      // attrs-ში 
 
     svg
       .append("g")
@@ -294,6 +296,7 @@ class Chart {
           .style("fill", "#666666")
       )
       .call((g) => g.selectAll(".tick line").style("stroke", "#e5e5e5"));
+      // attrs-ში 
 
     svg
       .append("g")
@@ -314,6 +317,8 @@ class Chart {
           .style("fill", "#666666")
       )
       .call((g) => g.selectAll(".tick line").style("stroke", "#e5e5e5"));
+      // attrs-ში 
+
   }
 
   // Add this new method
