@@ -1,6 +1,5 @@
 class Chart {
     constructor() {
-        // Defining state attributes
         const attrs = {
             id: "ID" + Math.floor(Math.random() * 1000000),
             svgWidth: 300,
@@ -18,13 +17,10 @@ class Chart {
             firstRender: true
         };
 
-        // Defining accessors
         this.getState = () => attrs;
         this.setState = (d) => Object.assign(attrs, d);
 
-        // Automatically generate getter and setters for chart object based on the state properties;
         Object.keys(attrs).forEach((key) => {
-            //@ts-ignore
             this[key] = function (_) {
                 if (!arguments.length) {
                     return attrs[key];
@@ -34,11 +30,9 @@ class Chart {
             };
         });
 
-        // Custom enter exit update pattern initialization (prototype method)
         this.initializeEnterExitUpdatePattern();
     }
     render() {
-        // გავასუფთ�ოთ წინა ელემენტები
         const { d3Container } = this.getState();
         if (d3Container) {
             d3Container.selectAll('*').remove();
@@ -61,7 +55,6 @@ class Chart {
             svgHeight
         } = this.getState();
 
-        //Calculated properties
         var calc = {
             id: null,
             chartTopMargin: null,
@@ -69,7 +62,7 @@ class Chart {
             chartWidth: null,
             chartHeight: null
         };
-        calc.id = "ID" + Math.floor(Math.random() * 1000000); // id for event handlings
+        calc.id = "ID" + Math.floor(Math.random() * 1000000); 
         calc.chartLeftMargin = marginLeft;
         calc.chartTopMargin = marginTop;
         const chartWidth = svgWidth - marginRight - calc.chartLeftMargin;
@@ -80,7 +73,6 @@ class Chart {
     drawRadarChart() {
         const { chart, data, chartWidth, chartHeight } = this.getState();
         
-        // რადარის კონფიგურაცია
         const config = {
             radius: Math.min(chartWidth, chartHeight) / 3,
             levels: 5,
@@ -88,16 +80,13 @@ class Chart {
             labelFactor: 1.25
         };
         
-        // კუთხეების გამოთვლა თითოეული ღერძისთვის
         const total = data.datasets[0].values.length;
         const angleSlice = (Math.PI * 2) / total;
         
-        // რადიალური სკალა
         const rScale = d3.scaleLinear()
             .range([0, config.radius])
             .domain([0, config.maxValue]);
         
-        // ღერძების დახაზვა
         const axes = chart.append('g')
             .selectAll('.axis')
             .data(data.datasets[0].values)
@@ -111,14 +100,12 @@ class Chart {
             .style('stroke', '#999')
             .style('stroke-width', '1px');
             
-        // კონცენტრული წრეები და მათი ლეიბლები
         const levels = chart.selectAll('.levels')
             .data(d3.range(1, config.levels + 1).reverse())
             .enter()
             .append('g')
             .attr('class', 'levels');
 
-        // წრეები
         levels.append('circle')
             .attr('class', 'gridCircle')
             .attr('r', d => (config.radius / config.levels) * d)
@@ -126,7 +113,6 @@ class Chart {
             .style('stroke', '#999')
             .style('fill-opacity', 0.1);
 
-        // პროცენტლი მნიშვნლობების დამატება
         levels.append('text')
             .attr('class', 'levelValue')
             .attr('x', 5)
@@ -136,7 +122,6 @@ class Chart {
             .style('fill', '#737373')
             .text(d => Math.round(config.maxValue * d / config.levels) + '%');
         
-        // ღერძებს დისახელების დამატება
         const axisLabels = chart.selectAll('.axisLabel')
             .data(data.datasets[0].values)
             .enter()
@@ -148,9 +133,7 @@ class Chart {
             .style('font-size', '11px')
             .attr('text-anchor', 'middle');
         
-        // მონაცემების დახაზვა
         data.datasets.forEach((dataset, i) => {
-            // წერტილების კოორდინატების გამოთვლა
             const points = dataset.values.map((d, j) => {
                 const angle = angleSlice * j - Math.PI / 2;
                 return {
@@ -160,12 +143,10 @@ class Chart {
                 };
             });
             
-            // Path გენერატორი
             const radarLine = d3.lineRadial()
                 .radius(d => d.value)
                 .angle((d, i) => i * angleSlice);
                 
-            // არის შევსება
             chart.append('path')
                 .datum(points)
                 .attr('class', 'radarArea')
@@ -179,7 +160,6 @@ class Chart {
                 .style('stroke-width', '2px');
         });
         
-        // გადავწიოთ chart ცენტრში
         chart.attr('transform', `translate(${chartWidth/2},${chartHeight/2})`);
     }
 
@@ -195,7 +175,6 @@ class Chart {
             chartHeight
         } = this.getState();
 
-        // Draw SVG
         const svg = d3Container
             ._add({
                 tag: "svg",
@@ -205,7 +184,6 @@ class Chart {
             .attr("height", svgHeight)
             .attr("font-family", defaultFont);
 
-        //Add container g element
         var chart = svg
             ._add({
                 tag: "g",
@@ -227,7 +205,6 @@ class Chart {
             var data = params.data || [className];
             var exitTransition = params.exitTransition || null;
             var enterTransition = params.enterTransition || null;
-            // Pattern in action
             var selection = container.selectAll("." + className).data(data, (d, i) => {
                 if (typeof d === "object") {
                     if (d.id) {
@@ -254,18 +231,14 @@ class Chart {
 
     setDynamicContainer() {
         const attrs = this.getState();
-
-        //Drawing containers
         var d3Container = d3.select(attrs.container);
         var containerRect = d3Container.node().getBoundingClientRect();
         if (containerRect.width > 0) {
             attrs.svgWidth = containerRect.width;
-            // დავამატოთ სიმაღლის პროპორციული ცვლილებაც
-            attrs.svgHeight = containerRect.width / 2; // ან სხვა თქვენთვის სასურველი პროპორცია
+            attrs.svgHeight = containerRect.width / 2;
         }
 
         let self = this;
-        // დავამატოთ throttle რომ ძალიან ხშირად არ მოხდეს გადახატვა
         const throttledResize = this.throttle(() => {
             var containerRect = d3Container.node().getBoundingClientRect();
             if (containerRect.width > 0) {
@@ -280,7 +253,6 @@ class Chart {
         this.setState({ d3Container });
     }
 
-    // დავამატო� throttle �ფუნქცია
     throttle(func, limit) {
         let inThrottle;
         return function() {
