@@ -1,0 +1,22 @@
+{
+  "features": [
+    "Creativity",
+    "Adaptability",
+    "Humor",
+    "Adventurousness",
+    "Resilience",
+    "Charisma",
+    "Patience",
+    "Organization"
+  ],
+  "persons": [
+    {
+      "name": "პიროვნება 1",
+      "scores": [70, 90, 70, 90, 85, 70, 65, 85]
+    },
+    {
+      "name": "პიროვნება 2",
+      "scores": [30, 40, 20, 0, 70, 70, 50, 10]
+    }
+  ]
+}
