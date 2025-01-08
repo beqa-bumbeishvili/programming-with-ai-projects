@@ -34,9 +34,6 @@ class Chart {
     }
     render() {
         const { d3Container } = this.getState();
-        if (d3Container) {
-            d3Container.selectAll('*').remove();
-        }
 
         this.setDynamicContainer();
         this.calculateProperties();
@@ -62,7 +59,7 @@ class Chart {
             chartWidth: null,
             chartHeight: null
         };
-        calc.id = "ID" + Math.floor(Math.random() * 1000000); 
+        calc.id = "ID" + Math.floor(Math.random() * 1000000);
         calc.chartLeftMargin = marginLeft;
         calc.chartTopMargin = marginTop;
         const chartWidth = svgWidth - marginRight - calc.chartLeftMargin;
@@ -72,95 +69,112 @@ class Chart {
     }
     drawRadarChart() {
         const { chart, data, chartWidth, chartHeight } = this.getState();
-        
+
         const config = {
             radius: Math.min(chartWidth, chartHeight) / 3,
             levels: 5,
             maxValue: 100,
             labelFactor: 1.25
         };
-        
+
         const total = data.datasets[0].values.length;
         const angleSlice = (Math.PI * 2) / total;
-        
+
         const rScale = d3.scaleLinear()
             .range([0, config.radius])
             .domain([0, config.maxValue]);
-        
-        const axes = chart.append('g')
-            .selectAll('.axis')
-            .data(data.datasets[0].values)
-            .enter()
-            .append('line')
-            .attr('class', 'axis')
+
+
+
+        const axes = chart._add({
+            tag: 'g',
+            className: 'axes-group'
+        })
+            ._add({
+                tag: 'line',
+                className: 'axis',
+                data: data.datasets[0].values
+            })
             .attr('x1', 0)
             .attr('y1', 0)
             .attr('x2', (d, i) => rScale(config.maxValue * 1.1) * Math.cos(angleSlice * i - Math.PI / 2))
             .attr('y2', (d, i) => rScale(config.maxValue * 1.1) * Math.sin(angleSlice * i - Math.PI / 2))
             .style('stroke', '#999')
             .style('stroke-width', '1px');
-            
-        const levels = chart.selectAll('.levels')
-            .data(d3.range(1, config.levels + 1).reverse())
-            .enter()
-            .append('g')
-            .attr('class', 'levels');
 
-        levels.append('circle')
-            .attr('class', 'gridCircle')
+        const levels = chart._add({
+            tag: 'g',
+            className: 'levels',
+            data: d3.range(1, config.levels + 1).reverse()
+        })
+
+        levels._add({
+            tag: 'circle',
+            className: 'gridCircle',
+            data: d => [d]
+        })
             .attr('r', d => (config.radius / config.levels) * d)
             .style('fill', '#CDCDCD')
             .style('stroke', '#999')
             .style('fill-opacity', 0.1);
 
-        levels.append('text')
-            .attr('class', 'levelValue')
+
+        levels._add({
+            tag: 'text',
+            className: 'levelValue',
+            data: d => [d]
+        })
             .attr('x', 5)
             .attr('y', d => -(config.radius / config.levels) * d)
             .attr('dy', '0.4em')
             .style('font-size', '10px')
             .style('fill', '#737373')
             .text(d => Math.round(config.maxValue * d / config.levels) + '%');
-        
-        const axisLabels = chart.selectAll('.axisLabel')
-            .data(data.datasets[0].values)
-            .enter()
-            .append('text')
-            .attr('class', 'axisLabel')
+
+        const axisLabels = chart._add({
+            tag: 'text',
+            className: 'axisLabel',
+            data: data.datasets[0].values
+        })
             .attr('x', (d, i) => rScale(config.maxValue * config.labelFactor) * Math.cos(angleSlice * i - Math.PI / 2))
             .attr('y', (d, i) => rScale(config.maxValue * config.labelFactor) * Math.sin(angleSlice * i - Math.PI / 2))
             .text(d => d.axis)
             .style('font-size', '11px')
             .attr('text-anchor', 'middle');
-        
-        data.datasets.forEach((dataset, i) => {
-            const points = dataset.values.map((d, j) => {
-                const angle = angleSlice * j - Math.PI / 2;
+
+
+        chart._add({
+            tag: 'path',
+            className: 'radarArea',
+            data: data.datasets.map((dataset, i) => {
+                const points = dataset.values.map((d, j) => {
+                    const angle = angleSlice * j - Math.PI / 2;
+                    return {
+                        x: rScale(d.value) * Math.cos(angle),
+                        y: rScale(d.value) * Math.sin(angle),
+                        value: d.value
+                    };
+                });
                 return {
-                    x: rScale(d.value) * Math.cos(angle),
-                    y: rScale(d.value) * Math.sin(angle),
-                    value: d.value
-                };
-            });
-            
-            const radarLine = d3.lineRadial()
-                .radius(d => d.value)
-                .angle((d, i) => i * angleSlice);
-                
-            chart.append('path')
-                .datum(points)
-                .attr('class', 'radarArea')
-                .attr('d', d3.line()
+                    dataset: dataset,
+                    points: points
+                }
+
+            })
+        })
+            .attr('d', d => {
+                return d3.line()
                     .x(d => d.x)
                     .y(d => d.y)
-                    .curve(d3.curveLinearClosed))
-                .style('fill', dataset.color)
-                .style('fill-opacity', 0.3)
-                .style('stroke', dataset.color)
-                .style('stroke-width', '2px');
-        });
-        
-        chart.attr('transform', `translate(${chartWidth/2},${chartHeight/2})`);
+                    .curve(d3.curveLinearClosed)(d.points)
+            })
+            .style('fill', d => d.dataset.color)
+            .style('fill-opacity', 0.3)
+            .style('stroke', d => d.dataset.color)
+            .style('stroke-width', '2px');
+
+
+        chart.attr('transform', `translate(${chartWidth / 2},${chartHeight / 2})`);
     }
 
     drawSvgAndWrappers() {
@@ -255,7 +269,7 @@ class Chart {
 
     throttle(func, limit) {
         let inThrottle;
-        return function() {
+        return function () {
             const args = arguments;
             const context = this;
             if (!inThrottle) {
