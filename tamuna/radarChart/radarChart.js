@@ -50,7 +50,6 @@ class Chart {
             };
         });
     }
-	
     render() {
         this.setDynamicContainer();
         this.calculateProperties();
@@ -296,3 +295,4 @@ class Chart {
             });
     }
 }
+

@@ -67,7 +67,6 @@ body {
 .radarInvisibleCircle {
     pointer-events: all;
     fill: none;
-    r: 6;  
 }
 
 .page-container {

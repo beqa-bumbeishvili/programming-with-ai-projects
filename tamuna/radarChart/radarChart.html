@@ -8,27 +8,27 @@
         <link rel="stylesheet" href="radarChart.css">
         <script src="https://unpkg.com/lil-gui@0.16.0/dist/lil-gui.umd.js"></script>
     </head>
-    <body translate="no">
-        <div class="page-container">
-            <div id="graph-container"></div>
-        </div>
-        <script src="https://d3js.org/d3.v7.min.js"></script>
-        <script src="radarChart.js"></script>
-        <script>
-            let chart;
-            d3.csv('data.csv')
-                .then(data => {
-                 const processedData = d3.group(data, d => d.group);
-                    const radarData = Array.from(processedData, ([key, values]) => values);
+<body translate="no">
+    <div class="page-container">
+        <div id="graph-container"></div>
+    </div>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="radarChart.js"></script>
+    <script>
+        let chart;
+        d3.csv('data.csv')
+            .then(data => {
+                const processedData = d3.group(data, d => d.group);
+                const radarData = Array.from(processedData, ([key, values]) => values);
 
-                    chart = new Chart()
-                        .svgHeight(1000)
-                        .svgWidth(1000)
-                        .container('#graph-container')
-                        .guiEnabled(true)
-                        .data(radarData)
-                        .render();
+                chart = new Chart()
+                    .svgHeight(1000)
+                    .svgWidth(1000)
+                    .container('#graph-container')
+                    .guiEnabled(true)
+                    .data(radarData)
+                    .render();
             })
-        </script>
-    </body>
+    </script>
+</body>
 </html>
