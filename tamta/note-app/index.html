@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Note App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Note App</h1>
+        <p class="subtitle">Double click on a note to remove it</p>
+        
+        <div class="notes-container">
+            <div class="note">Empty Note</div>
+            <div class="note">Empty Note</div>
+            <div class="note">Empty Note</div>
+            <div class="note">Empty Note</div>
+            <div class="add-note">+</div>
+        </div>
+    </div>
+
+    <div class="modal">
+        <div class="modal-content">
+            <p>Do you want to delete this note?</p>
+            <div class="modal-buttons">
+                <button class="modal-button cancel-button">Cancel</button>
+                <button class="modal-button ok-button">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

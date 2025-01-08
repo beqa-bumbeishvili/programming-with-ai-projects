@@ -1,0 +1,138 @@
+body {
+    margin: 0;
+    background: linear-gradient(to left, lightblue, lightgreen);
+    font-family: "Courier New", Courier, monospace;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: navy;
+    font-family: 'Courier New', Courier, monospace;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    text-align: center;
+    color: navy;
+    margin-bottom: 30px;
+}
+
+.notes-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 25px;
+
+    
+}
+.note:hover {
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.8);
+}
+.note {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 17px;
+    min-height: 150px;
+    cursor: pointer;
+    backdrop-filter: blur(5px);
+    border: none;
+    color: gray;
+    font-size: 18px;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+    
+
+
+}
+
+.add-note {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 17px;
+    min-height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 48px;
+    color: gray;
+    backdrop-filter: blur(5px);
+    border: none;
+    font-size: 80px;
+    font-weight: bold;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+    
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 550px;
+    background:white;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+    
+}
+
+.modal-content {
+    background: white;
+    padding: 10px;
+    border-radius: 8px;
+    text-align:left;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    min-width: 300px;
+    
+    
+}
+
+.modal-content p {
+    margin: 0;
+    padding: 20px 0;
+    border-bottom: 1px solid #eee;
+    color: #333;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px 0 0;
+}
+
+.modal-button {
+    padding: 8px 20px;
+    border: none;
+    background: none;
+    font-size: 14px;
+    cursor: pointer;
+    font-weight: normal;
+    margin-left: 15px;
+}
+
+.modal-button:hover {
+    opacity: 2;
+}
+
+.cancel-button {
+    color: #007AFF;
+    font-family: Arial, san-serif;
+    border: 1px solid #1e6dda;
+    border-radius: 25px;
+    align-items:first baseline;
+}
+
+.ok-button {
+    color: white;
+    border: 1px solid #1e6dda;
+    border-radius: 25px;
+    background-color:dodgerblue;
+    align-items:first baseline;
+    
+}

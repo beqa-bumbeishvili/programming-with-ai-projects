@@ -1,0 +1,72 @@
+body{
+    background: linear-gradient(to left, lightblue, lightgreen);
+    font-family: "Courier New", Courier, monospace;
+    width: 100vw;
+    height: 100vh;
+}
+
+#title{
+    color: darkblue;
+    text-align: center;
+    padding-top: 20px;
+    font-size: 35px;
+}
+
+p{
+    font-size: 18px;
+    color: darkblue;
+    text-align: center;
+}
+
+.notepadspace{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 300px); 
+    grid-template-rows: auto; 
+    gap: 40px; 
+    padding: 50px;
+    justify-content: center;
+}
+
+.plus {
+    height: 200px;
+    width: 300px;
+    border-color: rgba(255, 255, 255, 0.37);
+    background: rgba(255, 255, 255, 0.27);
+    border-radius: 15px;
+    font-size: 70px;
+    font-weight: 700;
+    color: rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+}
+
+.plus:hover{
+    cursor: pointer;
+    background-color: azure;
+    opacity: 0.6;
+    color: black;
+}
+
+.childDiv{
+    padding: 17px;
+    border-radius: 15px;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+    font-size: 18px;
+    height: 200px;
+    color: darkblue;
+    border: none;
+    outline: none;
+    background: rgba(255, 255, 255, 0.1);
+    box-sizing: border-box;
+    display: inline-block;
+    
+}
+
+.childDiv:hover{
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+textarea::placeholder {
+    opacity: 0.3;  
+}
+
+

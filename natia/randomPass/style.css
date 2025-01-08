@@ -1,0 +1,87 @@
+body {
+    display: flex;
+    justify-content: center;
+    height: 100vh;
+    align-items: center;
+    margin: 0;
+    font-family: "Courier New", Courier, monospace;
+    /* ცარიელი ხაზი არ გინდა აქ */
+}
+
+.container {
+    /* ცარიელი ხაზი არ გინდა აქ */
+    background-color: pink;
+    width: 500px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    margin: 10px;
+}
+
+.input_container {
+    border: solid 2px black;
+    padding: 10px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.input {
+    border: none;
+    background-color: transparent;
+    outline: none;
+    font-size: 24px;
+    letter-spacing: 4px;
+}
+
+input[type="text" i] {
+    padding-block: 1px;
+    padding-inline: 2px;
+}
+
+.fa-copy {
+    cursor: pointer;
+    opacity: 0.3;
+}
+
+.btn {
+    background: black;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin: 10px 0;
+    font-size: 20px;
+}
+
+/* Change color to green when the mouse is over the button */
+.btn:hover {
+    background-color: green;
+}
+
+/* Change color to green when the button is clicked (active state) */
+.btn:active {
+    background-color: green;
+}
+
+.alert-container {
+    position: fixed;
+    width: 300px;
+    height: 50px;
+    background-color: lightgreen;
+    right: 20px;
+    bottom: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    transition: 0.4s;
+}
+
+.alert-container.active {
+    display: block;
+    right: -300px;
+}

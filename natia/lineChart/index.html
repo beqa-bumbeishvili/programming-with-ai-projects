@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Chart</title>
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://unpkg.com/lil-gui@0.16.0/dist/lil-gui.umd.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script type="text/javascript" src="scripts/d3chart.js"></script>
+  </head>
+
+  <body>
+    <div id="chart-container">
+        <div id="info-text-wrapper">
+            <div id="info-text">
+                <div class="info-line company">Apple Inc (AAPL)</div>
+                <div class="info-line bold">$247.2</div>
+                <div class="info-line">
+                    <span class="green">+$2.14 (+0.86%)</span>
+                    <span class="black"> Past 5 days</span>
+                </div>
+                <div class="info-line">
+                    <span class="bold">$249.89</span>
+                    <span class="red"> -$2.47 (-0.99%)</span>
+                    <span class="black"> Pre-Market</span>
+                </div>
+            </div>
+        </div>
+        <div id="chart-wrapper">
+            <div id="chart"></div>
+        </div>
+    </div>
+
+    <script>
+        fetch('data/data.csv')
+            .then(response => response.text())
+            .then(csvData => {
+                const data = d3.csvParse(csvData, d => ({
+                    date: d3.timeParse("%d-%m-%y %H:%M")(d.date),
+                    price: +d.value
+                }));
+
+                const chart = new Chart()
+                    .container("#chart")
+                    .data(data)
+                    .render();
+            })
+            .catch(error => console.error('Error loading the CSV file:', error));
+    </script>
+  </body>
+</html>

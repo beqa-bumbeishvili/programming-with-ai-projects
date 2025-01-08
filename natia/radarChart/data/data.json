@@ -1,0 +1,30 @@
+{
+    "people": [
+        {
+            "name": "Person X",
+            "axes": [
+                {"axis": "Creativity", "value": 80},
+                {"axis": "Adaptability", "value": 70},
+                {"axis": "Humor", "value": 90},
+                {"axis": "Adventurousness", "value": 60},
+                {"axis": "Resilience", "value": 80},
+                {"axis": "Charisma", "value": 70},
+                {"axis": "Patience", "value": 60},
+                {"axis": "Organization", "value": 80}
+            ]
+        },
+        {
+            "name": "Person Y",
+            "axes": [
+                {"axis": "Creativity", "value": 40},
+                {"axis": "Adaptability", "value": 80},
+                {"axis": "Humor", "value": 50},
+                {"axis": "Adventurousness", "value": 80},
+                {"axis": "Resilience", "value": 70},
+                {"axis": "Charisma", "value": 40},
+                {"axis": "Patience", "value": 80},
+                {"axis": "Organization", "value": 70}
+            ]
+        }
+    ]
+} 
