@@ -6,8 +6,8 @@ class Chart {
             bottom: 100,
             left: 200      
         };
-        const width = 1200;  
-        const height = 800;  
+        const width = 1000;
+        const height = 1000;
         const attrs = {
             id: "ID" + Math.floor(Math.random() * 1000000),
             svgWidth: width,            
@@ -22,18 +22,11 @@ class Chart {
             levels: 5,
             maxValue: 1,
             labelFactor: 1.25,    
-            wrapWidth: 100,      
+            wrapWidth: 150,      
             dotRadius: 2.5,
             textAnchor: "middle",
             textDY: "0.35em",
             axisLabelDY: "0.4em",
-            fontSize: "11px",
-            fontFamily: "'Open Sans', sans-serif",
-            fontWeight: "300",
-            textFill: "#242424",
-            legendFontFamily: "'Raleway', sans-serif",
-            legendFill: "#333333",
-            tooltipFill: "#333333",
             color: d3.scaleOrdinal()
                 .range([ "#FFD700", "#FF7F7F",]),
             Format: d3.format('.0%'),
@@ -115,6 +108,10 @@ class Chart {
             .attr("x", 4)
             .attr("y", d => -d * radius / levels)
             .attr("dy", "0.4em")
+            .style("font-size", attrs.axisLabelFontSize)
+            .style("font-weight", attrs.axisLabelFontWeight)
+            .style("fill", attrs.textFill)
+            .style("filter", "url(#glow)")
             .text(d => Format(maxValue * d / levels));
     }
 
@@ -141,6 +138,8 @@ class Chart {
             .attr("dy", attrs.textDY)
             .attr("x", (d, i) => rScale(maxValue * labelFactor) * Math.cos(angleSlice * i - Math.PI / 2))
             .attr("y", (d, i) => rScale(maxValue * labelFactor) * Math.sin(angleSlice * i - Math.PI / 2))
+            .style("font-size", attrs.legendFontSize)
+            .style("font-weight", attrs.legendFontWeight)
             .text(d => d)
             .call(this.wrap, attrs.wrapWidth);
     }
@@ -163,12 +162,14 @@ class Chart {
         blobWrapper.append("path")
             .attr("class", "radarArea")
             .attr("d", d => radarLine(d))
-            .style("fill", (d, i) => color(i));
+            .style("fill", (d, i) => color(i))
+            .style("filter", "url(#glow)");
 
         blobWrapper.append("path")
             .attr("class", "radarStroke")
             .attr("d", d => radarLine(d))
-            .style("stroke", (d, i) => color(i));
+            .style("stroke", (d, i) => color(i))
+            .style("filter", "url(#glow)");
 
         blobWrapper.selectAll(".radarCircle")
             .data(d => d)
@@ -178,7 +179,8 @@ class Chart {
             .attr("r", attrs.dotRadius)
             .attr("cx", (d, i) => rScale(d.value) * Math.cos(angleSlice * i - Math.PI/2))
             .attr("cy", (d, i) => rScale(d.value) * Math.sin(angleSlice * i - Math.PI/2))
-            .style("fill", (d, i, j) => color(j));
+            .style("fill", (d, i, j) => color(j))
+            .style("filter", "url(#glow)");
     }
 
     wrap(text, width) {

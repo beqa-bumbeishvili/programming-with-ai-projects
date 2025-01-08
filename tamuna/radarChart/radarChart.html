@@ -22,8 +22,8 @@
                 const radarData = Array.from(processedData, ([key, values]) => values);
 
                 chart = new Chart()
-                    .svgHeight(window.innerHeight - 20)
-                    .svgWidth(window.innerWidth - 20)
+                    .svgHeight(1000)
+                    .svgWidth(1000)
                     .container('#graph-container')
                     .guiEnabled(true)
                     .data(radarData)
