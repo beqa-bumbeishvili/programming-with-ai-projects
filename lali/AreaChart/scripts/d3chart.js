@@ -7,7 +7,7 @@ class Chart {
             svgHeight: 300,
             marginTop: 230,
             marginBottom: 50,
-            marginRight:260,
+            marginRight: 260,
             marginLeft: 260,
             container: "body",
             defaultTextFill: "#2C3E50",
@@ -75,20 +75,22 @@ class Chart {
     drawAreaChart() {
         const { chart, data, chartWidth, chartHeight, marginTop } = this.getState();
 
-        console.log('Price range:', d3.extent(data, d => d.price));
+        console.log('Price range:', d3.extent(data, d => d.price)); //ეს console log ამოიღე როცა ტვირთავ
 
         if (!Array.isArray(data)) {
             console.error('Data is not properly formatted');
             return;
         }
 
+        // data-დან უნდა წაიკითხო მინიმალური და მაქსიმალური თარიღი
         const xScale = d3.scaleTime()
             .domain([
-                new Date('2023-12-15'), 
-                new Date('2023-12-20')   
+                new Date('2023-12-15'),
+                new Date('2023-12-20')
             ])
             .range([0, chartWidth]);
 
+        // 246-ის ნაცვლად დატადან უნდა წაიკითხო მინიმალური ვალუე
         const yScale = d3.scaleLinear()
             .domain([246, d3.max(data, d => d.price) * 1.01])
             .range([chartHeight, 0]);
@@ -114,6 +116,7 @@ class Chart {
                 .tickFormat(''))
             .style('stroke', '#e5e5e5')
             .style('stroke-opacity', 0.7);
+            // attrs-ში აიტანე 5, '#e5e5e5' და 0.7
 
         const gradient = chart._add({
             tag: 'defs'
@@ -140,6 +143,8 @@ class Chart {
             .attr('stop-color', '#C9E6C7')
             .attr('stop-opacity', 0.1);
 
+            // გრადიენტის რაღაცები attrs-ში აიტანე
+
         chart._add({
             tag: 'path',
             className: 'area',
@@ -157,6 +162,7 @@ class Chart {
             .style('stroke', '#2FA533')
             .style('stroke-width', '2.5')
             .style('fill', 'none');
+            // attrs-ში 
 
         chart._add({
             tag: 'g',
@@ -169,11 +175,12 @@ class Chart {
                     new Date('2023-12-17'),
                     new Date('2023-12-18'),
                     new Date('2023-12-19'),
-                    new Date('2023-12-20')
+                    new Date('2023-12-20')  //დატადან უნდა წაიკითხო ესენი
                 ])
-                .tickFormat(d3.timeFormat('%b %d'))
+                .tickFormat(d3.timeFormat('%b %d')) 
                 .tickSize(0))
             .style('color', '#666');
+            // attrs-ში
 
         chart._add({
             tag: 'g',
@@ -185,6 +192,7 @@ class Chart {
                 .tickFormat(d => Math.round(d)))
             .style('color', '#666')
             .select('.domain').remove();
+// attrs-ში
 
         chart._add({
             tag: 'text',
@@ -192,7 +200,7 @@ class Chart {
         })
             .attr('x', 0)
             .attr('y', -marginTop + 45)
-            .text('Apple Inc (AAPL)');
+            .text('Apple Inc (AAPL)'); // attrs-ში
 
         chart._add({
             tag: 'text',
@@ -236,6 +244,8 @@ class Chart {
             .attr('class', d => d.class)
             .style('fill', d => d.color)
             .text(d => d.text);
+
+            // ზევით რაც გიწერია ყველაფერი attrs-ში
     }
 
     drawSvgAndWrappers() {

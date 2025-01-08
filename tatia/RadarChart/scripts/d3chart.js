@@ -61,7 +61,7 @@ class Chart {
         };
         calc.id = "ID" + Math.floor(Math.random() * 1000000);
         calc.chartLeftMargin = marginLeft;
-        calc.chartTopMargin = marginTop;
+        calc.chartTopMargin = marginTop;  //ერთი ხაზი გამოტოვე აქ ლოგიკურად ახალ მონაკვეთს იწყებ
         const chartWidth = svgWidth - marginRight - calc.chartLeftMargin;
         const chartHeight = svgHeight - marginBottom - calc.chartTopMargin;
 
@@ -117,6 +117,7 @@ class Chart {
             .style('fill', '#CDCDCD')
             .style('stroke', '#999')
             .style('fill-opacity', 0.1);
+            // attrs-ში
 
 
         levels._add({

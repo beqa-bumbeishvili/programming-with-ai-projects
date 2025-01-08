@@ -3,7 +3,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 95vh;
   margin: 0;
   background-color: #f8f8f8;
 }
@@ -13,28 +13,35 @@ body {
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  text-align: center;
+  text-align: left;
+  width: 500px;
+  height: 200px;
 }
 
 .container h1 {
   font-family: 'Courier New', Courier, monospace;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
+  font-size: 25px;
+  left: 300px;
 }
 
 .password-container {
   position: relative;
   display: inline-block;
   width: 100%;
+  
 }
 
 .password {
   width: calc(100% - 40px);
   padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ccc;
+  font-size: 19px;
+  border: 2px solid black;
   border-radius: 5px;
   padding-right: 40px; 
-  letter-spacing: 3px; 
+  letter-spacing: normal; 
+  background: pink;
+
   
 }
 
@@ -48,7 +55,7 @@ body {
   cursor: pointer;
   font-size: 16px;
   margin-top: 10px;
-  left: -170px;
+  left: -0px;
   
 }
 
@@ -65,15 +72,18 @@ body {
   border: none;
   cursor: pointer;
   padding: 0;
+  
+  
 }
 
 .copy-btn svg {
   fill: #774b4b;
   transition: fill 0.2s ease;
+  
 }
 
 .copy-btn:hover svg {
-  fill: #333;
+  fill: #747171;
 }
 .copy-notification {
   position: fixed;
@@ -89,13 +99,3 @@ body {
   box-shadow: 0 4px 9px rgba(0,0,0,0.2);
 }
 
-@keyframes slideIn {
-  from {
-      transform: translateX(100%);
-      opacity: 0;
-  }
-  to {
-      transform: translateX(0);
-      opacity: 1;
-  }
-}
