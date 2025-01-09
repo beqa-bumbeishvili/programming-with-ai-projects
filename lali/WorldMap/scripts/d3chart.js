@@ -114,7 +114,7 @@ class Chart {
         return this;
     }
 
-    calculateProperties(data = this.getState().data) {
+    calculateProperties(data = this.getState().data) { //data = this.getState().data არგუმენტში არ იყო საჭირო ჩაწერა :D პირველ ხაზზე ქენი ქვევით 
         const state = this.getState();
 
         // Calculate dimensions
@@ -182,7 +182,7 @@ class Chart {
             .attr("x1", "0%")
             .attr("y1", "50%")
             .attr("x2", "100%")
-            .attr("y2", "50%");
+            .attr("y2", "50%"); //ატტრს-ში
 
         gradient.append("stop")
             .attr("offset", "0%")
@@ -196,7 +196,7 @@ class Chart {
             .attr("offset", "100%")
             .attr("stop-color", styles.gradient.colors.end);
 
-        d3.json("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson")
+        d3.json("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson") //index.html-ში გაიტანე ესეც
             .then(worldData => {
 
                 chart.append('g')
