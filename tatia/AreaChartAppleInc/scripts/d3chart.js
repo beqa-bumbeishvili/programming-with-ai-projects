@@ -72,11 +72,11 @@ class Chart {
     }
 
     drawChart() {
-        const { chart, chartWidth, chartHeight, data, firstRender } = this.getState(); //firstRender ამოიღე ვაფშე, არსად არ გამოიყენება
+        const { chart, chartWidth, chartHeight, data } = this.getState(); 
         const maxValue = d3.max(data, d => d.price);
         const minValue = d3.min(data, d => d.price);
 
-        const extent = d3.extent(data, d => d.date); //extent იმავეს აკეთებს რასაც minValue და maxValue. ან extent დატოვე, ან minValue და maxValue
+        const extent = d3.extent(data, d => d.date); 
         const x = d3.scaleTime()
             .domain(extent)
             .range([0, chartWidth]);
@@ -106,7 +106,7 @@ class Chart {
             .attr("transform", `translate(0,${chartHeight})`)
             .call(d3.axisBottom(x)
                 .ticks(5)
-                .tickFormat(d3.timeFormat("Dec %d"))) // ეს არასწორია, data-ში ნოემბრის მონაცემები რო იყოს მაინც დეკემბერს აჩვენებს
+                .tickFormat(d3.timeFormat("%b %d")))
             .selectAll("text")
             .style("font-size", "16px")
             .style("fill", "#666")
@@ -149,7 +149,7 @@ class Chart {
         gradient.append("stop")
             .attr("offset", "100%")
             .attr("stop-color", "#34a853")
-            .attr("stop-opacity", 0.0); //0-იც საკმარისია ;დ
+            .attr("stop-opacity", 0); //0-იც საკმარისია ;დ
             // attrs-ში ესენი
 
         const area = d3.area()
