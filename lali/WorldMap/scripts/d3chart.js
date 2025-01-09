@@ -251,7 +251,7 @@ class Chart {
                     .attr('d', map.pinPath)
                     .attr('transform', d => {
                         const [x, y] = projection(d.coordinates);
-                        return `translate(${x - 12},${y - 24}) scale(0.8)`;
+                        return `translate(${x - 12},${y - 24}) scale(${styles.pin.scale})`;
                     })
                     .style("fill", styles.pin.fill)
                     .style("stroke", styles.pin.stroke)
@@ -265,27 +265,11 @@ class Chart {
                         tooltip.html(templates.tooltip(d))
                             .style("left", (event.pageX + constants.tooltipOffsetX) + "px")
                             .style("top", (event.pageY - constants.tooltipOffsetY) + "px");
-
-                        d3.select(this)
-                            .transition()
-                            .duration(200)
-                            .attr("transform", function (d) {
-                                const [x, y] = projection(d.coordinates);
-                                return `translate(${x - 12},${y - 24}) scale(1)`;
-                            });
                     })
                     .on("mouseout", function (d) {
                         tooltip.transition()
                             .duration(500)
                             .style("opacity", 0);
-
-                        d3.select(this)
-                            .transition()
-                            .duration(200)
-                            .attr("transform", function (d) {
-                                const [x, y] = projection(d.coordinates);
-                                return `translate(${x - 12},${y - 24}) scale(0.8)`;
-                            });
                     });
 
                 chart.selectAll('.pin-path')
