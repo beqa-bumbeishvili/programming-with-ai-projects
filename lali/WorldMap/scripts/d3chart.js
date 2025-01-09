@@ -15,7 +15,76 @@ class Chart {
             data: null,
             chartWidth: null,
             chartHeight: null,
-            firstRender: true
+            firstRender: true,
+            map: {
+                minWidth: 800,
+                minHeight: 400,
+                aspectRatio: 1.7,
+                center: [15, 45],
+                pinPath: "M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z",
+                bounds: {
+                    minLat: -60,
+                    maxLat: 85,
+                    minLng: -180,
+                    maxLng: 180
+                }
+            },
+            styles: {
+                pin: {
+                    fill: "#ff4d4d",
+                    stroke: "#fff",
+                    strokeWidth: 1,
+                    scale: 0.8,
+                    hoverScale: 1
+                },
+                countries: {
+                    stroke: "#fff",
+                    strokeWidth: 0.5
+                },
+                gradient: {
+                    colors: {
+                        start: "#72dc8b",
+                        middle: "#97ca0e",
+                        end: "#dcd472"
+                    }
+                },
+                tooltip: {
+                    backgroundColor: "rgba(255, 255, 255, 0.95)",
+                    border: "1px solid #ddd",
+                    borderRadius: "4px",
+                    padding: "10px",
+                    fontSize: "14px",
+                    boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                    minWidth: "200px"
+                }
+            },
+            animation: {
+                pinDelay: 400,
+                pinDuration: 800,
+                tooltipFadeIn: 200,
+                tooltipFadeOut: 500
+            },
+            templates: {
+                tooltip: (d) => `
+                    <div style="text-align: left;">
+                        <div style="font-size: 16px; font-weight: bold; margin-bottom: 5px; color: #333;">
+                            ${d.country}
+                        </div>
+                        <div style="color: #666; margin-bottom: 3px;">
+                            Score: ${d.score}
+                        </div>
+                        <div style="color: #666; font-style: italic;">
+                            ${d.comment}
+                        </div>
+                    </div>
+                `
+            },
+            constants: {
+                tooltipOffsetX: 15,
+                tooltipOffsetY: 35,
+                tooltipFadeOpacity: 1,
+                pinTransformOffset: { x: 12, y: 24 }
+            }
         };
 
         // Defining accessors
@@ -45,67 +114,68 @@ class Chart {
         return this;
     }
 
-    calculateProperties() {
-        const {
-            marginLeft,
-            marginTop,
-            marginRight,
-            marginBottom,
-            svgWidth,
-            svgHeight
-        } = this.getState();
+    calculateProperties(data = this.getState().data) {
+        const state = this.getState();
 
-        //Calculated properties
-        var calc = {
-            id: null,
-            chartTopMargin: null,
-            chartLeftMargin: null,
-            chartWidth: null,
-            chartHeight: null
-        };
-        calc.id = "ID" + Math.floor(Math.random() * 1000000); // id for event handlings
-        calc.chartLeftMargin = marginLeft;
-        calc.chartTopMargin = marginTop;
-        const chartWidth = svgWidth - marginRight - calc.chartLeftMargin;
-        const chartHeight = svgHeight - marginBottom - calc.chartTopMargin;
+        // Calculate dimensions
+        const chartWidth = state.svgWidth - state.marginLeft - state.marginRight;
+        const chartHeight = state.svgHeight - state.marginTop - state.marginBottom;
 
-        this.setState({ calc, chartWidth, chartHeight });
-    }
-
-    drawWorldMap() {
-        const { chart, data, chartWidth, chartHeight } = this.getState();
-
-        // შინიმალური ზომები და aspect ratio
-        const minWidth = 800;
-        const minHeight = 400;
-        const aspectRatio = 1.7;
-
-        // გინის SVG path განსაზღვრა
-        const pinPath = "M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z";
-
-        // გამოთვალე ოპტიმალური scale
+        // Calculate map properties
         const scale = Math.min(
-            chartWidth / minWidth,
-            chartHeight / minHeight
-        ) * minWidth / 8.5;
+            chartWidth / state.map.minWidth,
+            chartHeight / state.map.minHeight
+        ) * state.map.minWidth / 8.5;
 
-        // დამოთვალე ოენტრის წერტილები
         const centerX = chartWidth / 2;
         const centerY = chartHeight / 2;
 
-        // პროექციის პარამეტრები
+        // Calculate projection with clipping
         const projection = d3.geoMercator()
             .scale(scale)
-            .center([15, 45])
-            .translate([centerX, centerY]);
+            .center(state.map.center)
+            .translate([centerX, centerY])
+            .clipExtent([[0, 0], [chartWidth, chartHeight]]);
 
         const path = d3.geoPath()
             .projection(projection);
 
-        // მავშალოთ ძველი ელემენტები
+        this.setState({
+            chartWidth,
+            chartHeight,
+            mapScale: scale,
+            centerX,
+            centerY,
+            projection,
+            path,
+
+            filterFeature: (d) => {
+                if (d.properties && d.properties.name === "Antarctica") return false;
+
+                const coordinates = d.geometry.coordinates[0];
+                if (!coordinates) return true;
+
+                const [_, lat] = projection.invert(path.centroid(d));
+                return lat > state.map.bounds.minLat;
+            }
+        });
+    }
+
+    drawWorldMap() {
+        const {
+            chart,
+            data,
+            projection,
+            path,
+            map,
+            styles,
+            animation,
+            templates,
+            constants
+        } = this.getState();
+
         chart.selectAll('*').remove();
 
-        // დავამატოთ გრადიენტი
         const gradient = chart.append("defs")
             .append("linearGradient")
             .attr("id", "map-gradient")
@@ -116,114 +186,114 @@ class Chart {
 
         gradient.append("stop")
             .attr("offset", "0%")
-            .attr("stop-color", "#ff9999");
+            .attr("stop-color", styles.gradient.colors.start);
 
         gradient.append("stop")
             .attr("offset", "50%")
-            .attr("stop-color", "#ff99ff");
+            .attr("stop-color", styles.gradient.colors.middle);
 
         gradient.append("stop")
             .attr("offset", "100%")
-            .attr("stop-color", "#ccccff");
+            .attr("stop-color", styles.gradient.colors.end);
 
-        // ჯერ დვხატოთ მსოფლიო რუკა
         d3.json("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson")
             .then(worldData => {
-                // წავხატოთ ქვეყნები
-                const countries = chart.append('g')
+
+                chart.append('g')
                     .selectAll('path')
-                    .data(worldData.features)
+                    .data(worldData.features.filter(this.getState().filterFeature))
                     .enter()
                     .append('path')
                     .attr('class', 'countries')
                     .attr("d", path)
                     .style("fill", "url(#map-gradient)")
-                    .style("stroke", "#fff")
-                    .style("stroke-width", 0.5);
+                    .style("stroke", styles.countries.stroke)
+                    .style("stroke-width", styles.countries.strokeWidth);
 
-                // პავამატოთ tooltip
+                chart.append('g')
+                    .selectAll('path')
+                    .data(data.locations)
+                    .enter()
+                    .append('path')
+                    .attr('class', 'pin-path')
+                    .attr('d', map.pinPath)
+                    .attr('transform', d => {
+                        const [x, y] = projection(d.coordinates);
+                        const { x: offsetX, y: offsetY } = constants.pinTransformOffset;
+                        return `translate(${x - offsetX},${y - offsetY}) scale(${styles.pin.scale})`;
+                    })
+                    .style("fill", styles.pin.fill)
+                    .style("stroke", styles.pin.stroke)
+                    .style("stroke-width", styles.pin.strokeWidth)
+                    .style("opacity", 0)
+                    .style("cursor", "pointer");
+
                 const tooltip = d3.select("body").append("div")
                     .attr("class", "tooltip")
                     .style("opacity", 0)
                     .style("position", "absolute")
-                    .style("background-color", "rgba(255, 255, 255, 0.95)")
-                    .style("border", "1px solid #ddd")
-                    .style("border-radius", "4px")
-                    .style("padding", "10px")
+                    .style("background-color", styles.tooltip.backgroundColor)
+                    .style("border", styles.tooltip.border)
+                    .style("border-radius", styles.tooltip.borderRadius)
+                    .style("padding", styles.tooltip.padding)
                     .style("pointer-events", "none")
-                    .style("font-size", "14px")
-                    .style("box-shadow", "0 2px 4px rgba(0,0,0,0.1)")
-                    .style("min-width", "200px")
+                    .style("font-size", styles.tooltip.fontSize)
+                    .style("box-shadow", styles.tooltip.boxShadow)
+                    .style("min-width", styles.tooltip.minWidth)
                     .style("z-index", "100");
 
-                // პინების დამატება tooltip-ით
                 const pins = chart.append('g')
                     .selectAll('path')
                     .data(data.locations)
                     .enter()
                     .append('path')
                     .attr('class', 'pin-path')
-                    .attr('d', pinPath)
+                    .attr('d', map.pinPath)
                     .attr('transform', d => {
                         const [x, y] = projection(d.coordinates);
-                        return `translate(${x-12},${y-24}) scale(0.8)`;
+                        return `translate(${x - 12},${y - 24}) scale(0.8)`;
                     })
-                    .style("fill", "#ff4d4d")
-                    .style("stroke", "#fff")
-                    .style("stroke-width", 1)
+                    .style("fill", styles.pin.fill)
+                    .style("stroke", styles.pin.stroke)
+                    .style("stroke-width", styles.pin.strokeWidth)
                     .style("opacity", 0)
-                    .style("cursor", "pointer")  // დავამატოთ მაუსის კურსორი
-                    .on("mouseover", function(event, d) {
+                    .style("cursor", "pointer")
+                    .on("mouseover", function (event, d) {
                         tooltip.transition()
-                            .duration(200)
-                            .style("opacity", 1);
-                        tooltip.html(`
-                            <div style="text-align: left;">
-                                <div style="font-size: 16px; font-weight: bold; margin-bottom: 5px; color: #333;">
-                                    ${d.country}
-                                </div>
-                                <div style="color: #666; margin-bottom: 3px;">
-                                    Score: ${d.score}
-                                </div>
-                                <div style="color: #666; font-style: italic;">
-                                    ${d.comment}
-                                </div>
-                            </div>
-                        `)
-                        .style("left", (event.pageX + 15) + "px")
-                        .style("top", (event.pageY - 35) + "px");
-                        
-                        // გავზარდო პინი hover-ზე
+                            .duration(animation.tooltipFadeIn)
+                            .style("opacity", constants.tooltipFadeOpacity);
+                        tooltip.html(templates.tooltip(d))
+                            .style("left", (event.pageX + constants.tooltipOffsetX) + "px")
+                            .style("top", (event.pageY - constants.tooltipOffsetY) + "px");
+
                         d3.select(this)
                             .transition()
                             .duration(200)
-                            .attr("transform", function(d) {
+                            .attr("transform", function (d) {
                                 const [x, y] = projection(d.coordinates);
-                                return `translate(${x-12},${y-24}) scale(1)`;
+                                return `translate(${x - 12},${y - 24}) scale(1)`;
                             });
                     })
-                    .on("mouseout", function(d) {
+                    .on("mouseout", function (d) {
                         tooltip.transition()
                             .duration(500)
                             .style("opacity", 0);
-                        
-                        // დავაბრუნთ პინის ორგინალი ზომა
+
                         d3.select(this)
                             .transition()
                             .duration(200)
-                            .attr("transform", function(d) {
+                            .attr("transform", function (d) {
                                 const [x, y] = projection(d.coordinates);
-                                return `translate(${x-12},${y-24}) scale(0.8)`;
+                                return `translate(${x - 12},${y - 24}) scale(0.8)`;
                             });
                     });
 
-                // პინების ნიმაცია
                 chart.selectAll('.pin-path')
-                    .each(function(d, i) {
+                    .each(function (d, i) {
                         d3.select(this)
                             .transition()
-                            .delay(i * 400)
-                            .duration(800)
+                            .delay(i * animation.pinDelay)
+                            .duration(animation.pinDuration)
                             .style("opacity", 1);
                     });
             })
@@ -238,10 +308,8 @@ class Chart {
             svgWidth,
             svgHeight,
             defaultFont,
-            calc,
-            data,
-            chartWidth,
-            chartHeight
+            marginLeft,
+            marginTop
         } = this.getState();
 
         // Draw SVG
@@ -262,7 +330,7 @@ class Chart {
             })
             .attr(
                 "transform",
-                "translate(" + calc.chartLeftMargin + "," + calc.chartTopMargin + ")"
+                "translate(" + marginLeft + "," + marginTop + ")"
             );
 
         this.setState({ chart, svg });
@@ -311,8 +379,7 @@ class Chart {
         if (containerRect.height > 0) attrs.svgHeight = containerRect.height;
 
         let self = this;
-        
-        // დებაუნსინ ფუნქცია
+
         const debounce = (func, wait) => {
             let timeout;
             return function executedFunction(...args) {
@@ -325,24 +392,20 @@ class Chart {
             };
         };
 
-        // resize ფუნქცი განახლება დებაუნსინგით
         const handleResize = debounce(() => {
             var containerRect = d3Container.node().getBoundingClientRect();
             if (containerRect.width > 0) attrs.svgWidth = containerRect.width;
             if (containerRect.height > 0) attrs.svgHeight = containerRect.height;
 
-            // განაახლე SVG ოომები
             d3Container.select('svg')
                 .attr('width', attrs.svgWidth)
                 .attr('height', attrs.svgHeight);
 
             self.calculateProperties();
-            
-            // სრული გახატვა
-            self.drawWorldMap();
-        }, 250); // 250მს დაყოვნება
 
-        // მიაბი resize ივენი
+            self.drawWorldMap();
+        }, 250);
+
         d3.select(window).on("resize." + attrs.id, handleResize);
 
         this.setState({ d3Container });
