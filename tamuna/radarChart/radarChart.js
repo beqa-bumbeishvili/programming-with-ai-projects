@@ -5,9 +5,9 @@ class Chart {
             right: 200,     
             bottom: 100,
             left: 200      
-        };
+        }; 
         const width = 1000;
-        const height = 1000;
+        const height = 1000; //ერთი ხაზი გამოტოვე ქვევით
         const attrs = {
             id: "ID" + Math.floor(Math.random() * 1000000),
             svgWidth: width,            
@@ -28,8 +28,8 @@ class Chart {
             textDY: "0.35em",
             axisLabelDY: "0.4em",
             color: d3.scaleOrdinal()
-                .range([ "#FFD700", "#FF7F7F",]),
-            Format: d3.format('.0%'),
+                .range([ "#FFD700", "#FF7F7F",]), //ეს calc-ში
+            Format: d3.format('.0%'), //Format პატარა ასოთი დაიწყე
             tooltipOffset: 10,          
             invisibleCircleRadius: 6,  
             tooltipOpacityHidden: 0,    
@@ -80,7 +80,7 @@ class Chart {
     }
     
     drawCharts() {
-        const attrs = this.getState();
+        const attrs = this.getState(); //attrs ცვლადს არსად არ იყენებ
         this.drawCircularGrid();
         this.drawAxes();
         this.drawBlobs();
@@ -89,7 +89,7 @@ class Chart {
 
     drawCircularGrid() {
         const attrs = this.getState();
-        const { chart, radius, levels, rScale, maxValue, Format } = attrs;
+        const { chart, radius, levels, rScale, maxValue, Format } = attrs; //rscale ზედმეტია აქ
     
         const axisGrid = chart.append("g").attr("class", "axisWrapper");
     
@@ -105,9 +105,9 @@ class Chart {
             .enter()
             .append("text")
             .attr("class", "axisLabel")
-            .attr("x", 4)
+            .attr("x", 4) //ატტრს-ში
             .attr("y", d => -d * radius / levels)
-            .attr("dy", "0.4em")
+            .attr("dy", "0.4em") //ატტრს-ში
             .style("font-size", attrs.axisLabelFontSize)
             .style("font-weight", attrs.axisLabelFontWeight)
             .style("fill", attrs.textFill)

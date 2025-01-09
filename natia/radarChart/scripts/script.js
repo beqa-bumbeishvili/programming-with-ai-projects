@@ -1,6 +1,7 @@
 class RadarChart {
   constructor(data) {
-    const style = document.createElement("style");
+    const style = document.createElement("style"); // სტილები style.css-ში გაუწერე, createElement('style') პირველად მესმის ;დ
+
     style.textContent = `
             body {
                 display: flex;
@@ -41,7 +42,7 @@ class RadarChart {
       roundStrokes: true,
 
       // Color scheme
-      color: d3.scaleOrdinal().range(["#FF6B6B", "#4ECDC4"]),
+      color: d3.scaleOrdinal().range(["#FF6B6B", "#4ECDC4"]), //ეს calc-ში
 
       axisLabel: {
         xOffset: 4,
@@ -71,7 +72,7 @@ class RadarChart {
         xOffset: 400,
         yOffset: 0,
       },
-
+//ხაზები არ გამოტოვო
       radarArea: {
         fillOpacity: 0.35,
       },
@@ -143,7 +144,7 @@ class RadarChart {
       wrapWidth,
       opacityArea,
       dotRadius,
-      strokeWidth,
+      strokeWidth, // ამ სამ ცვლადს არ იყენებ, ამოიღე არგუმენტებიდან
       color,
     } = this.attrs;
 

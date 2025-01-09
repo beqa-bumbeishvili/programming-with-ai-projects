@@ -15,7 +15,7 @@ class Chart {
 
             gridLineColor: '#e5e5e5',
             gridLineOpacity: 0.7,
-
+// ხაზების გამოტოვება არ გინდა attrs-ში
             gradientStops: [
                 { offset: '0%', color: '#C9E6C7', opacity: 0.8 },
                 { offset: '50%', color: '#C9E6C7', opacity: 0.3 },
@@ -121,7 +121,7 @@ class Chart {
             dateFormat,
             companyNameFontSize,
             companyNameColor,
-            mainPriceFontSize,
+            mainPriceFontSize, //ეს ორი ცვლადი ზედმეტია
             mainPriceColor,
             positiveColor,
             negativeColor
@@ -219,7 +219,7 @@ class Chart {
             .call(d3.axisLeft(yScale)
                 .ticks(5)
                 .tickFormat(d => Math.round(d)))
-            .style('color', '#666')
+            .style('color', '#666') //ატტრს-ში
             .select('.domain').remove();
 
         const lastPrice = data[data.length - 1].price.toFixed(2);
@@ -306,7 +306,7 @@ class Chart {
             svgHeight,
             defaultFont,
             calc,
-            chartWidth
+            chartWidth //ზედმეტია
         } = this.getState();
 
         d3Container.selectAll('svg').remove();
@@ -315,7 +315,7 @@ class Chart {
             .style("padding", "20px")
             .style("overflow-x", "auto")
             .style("overflow-y", "hidden")
-            .style("display", "block");
+            .style("display", "block"); //ატტრს-ში
 
         const svg = d3Container
             ._add({
@@ -382,7 +382,7 @@ class Chart {
             .style("padding", containerPadding)
             .style("overflow-x", "auto")
             .style("overflow-y", "hidden")
-            .style("display", "block");
+            .style("display", "block"); //ატტრს-ში
 
         this.updateDimensions();
 
