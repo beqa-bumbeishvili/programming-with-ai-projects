@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <title>Chart</title>
@@ -10,6 +11,7 @@
     <link rel="stylesheet" href="worldMap.css" />
     <script src="https://unpkg.com/lil-gui@0.16.0/dist/lil-gui.umd.js"></script>
 </head>
+
 <body translate="no">
     <div class="page-container">
         <svg id="graph-container" width="1200" height="600"></svg>
@@ -22,7 +24,7 @@
             d3.csv("countries.csv")
         ]).then(([worldData, placesData]) => {
             const chart = new Chart();
-            
+
             chart
                 .svgHeight(1000)
                 .svgWidth(1200)
@@ -36,4 +38,5 @@
         });
     </script>
 </body>
+
 </html>
