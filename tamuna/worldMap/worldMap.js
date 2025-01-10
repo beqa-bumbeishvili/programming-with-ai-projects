@@ -78,7 +78,17 @@ class Chart {
     }
 
     drawRects() {
-        const { chart, data, chartWidth, chartHeight, markerScale, markerOffset, tooltipOffset, projection: projConfig, mapContainer: mapConfig } = this.getState();
+        const {
+            chart,
+            data,
+            chartWidth,
+            chartHeight,
+            markerScale,
+            markerOffset,
+            tooltipOffset,
+            projection: projConfig,
+            mapContainer: mapConfig
+        } = this.getState();
 
         chart.selectAll('.map-container').remove();
 
@@ -115,37 +125,40 @@ class Chart {
     
         data.placesData.forEach((place, index) => {
             setTimeout(() => {
-                const marker = mapContainer.append("g")
-                    .attr("class", "marker")
-                    .attr("transform", `translate(${projection([+place.longitude, +place.latitude])[0]},\
-                     ${projection([+place.longitude, +place.latitude])[1]})`)
-                    .on("mouseover", function(event) {
-                        d3.select("body")
-                            .append("div")
-                            .attr("class", "tooltip visible")
+                const marker = mapContainer._add('g.marker', data.placesData.slice(0, index + 1))
+                    .attr("transform", d => `translate(${projection([+d.longitude, +d.latitude])[0]},\
+                     ${projection([+d.longitude, +d.latitude])[1]})`)
+                    .on("mouseover", function(event, d) {
+                        d3.selectAll('.tooltip').remove();
+                        
+                        const tooltipContainer = d3.select("body")
+                            ._add('div.tooltip-container', [d]);
+                        
+                        tooltipContainer
+                            .style("position", "absolute")
                             .style("left", (event.pageX + tooltipOffset.x) + "px")
                             .style("top", (event.pageY + tooltipOffset.y) + "px")
-                            .html(`
-                                <h3>${place.name}</h3>
-                                <p>Visited: ${new Date(place.date).getFullYear()}</p>
-                                <p>Score: <span class="score">${place.score}</span></p>
-                                <p>${place.comment}</p>
+                            ._add('div.tooltip-content', [d])
+                            .html(d => `
+                                <h3>${d.name}</h3>
+                                <p>Visited: ${new Date(d.date).getFullYear()}</p>
+                                <p>Score: <span class="score">${d.score}</span></p>
+                                <p>${d.comment}</p>
                             `);
                     })
                     .on("mouseout", function() {
-                        d3.selectAll(".tooltip").remove();
-                    })
-                    .on("mousemove", function(event) {
-                        d3.select(".tooltip")
-                            .style("left", (event.pageX + tooltipOffset.x) + "px")
-                            .style("top", (event.pageY + tooltipOffset.y) + "px");
+                        d3.selectAll('.tooltip-container').remove();
                     });
                 
-                marker.append("path")
-                    .attr("d", markerPath)
-                    .attr("transform", `translate(${markerOffset.x}, ${markerOffset.y}) scale(${markerScale})`)
-                    .classed('marker-path', true);
-                
+                marker.each(function(d) {
+                    const currentMarker = d3.select(this);
+                    if (!currentMarker.select('.marker-path').size()) {
+                        currentMarker._add('path.marker-path')
+                            .attr("d", markerPath)
+                            .attr("transform", `translate(${markerOffset.x}, ${markerOffset.y}) scale(${markerScale})`);
+                    }
+                });
+            
             }, initialDelay + (index * delayBetweenPins));
         });
 
@@ -159,13 +172,14 @@ class Chart {
         
         container.selectAll('svg').remove();
         
-        const svg = container.append('svg')
+        const svg = container
+            ._add('svg.svg-chart-container')
             .attr('width', attrs.svgWidth)
             .attr('height', attrs.svgHeight)
             .attr('font-family', attrs.defaultFont);
 
-        const chart = svg.append('g')
-            .attr('class', 'chart')
+        const chart = svg
+            ._add('g.chart')
             .attr(
                 'transform',
                 `translate(${attrs.marginLeft},${attrs.marginTop})`
@@ -175,9 +189,16 @@ class Chart {
     }
 
     initializeEnterExitUpdatePattern() {
-        d3.selection.prototype._add = function (classSelector, data, params) {
+        d3.selection.prototype._add = function (selector, data, params) {
             const container = this;
-            const split = classSelector.split(".");
+            
+
+            if (typeof selector === 'object') {
+                const { tag, className } = selector;
+                selector = `${tag}.${className}`;
+            }
+            
+            const split = selector.split(".");
             const elementTag = split[0];
             const className = split[1] || 'not-good';
             const exitTransition = params?.exitTransition;
