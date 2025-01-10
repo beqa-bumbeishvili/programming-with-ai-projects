@@ -3,15 +3,45 @@ class Chart {
         // Defining state attributes
         const attrs = {
             id: "ID" + Math.floor(Math.random() * 1000000),
-            svgWidth: 400,
-            svgHeight: 300,
-            marginTop: 230,
-            marginBottom: 50,
-            marginRight:260,
-            marginLeft: 260,
+            svgWidth: window.innerWidth - 40,
+            svgHeight: 600,
+            marginTop: 140,
+            marginBottom: 60,
+            marginRight: 80,
+            marginLeft: 80,
             container: "body",
             defaultTextFill: "#2C3E50",
             defaultFont: "Helvetica",
+
+            gridLineColor: '#e5e5e5',
+            gridLineOpacity: 0.7,
+// ხაზების გამოტოვება არ გინდა attrs-ში
+            gradientStops: [
+                { offset: '0%', color: '#C9E6C7', opacity: 0.8 },
+                { offset: '50%', color: '#C9E6C7', opacity: 0.3 },
+                { offset: '100%', color: '#C9E6C7', opacity: 0.1 }
+            ],
+
+            lineColor: '#2FA533',
+            lineWidth: '2.5',
+
+            axisColor: '#666',
+            axisFontSize: '12px',
+
+            companyNameFontSize: '24px',
+            companyNameColor: '#1a1a1a',
+            mainPriceFontSize: '32px',
+            mainPriceColor: '#1a1a1a',
+
+            positiveColor: '#30A632',
+            negativeColor: '#EF4444',
+
+            containerPadding: '20px',
+
+            curveType: d3.curveMonotoneX,
+            ticksCount: 5,
+            dateFormat: '%b %d',
+
             data: null,
             chartWidth: null,
             chartHeight: null,
@@ -73,9 +103,29 @@ class Chart {
     }
 
     drawAreaChart() {
-        const { chart, data, chartWidth, chartHeight, marginTop } = this.getState();
-
-        console.log('Price range:', d3.extent(data, d => d.price));
+        const {
+            chart,
+            data,
+            chartWidth,
+            chartHeight,
+            marginTop,
+            gridLineColor,
+            gridLineOpacity,
+            gradientStops,
+            lineColor,
+            lineWidth,
+            axisColor,
+            axisFontSize,
+            curveType,
+            ticksCount,
+            dateFormat,
+            companyNameFontSize,
+            companyNameColor,
+            mainPriceFontSize, //ეს ორი ცვლადი ზედმეტია
+            mainPriceColor,
+            positiveColor,
+            negativeColor
+        } = this.getState();
 
         if (!Array.isArray(data)) {
             console.error('Data is not properly formatted');
@@ -83,14 +133,14 @@ class Chart {
         }
 
         const xScale = d3.scaleTime()
-            .domain([
-                new Date('2023-12-15'), 
-                new Date('2023-12-20')   
-            ])
+            .domain(d3.extent(data, d => new Date(d.date)))
             .range([0, chartWidth]);
 
         const yScale = d3.scaleLinear()
-            .domain([246, d3.max(data, d => d.price) * 1.01])
+            .domain([
+                d3.min(data, d => d.price) * 0.999,
+                d3.max(data, d => d.price) * 1.001
+            ])
             .range([chartHeight, 0]);
 
         const areaGenerator = d3.area()
@@ -102,7 +152,7 @@ class Chart {
         const lineGenerator = d3.line()
             .x(d => xScale(new Date(d.date)))
             .y(d => yScale(d.price))
-            .curve(d3.curveMonotoneX);
+            .curve(curveType);
 
         chart._add({
             tag: 'g',
@@ -112,8 +162,8 @@ class Chart {
                 .ticks(5)
                 .tickSize(chartWidth)
                 .tickFormat(''))
-            .style('stroke', '#e5e5e5')
-            .style('stroke-opacity', 0.7);
+            .style('stroke', gridLineColor)
+            .style('stroke-opacity', gridLineOpacity);
 
         const gradient = chart._add({
             tag: 'defs'
@@ -125,20 +175,12 @@ class Chart {
             .attr('y1', '0%')
             .attr('y2', '100%');
 
-        gradient.append('stop')
-            .attr('offset', '0%')
-            .attr('stop-color', '#C9E6C7')
-            .attr('stop-opacity', 0.8);
-
-        gradient.append('stop')
-            .attr('offset', '50%')
-            .attr('stop-color', '#C9E6C7')
-            .attr('stop-opacity', 0.3);
-
-        gradient.append('stop')
-            .attr('offset', '100%')
-            .attr('stop-color', '#C9E6C7')
-            .attr('stop-opacity', 0.1);
+        gradientStops.forEach(stop => {
+            gradient.append('stop')
+                .attr('offset', stop.offset)
+                .attr('stop-color', stop.color)
+                .attr('stop-opacity', stop.opacity);
+        });
 
         chart._add({
             tag: 'path',
@@ -154,26 +196,20 @@ class Chart {
             datum: data
         })
             .attr('d', lineGenerator(data))
-            .style('stroke', '#2FA533')
-            .style('stroke-width', '2.5')
+            .style('stroke', lineColor)
+            .style('stroke-width', lineWidth)
             .style('fill', 'none');
 
         chart._add({
             tag: 'g',
             className: 'x-axis'
         })
-            .attr('transform', `translate(0,${yScale(246)})`)
+            .attr('transform', `translate(0,${chartHeight})`)
             .call(d3.axisBottom(xScale)
-                .tickValues([
-                    new Date('2023-12-16'),
-                    new Date('2023-12-17'),
-                    new Date('2023-12-18'),
-                    new Date('2023-12-19'),
-                    new Date('2023-12-20')
-                ])
-                .tickFormat(d3.timeFormat('%b %d'))
-                .tickSize(0))
-            .style('color', '#666');
+                .ticks(ticksCount)
+                .tickFormat(d3.timeFormat(dateFormat)))
+            .style('color', axisColor)
+            .style('font-size', axisFontSize);
 
         chart._add({
             tag: 'g',
@@ -183,15 +219,32 @@ class Chart {
             .call(d3.axisLeft(yScale)
                 .ticks(5)
                 .tickFormat(d => Math.round(d)))
-            .style('color', '#666')
+            .style('color', '#666') //ატტრს-ში
             .select('.domain').remove();
+
+        const lastPrice = data[data.length - 1].price.toFixed(2);
+
+        const firstDate = new Date(data[0].date);
+        const lastDate = new Date(data[data.length - 1].date);
+
+        const dayDiff = Math.round((lastDate - firstDate) / (1000 * 60 * 60 * 24));
+
+        const firstPrice = data[0].price;
+        const priceChange = (lastPrice - firstPrice).toFixed(2);
+        const priceChangePercent = ((priceChange / firstPrice) * 100).toFixed(2);
+
+        const previousPrice = data[data.length - 2].price.toFixed(2);
+        const preMarketChange = (lastPrice - previousPrice).toFixed(2);
+        const preMarketChangePercent = ((preMarketChange / previousPrice) * 100).toFixed(2);
 
         chart._add({
             tag: 'text',
             className: 'company-name'
         })
             .attr('x', 0)
-            .attr('y', -marginTop + 45)
+            .attr('y', -marginTop + 20)
+            .style('font-size', companyNameFontSize)
+            .style('fill', companyNameColor)
             .text('Apple Inc (AAPL)');
 
         chart._add({
@@ -199,19 +252,23 @@ class Chart {
             className: 'main-price'
         })
             .attr('x', 0)
-            .attr('y', -marginTop + 110)
-            .text('$249.79');
+            .attr('y', -marginTop + 65)
+            .text(`$${lastPrice}`);
 
         chart._add({
             tag: 'text',
             className: 'price-change-text'
         })
             .attr('x', 0)
-            .attr('y', -marginTop + 150)
+            .attr('y', -marginTop + 95)
             .selectAll('tspan')
             .data([
-                { text: '+$2.14 (+0.86%)', class: 'positive bold-text', color: '#30A632' },
-                { text: ' Past 5 days', class: 'black-text' }
+                {
+                    text: `${priceChange >= 0 ? '+' : ''}$${priceChange} (${priceChange >= 0 ? '+' : ''}${priceChangePercent}%)`,
+                    class: priceChange >= 0 ? 'positive bold-text' : 'negative bold-text',
+                    color: priceChange >= 0 ? positiveColor : negativeColor
+                },
+                { text: ` Past ${dayDiff} days`, class: 'black-text' }
             ])
             .enter()
             .append('tspan')
@@ -224,11 +281,15 @@ class Chart {
             className: 'pre-market-text'
         })
             .attr('x', 0)
-            .attr('y', -marginTop + 185)
+            .attr('y', -marginTop + 125)
             .selectAll('tspan')
             .data([
-                { text: '$247.32', class: 'black-text bold-text' },
-                { text: ' -$2.47 (-0.99%) ', class: 'negative bold-text', color: '#EF4444' },
+                { text: `$${previousPrice}`, class: 'black-text bold-text' },
+                {
+                    text: ` ${preMarketChange >= 0 ? '+' : ''}$${preMarketChange} (${preMarketChange >= 0 ? '+' : ''}${preMarketChangePercent}%) `,
+                    class: preMarketChange >= 0 ? 'positive bold-text' : 'negative bold-text',
+                    color: preMarketChange >= 0 ? '#30A632' : '#EF4444'
+                },
                 { text: 'Pre-Market', class: 'black-text' }
             ])
             .enter()
@@ -245,30 +306,37 @@ class Chart {
             svgHeight,
             defaultFont,
             calc,
-            data,
-            chartWidth,
-            chartHeight
+            chartWidth //ზედმეტია
         } = this.getState();
 
-        // Draw SVG
+        d3Container.selectAll('svg').remove();
+
+        d3Container
+            .style("padding", "20px")
+            .style("overflow-x", "auto")
+            .style("overflow-y", "hidden")
+            .style("display", "block"); //ატტრს-ში
+
         const svg = d3Container
             ._add({
                 tag: "svg",
                 className: "svg-chart-container"
             })
-            .attr("width", svgWidth)
+            .attr("width", "100%")
             .attr("height", svgHeight)
+            .attr("viewBox", `0 0 ${svgWidth} ${svgHeight}`)
+            .attr("preserveAspectRatio", "xMinYMid meet")
+            .style("overflow", "visible")
             .attr("font-family", defaultFont);
 
-        //Add container g element
-        var chart = svg
+        const chart = svg
             ._add({
                 tag: "g",
                 className: "chart"
             })
             .attr(
                 "transform",
-                "translate(" + calc.chartLeftMargin + "," + calc.chartTopMargin + ")"
+                `translate(${calc.chartLeftMargin},${calc.chartTopMargin})`
             );
 
         this.setState({ chart, svg });
@@ -309,22 +377,49 @@ class Chart {
 
     setDynamicContainer() {
         const attrs = this.getState();
+        const { containerPadding } = attrs;
+        const d3Container = d3.select(attrs.container)
+            .style("padding", containerPadding)
+            .style("overflow-x", "auto")
+            .style("overflow-y", "hidden")
+            .style("display", "block"); //ატტრს-ში
 
-        //Drawing containers
-        var d3Container = d3.select(attrs.container);
-        var containerRect = d3Container.node().getBoundingClientRect();
-        if (containerRect.width > 0) attrs.svgWidth = containerRect.width;
+        this.updateDimensions();
 
-        let self = this;
+        let resizeTimeout;
+        const handleResize = () => {
+            if (resizeTimeout) {
+                clearTimeout(resizeTimeout);
+            }
+            resizeTimeout = setTimeout(() => {
+                this.updateDimensions();
+                this.render();
+            }, 100);
+        };
 
-        d3.select(window).on("resize." + attrs.id, function () {
-            var containerRect = d3Container.node().getBoundingClientRect();
-            if (containerRect.width > 0) attrs.svgWidth = containerRect.width;
-
-            self.render();
-        });
+        window.removeEventListener('resize', handleResize);
+        window.addEventListener('resize', handleResize);
 
         this.setState({ d3Container });
+    }
+
+    updateDimensions() {
+        const attrs = this.getState();
+        const d3Container = d3.select(attrs.container);
+        const containerRect = d3Container.node().getBoundingClientRect();
+
+        if (containerRect.width > 0) {
+            const minWidth = 800;
+            const minHeight = 500;
+            const padding = 40;
+
+            attrs.svgWidth = Math.max(containerRect.width - (padding * 2), minWidth);
+
+            attrs.svgHeight = Math.max(window.innerHeight * 0.85, minHeight);
+
+            attrs.chartWidth = attrs.svgWidth - attrs.marginLeft - attrs.marginRight;
+            attrs.chartHeight = attrs.svgHeight - attrs.marginTop - attrs.marginBottom;
+        }
     }
 
 }

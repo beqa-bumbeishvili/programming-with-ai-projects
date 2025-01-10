@@ -15,7 +15,23 @@ class Chart {
             data: null,
             chartWidth: null,
             chartHeight: null,
-            firstRender: true
+            firstRender: true,
+            minSize: 300,
+            maxDomain: 100,
+            levels: [0, 20, 40, 60, 80, 100],
+            colors: ['#ca8cf0', '#7FFFD4'],
+
+            gridColor: '#CDCDCD',
+            gridStrokeWidth: '0.5px',
+            axisColor: '#999',
+            axisStrokeWidth: '1px',
+            radarFillOpacity: 0.3,
+            radarStrokeWidth: '2px',
+            dotRadius: 4,
+            labelWrapWidth: 60,
+            fontWeight: '500',
+            levelLabelDy: '-0.5em',
+            levelLabelAnchor: 'middle'
         };
 
         // Defining accessors
@@ -52,7 +68,9 @@ class Chart {
             marginRight,
             marginBottom,
             svgWidth,
-            svgHeight
+            svgHeight,
+            minSize,
+            data
         } = this.getState();
 
         //Calculated properties
@@ -61,38 +79,70 @@ class Chart {
             chartTopMargin: null,
             chartLeftMargin: null,
             chartWidth: null,
-            chartHeight: null
+            chartHeight: null,
+            effectiveWidth: null,
+            effectiveHeight: null,
+            angleSlice: null,
+            radius: null,
+            fontSize: null,
+            labelDistance: null
         };
-        calc.id = "ID" + Math.floor(Math.random() * 1000000); // id for event handlings
+
+        calc.id = "ID" + Math.floor(Math.random() * 1000000);
         calc.chartLeftMargin = marginLeft;
         calc.chartTopMargin = marginTop;
-        const chartWidth = svgWidth - marginRight - calc.chartLeftMargin;
-        const chartHeight = svgHeight - marginBottom - calc.chartTopMargin;
+        calc.chartWidth = svgWidth - marginRight - calc.chartLeftMargin;
+        calc.chartHeight = svgHeight - marginBottom - calc.chartTopMargin;
 
-        this.setState({ calc, chartWidth, chartHeight });
+        calc.effectiveWidth = Math.max(minSize, calc.chartWidth);
+        calc.effectiveHeight = Math.max(minSize, calc.chartHeight);
+        calc.angleSlice = (Math.PI * 2) / data.features.length;
+        calc.radius = Math.min(calc.effectiveWidth, calc.effectiveHeight) / 2.8;
+        calc.fontSize = Math.max(12, Math.min(14, calc.radius / 10));
+        calc.labelDistance = calc.radius * 1.2;
+
+        this.setState({ calc, chartWidth: calc.chartWidth, chartHeight: calc.chartHeight });
     }
 
     drawRadarChart() {
-        const { chart, data, chartWidth, chartHeight } = this.getState();
-        
+        const {
+            chart,
+            data,
+            calc,
+            chartWidth,
+            chartHeight,
+            minSize,
+            maxDomain,
+            levels,
+            colors,
+            gridColor,
+            gridStrokeWidth,
+            axisColor,
+            axisStrokeWidth,
+            radarFillOpacity,
+            radarStrokeWidth,
+            dotRadius,
+            labelWrapWidth,
+            fontWeight,
+            levelLabelDy,
+            levelLabelAnchor
+        } = this.getState();
+
         chart.selectAll('*').remove();
-        
-        const minSize = 300;
-        const effectiveWidth = Math.max(minSize, chartWidth);
-        const effectiveHeight = Math.max(minSize, chartHeight);
-        
-        const angleSlice = (Math.PI * 2) / data.features.length;
-        const radius = Math.min(effectiveWidth, effectiveHeight) / 2.8;
-        
-        const fontSize = Math.max(12, Math.min(14, radius / 10));
-        
-        const labelDistance = radius * 1.2;
-        
+
+        const {
+            effectiveWidth,
+            effectiveHeight,
+            angleSlice,
+            radius,
+            fontSize,
+            labelDistance
+        } = calc;
+
         const rScale = d3.scaleLinear()
             .range([0, radius])
-            .domain([0, 100]);
+            .domain([0, maxDomain]);
 
-        const levels = [0, 20, 40, 60, 80, 100];
         const axisGrid = chart._add({
             tag: 'g',
             className: 'axis-grid'
@@ -102,20 +152,20 @@ class Chart {
             axisGrid.append('circle')
                 .attr('r', rScale(level))
                 .style('fill', 'none')
-                .style('stroke', '#CDCDCD')
-                .style('stroke-width', '0.5px');
+                .style('stroke', gridColor)
+                .style('stroke-width', gridStrokeWidth);
 
             if (level > 0) {
                 const angle = -Math.PI / 2;
                 const x = rScale(level) * Math.cos(angle);
                 const y = rScale(level) * Math.sin(angle);
-                
+
                 axisGrid.append('text')
                     .attr('x', x)
                     .attr('y', y)
-                    .attr('dy', '-0.5em')
+                    .attr('dy', levelLabelDy)
                     .style('font-size', `${fontSize}px`)
-                    .style('text-anchor', 'middle')
+                    .style('text-anchor', levelLabelAnchor)
                     .text(level.toString());
             }
         });
@@ -134,8 +184,8 @@ class Chart {
             .attr('y1', 0)
             .attr('x2', (d, i) => rScale(100) * Math.cos(angleSlice * i - Math.PI / 2))
             .attr('y2', (d, i) => rScale(100) * Math.sin(angleSlice * i - Math.PI / 2))
-            .style('stroke', '#999')
-            .style('stroke-width', '1px');
+            .style('stroke', axisColor)
+            .style('stroke-width', axisStrokeWidth);
 
         axes.selectAll('.axis-label')
             .data(data.features)
@@ -159,12 +209,10 @@ class Chart {
             })
             .style('dominant-baseline', 'central')
             .style('font-size', `${fontSize}px`)
-            .style('font-weight', '500')
+            .style('font-weight', fontWeight)
             .text(d => d)
-            .call(wrap, 60);
+            .call(wrap, labelWrapWidth);
 
-        const colors = ['#ca8cf0', '#7FFFD4'];  
-        
         data.persons.forEach((person, personIndex) => {
             const points = person.scores.map((score, i) => {
                 const angle = angleSlice * i - Math.PI / 2;
@@ -178,32 +226,32 @@ class Chart {
                 tag: 'path',
                 className: `radar-path-${personIndex}`
             })
-            .datum(points)
-            .attr('d', d3.line()
-                .x(d => d.x)
-                .y(d => d.y)
-                .curve(d3.curveLinearClosed))
-            .style('fill', colors[personIndex])
-            .style('fill-opacity', 0.3)
-            .style('stroke', colors[personIndex])
-            .style('stroke-width', '2px');
+                .datum(points)
+                .attr('d', d3.line()
+                    .x(d => d.x)
+                    .y(d => d.y)
+                    .curve(d3.curveLinearClosed))
+                .style('fill', colors[personIndex])
+                .style('fill-opacity', radarFillOpacity)
+                .style('stroke', colors[personIndex])
+                .style('stroke-width', radarStrokeWidth);
 
             chart._add({
                 tag: 'g',
                 className: `dots-group-${personIndex}`
             })
-            .selectAll('.dot')
-            .data(points)
-            .enter()
-            .append('circle')
-            .attr('class', 'dot')
-            .attr('cx', d => d.x)
-            .attr('cy', d => d.y)
-            .attr('r', 4)
-            .style('fill', colors[personIndex]);
+                .selectAll('.dot')
+                .data(points)
+                .enter()
+                .append('circle')
+                .attr('class', 'dot')
+                .attr('cx', d => d.x)
+                .attr('cy', d => d.y)
+                .attr('r', dotRadius)
+                .style('fill', colors[personIndex]);
         });
 
-        chart.attr('transform', `translate(${chartWidth/2},${chartHeight/2})`);
+        chart.attr('transform', `translate(${effectiveWidth / 2},${effectiveHeight / 2})`);
     }
 
     drawSvgAndWrappers() {
@@ -284,19 +332,19 @@ class Chart {
         if (containerRect.width > 0) attrs.svgWidth = containerRect.width;
 
         let self = this;
-        
+
         let resizeTimeout;
         d3.select(window).on("resize." + attrs.id, function () {
             if (resizeTimeout) clearTimeout(resizeTimeout);
-            
+
             resizeTimeout = setTimeout(() => {
                 var containerRect = d3Container.node().getBoundingClientRect();
                 if (containerRect.width > 0) attrs.svgWidth = containerRect.width;
-                
+
                 d3Container.selectAll("*").remove();
-                
+
                 self.render();
-            }, 250); 
+            }, 250);
         });
 
         this.setState({ d3Container });
@@ -305,7 +353,7 @@ class Chart {
 }
 
 function wrap(text, width) {
-    text.each(function() {
+    text.each(function () {
         const text = d3.select(this);
         const words = text.text().split(/\s+/).reverse();
         let word;
@@ -318,7 +366,7 @@ function wrap(text, width) {
             .attr("x", text.attr("x"))
             .attr("y", y)
             .attr("dy", dy + "em");
-        
+
         while (word = words.pop()) {
             line.push(word);
             tspan.text(line.join(" "));

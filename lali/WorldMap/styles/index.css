@@ -1,0 +1,36 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #FAFAFA;
+}
+
+svg {
+  background-color: #FAFAFA;
+}
+
+#graph-container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.svg-chart-container {
+  width: 100%;
+  height: 100%;
+  background: #fff;
+}
+
+.countries {
+  fill: #e0e0e0;
+  stroke: #fff;
+  stroke-width: 0.5;
+}
+
+.location-pins {
+  fill: teal;
+  stroke: #fff;
+  stroke-width: 1.5;
+  cursor: pointer;
+}

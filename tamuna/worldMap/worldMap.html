@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Chart</title>
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://unpkg.com/topojson-client@3"></script>
+    <link rel="stylesheet" href="worldMap.css" />
+    <script src="https://unpkg.com/lil-gui@0.16.0/dist/lil-gui.umd.js"></script>
+</head>
+<body translate="no">
+    <div class="page-container">
+        <svg id="graph-container" width="1200" height="600"></svg>
+        <div class="tooltip"></div>
+    </div>
+    <script src="worldMap.js"></script>
+    <script>
+        Promise.all([
+            d3.json("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson"),
+            d3.csv("countries.csv")
+        ]).then(([worldData, placesData]) => {
+            const chart = new Chart();
+            
+            chart
+                .svgHeight(1000)
+                .svgWidth(1200)
+                .container('#graph-container')
+                .guiEnabled(true)
+                .data({
+                    worldData: worldData,
+                    placesData: placesData
+                })
+                .render();
+        });
+    </script>
+</body>
+</html>

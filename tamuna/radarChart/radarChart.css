@@ -1,0 +1,99 @@
+body {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 300;
+    fill: #242424;
+    text-align: center;
+    text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff, 0 -1px 0 #fff;
+    cursor: default;
+}
+
+.legend {
+    font-family: 'Raleway', sans-serif;
+    font-size: 18px;
+    font-weight: 300;
+    fill: #333333;
+}
+
+.gridCircle {
+    fill: #CDCDCD;
+    stroke: #CDCDCD;
+    fill-opacity: 0.1;
+    filter: url(#glow);
+}
+
+.axisLabel {
+    font-size: 16px;
+    font-weight: 100;
+    fill: #242424;
+}
+
+.axis .line {
+    stroke:  #CDCDCD;
+    stroke-width: 1px;
+}
+
+.radarArea {
+    fill-opacity: 0.35;
+}
+
+.radarStroke {
+    fill: none;
+    stroke-width: 2px;
+    filter: url(#glow);
+}
+
+.radarCircle {
+    fill-opacity: 0.8;
+    fill: #CDCDCD;
+    stroke:#CDCDCD;
+
+}
+
+.radarArea:hover {
+    fill-opacity: 0.7;
+}
+
+.radarArea.dimmed {
+    fill-opacity: 0.1;
+}
+#graph-container {
+    position: relative;
+    width: 450px;  
+    height: 450px; 
+    margin: auto;
+}
+
+.radarInvisibleCircle {
+    pointer-events: all;
+    fill: none;
+}
+
+.page-container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#graph-container {
+    width: 100%;
+    height: 100%;
+    max-width: 100vh;  
+    max-height: 100vw; 
+}
+
+#graph-container svg {
+    width: 100%;
+    height: 100%;
+}
+
+.tooltip {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    fill: #242424;
+}
+
+
