@@ -54,6 +54,7 @@ class Chart {
         this.calculateProperties();
         this.drawSvgAndWrappers();
         this.drawWorldMap();
+
         return this;
     }
 
@@ -95,13 +96,13 @@ class Chart {
             this.allPins = [];
         }
 
-        const countryOrder = ['Georgia', 'Hungary', 'Austria', 'Italy'];
-
+        const countryOrder = ['Georgia', 'Hungary', 'Austria', 'Italy']; //attrs-ში
+// ორი ხაზი ზედმეტია
 
         if (data && data.locations) {
-
+// ხაზი ზედმეტია, პირველივე ხაზზე დაიწყე კოდის წერა
             const orderedLocations = countryOrder
-                .map(country => data.locations.find(loc => loc.country === country))
+                .map(country => data.locations.find(loc => loc.country === country)) //Note: აქ არაა პრობლემა თუმცა გაითვალისწინე, map ციკლს ატრიალებს და შიგნით find კიდევ ციკლს ატრიალებს, დიდ მონაცემებზე გაჭედავს
                 .filter(location => location !== undefined);
 
             orderedLocations.forEach(location => {
@@ -110,7 +111,7 @@ class Chart {
                 }
             });
         }
-
+// ორი ხაზი ზედმეტია
 
         let mapLayer = chart.select('.map-layer');
         let pinsLayer = chart.select('.pins-layer');
@@ -133,6 +134,7 @@ class Chart {
         const path = d3.geoPath().projection(projection);
 
         let gradient = mapLayer.select("#country-gradient");
+
         if (gradient.empty()) {
             gradient = mapLayer._add("defs.gradient-defs")
                 ._add("linearGradient.gradient")
@@ -146,6 +148,8 @@ class Chart {
             gradient._add("stop.gradient-stop-end")
                 .attr("offset", "100%")
                 .attr("stop-color", "#7F7FD5");
+// ატტრს-ში ესენი
+
         }
 
         gradient
@@ -169,6 +173,7 @@ class Chart {
         countries.exit().remove();
 
         let tooltip = d3.select("body").select(".tooltip");
+
         if (tooltip.empty()) {
             const { tooltipStyles } = this.getState();
             tooltip = d3.select("body")
@@ -181,7 +186,7 @@ class Chart {
                 .style("position", tooltipStyles.position)
                 .style("opacity", tooltipStyles.opacity);
         }
-
+// ორი ხაზი ზედმეტია
 
         const handlePinEvents = (selection) => {
             selection
@@ -196,14 +201,14 @@ class Chart {
                     tooltip.style("opacity", 0);
                 });
         };
-
+// ორი ხაზი ზედმეტია
 
         const pins = pinsLayer.selectAll(".pin")
             .data(this.allPins, d => d.country);
 
         const newPins = pinsLayer._add("circle.pin", this.allPins)
             .attr("r", 0)
-            .attr("fill", "#FF4136")
+            .attr("fill", "#FF4136") // ატტრს-ში ესენი
             .style("cursor", "pointer")
             .style("opacity", 0)
             .attr("cx", d => {
@@ -226,7 +231,7 @@ class Chart {
                     .attr("r", 5);
             }
         });
-
+// ორი ხაზი ზედმეტია
 
         handlePinEvents(newPins);
 
@@ -242,7 +247,7 @@ class Chart {
             calc,
             data,
             chartWidth,
-            chartHeight
+            chartHeight //ამ სამ ცვლადს არ იყენებ, ამოსაღებია
         } = this.getState();
 
         // Draw SVG
@@ -250,7 +255,7 @@ class Chart {
             .attr("width", svgWidth)
             .attr("height", svgHeight)
             .attr("font-family", defaultFont);
-
+// ორი ხაზი ზედმეტია
 
         var chart = svg._add('g.chart')
             .attr(
@@ -343,24 +348,24 @@ class Chart {
             .attr("width", attrs.svgWidth);
 
         const newChartWidth = attrs.svgWidth - attrs.marginRight - attrs.marginLeft;
-        const widthRatio = newChartWidth / oldWidth;
-
+        const widthRatio = newChartWidth / oldWidth; //ამ ცვლადს არსად იყენებ
+// ორი ხაზი ზედმეტია
 
         const projection = d3.geoMercator()
             .fitSize([newChartWidth, chartHeight], {
                 type: "FeatureCollection",
                 features: worldMap.features.filter(d => d.properties.name !== "Antarctica")
             });
-
+// ორი ხაზი ზედმეტია
 
         const path = d3.geoPath().projection(projection);
 
         chart.select('.map-layer')
             .selectAll('path.country')
             .attr('d', path);
+// ორი ხაზი ზედმეტია
 
-
-        const gradient = chart.select('#country-gradient')
+        const gradient = chart.select('#country-gradient')  //gradient ცვლადი ზედმეტია, არსად იყენებ
             .attr("x2", newChartWidth);
 
         chart.select('.pins-layer')
