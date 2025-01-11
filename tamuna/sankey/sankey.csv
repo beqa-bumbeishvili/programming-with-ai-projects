@@ -1,0 +1,11 @@
+source,target,value
+Income,Expenses,0.70
+Expenses,Housing,0.16
+Expenses,Food,0.192
+Expenses,Taxes,0.035
+Expenses,Health,0.018
+Expenses,Other,0.025
+Expenses,Transportation,0.02
+Expenses,Shopping,0.10
+Expenses,Travel,0.15
+Income,Savings,0.30

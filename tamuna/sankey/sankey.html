@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="sankey.css">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://unpkg.com/d3-sankey@0.12.3/dist/d3-sankey.min.js"></script>
+</head>
+<body translate="no">
+    <div class="page-container">
+        <div id="graph-container"></div>
+    </div>
+    <script src="sankey.js"></script>
+    <script>
+        let chart;
+        d3.csv('sankey.csv')
+            .then(data => {
+                chart = new Chart()
+                    .svgHeight(window.innerHeight - 30)
+                    .svgWidth(window.innerWidth - 30)
+                    .container('#graph-container')
+                    .data(data)
+                    .render()
+            })
+    </script>
+</body>
+</html>
