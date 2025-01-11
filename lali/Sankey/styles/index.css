@@ -1,0 +1,125 @@
+body {
+  background-color: #FAFAFA;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100vh;
+}
+
+.page-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#graph-container {
+  width: 100%;
+  height: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+svg {
+  background-color: #FAFAFA;
+  width: 100%;
+  height: 100%;
+}
+
+.node.Income {
+  fill: #8ec4ea !important;
+}
+
+.node.Expenses {
+  fill: #FF7F7F !important;
+}
+
+.node.Savings {
+  fill: #dda4a4 !important;
+}
+
+.node.Food {
+  fill: #FFB347 !important;
+}
+
+.node.Gifts {
+  fill: #98FB98 !important;
+}
+
+.node.Shopping {
+  fill: #E6A8D7 !important;
+}
+
+.node.Travel {
+  fill: #87CEEB !important;
+}
+
+.node.Direct-Saving {
+  fill: #FF6B6B !important;
+}
+
+.link.from-Income {
+  stroke: #FFC107 !important;
+  opacity: 0.7;
+}
+
+.link.from-Expenses {
+  stroke: #E91E63 !important;
+  opacity: 0.7;
+}
+
+.link.to-Food {
+  stroke: #4CAF50 !important;
+  opacity: 0.7;
+}
+
+.link.to-Gifts {
+  stroke: #2196F3 !important;
+  opacity: 0.7;
+}
+
+.link.to-Shopping {
+  stroke: #9C27B0 !important;
+  opacity: 0.7;
+}
+
+.link.to-Travel {
+  stroke: #FF5722 !important;
+  opacity: 0.7;
+}
+
+.link.to-Direct-Saving {
+  stroke: #FF6B6B !important;
+  opacity: 0.7;
+}
+
+.link.from-Income.to-Expenses {
+  stroke: #FF7F7F !important;
+  opacity: 0.7;
+}
+
+.link.from-Income.to-Savings {
+  stroke: #d09d9d !important;
+  opacity: 0.7;
+}
+
+.link.from-Expenses.to-Food {
+  stroke: #FFB347 !important;
+  opacity: 0.7;
+}
+
+.link.from-Expenses.to-Gifts {
+  stroke: #98FB98 !important;
+  opacity: 0.7;
+}
+
+.link.from-Expenses.to-Shopping {
+  stroke: #E6A8D7 !important;
+  opacity: 0.7;
+}
+
+.link.from-Expenses.to-Travel {
+  stroke: #87CEEB !important;
+  opacity: 0.7;
+}
