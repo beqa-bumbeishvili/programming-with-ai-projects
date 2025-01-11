@@ -26,7 +26,7 @@ class Chart {
                 fadeOutDuration: 500,
                 opacity: 0.9
             },
-
+// ნუ ტოვებთ ამ ხაზებს :D შემდეგზე 5 ლარი იქნება
             labelStyles: {
                 fontSize: '11px',
                 opacity: 0.6,
@@ -171,7 +171,7 @@ class Chart {
                 links.style('opacity', calc.getLinkStyle.strokeOpacity);
             });
 
-        const labels = chart._add({
+        const labels = chart._add({  //labels ცვლადი ზედმეტია არსად იყენებ
             tag: 'g'
         })
             .selectAll('text')
@@ -293,8 +293,10 @@ class Chart {
             const nodes = data.nodes.map(d => ({ ...d }));
             const links = data.links.map(d => {
                 const link = { ...d };
-                
-                if (nodes[link.target].name === "Savings") {
+
+                // hardcode ქვია ამას, შენ არ იცი რა დატა შემოგივა, შეიძლება savings ვაფშე არ იყოს შიგნით
+                // ხელით არ შეილება დატას ელემენტების აღება და მისთვის განსხვავებული პირობების გაწერა
+                if (nodes[link.target].name === "Savings") { 
                     link.value *= 1; 
                 }
 
@@ -313,6 +315,7 @@ class Chart {
             });
 
             calc.sankeyData.nodes.forEach(node => {
+                // იგივე აქაც, savings ვაფშე არ უნდა ახსენო
                 if (node.name === "Savings") {
                     node.x0 = calc.chartWidth * 0.5;
                     node.x1 = calc.chartWidth * 0.6;
