@@ -2,7 +2,7 @@
     "color": "teal",
     "locations": [
         { "country": "Georgia", "coordinates": [43.3569, 42.3154], "score": 10, "comment": "ქვეყნების ქვეყანა არის საქართველო" },
-        { "country": "Hungary", "coordinates": [19.5033, 47.1625], "score": 7, "comment": "ღარიღი მაგრამ ძალიან საინტერესო ქვეყანაა" },
+        { "country": "Hungary", "coordinates": [19.5033, 47.1625], "score": 8, "comment": "ღარიღი მაგრამ ძალიან საინტერესო ქვეყანაა" },
         { "country": "Austria", "coordinates": [14.5501, 47.5162], "score": 7, "comment": "კარგი ქვეყანაა ალბათ საცხოვრებლად, მაგრამ სამოგზაუროდ ცოტა ზედმეტად მშვიდია" },
         { "country": "Spain", "coordinates": [-3.7492, 40.4637], "score": 9, "comment": "ძალიან მომეწონა ესპანეთი, ალბათ ვიცხოვრებდი მზე სანაპიროები და ენერგეტიკა - es perfecto" },
         { "country": "Czech Republic", "coordinates": [15.4729, 49.8175], "score": 5, "comment": "ჩეხეთში ხალხი არ მომეწონა, ამიტომ სულ აღარ მაინტერესებს იმათი არქიტექტურები" },

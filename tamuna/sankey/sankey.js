@@ -60,11 +60,39 @@ class Chart {
         };
 
         const sankey = d3.sankey()
-            .nodeWidth(10)
+            .nodeWidth(10) //attrs-ში ესენი
             .nodePadding(12)
             .extent([[1, 1], [800, 400]])
             .nodeAlign(d3.sankeyLeft)
+<<<<<<< HEAD
             .nodeSort(null);
+=======
+            .nodeSort((a, b) => {
+                if (a.name === "Income") return -1; //არაა აუცილებელი სურათის მიხედვით იყოს დასორტირებული, სანკეი სულ უნდა მუშაობდეს რა დატაც არ უნდა შემოვიცეს csv ფაილიდან
+                if (b.name === "Income") return 1;  // შეილება Income და Savings სულ არ იყოს იმ დატაში, აქ შეგიძლია დაასორტირო ალფავიტის მიხედვით მაგალითად
+                if (a.name === "Savings") return 2;
+                if (b.name === "Savings") return -2;
+                
+                if (a.name === "Food") return 2;
+                if (b.name === "Food") return -2;
+                if (a.name === "Housing") return -1.5;
+                if (b.name === "Housing") return 1.5;
+                
+                const sequence = [
+                    "Housing",
+                    "Entertainment",
+                    "Taxes",
+                    "Transportation",
+                    "Shopping",
+                    "Travel",
+                    "Health",
+                    "Other",
+                    "Food"
+                ];
+                
+                return sequence.indexOf(a.name) - sequence.indexOf(b.name);
+            });
+>>>>>>> 86cbd34335f9a90ce647280167da15533fe4c82c
 
         const { nodes: sankeyNodes, links: sankeyLinks2 } = sankey(sankeyData);
 
@@ -92,8 +120,12 @@ class Chart {
                             C${(x0 + x1) / 2},${y0}
                              ${(x0 + x1) / 2},${y1}
                              ${x1},${y1}`;
+<<<<<<< HEAD
                 } 
 
+=======
+                } //ხაზი გამოტოვე ქვევით
+>>>>>>> 86cbd34335f9a90ce647280167da15533fe4c82c
                 return d3.sankeyLinkHorizontal()(d);
             })
             .attr("stroke", d => colorScale(d.target.name))

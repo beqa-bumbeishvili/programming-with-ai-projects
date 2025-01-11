@@ -1,0 +1,108 @@
+body {
+  background-color: #FAFAFA;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100vh;
+}
+
+.page-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#graph-container {
+  width: 100%;
+  height: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+svg {
+  background-color: #FAFAFA;
+  width: 100%;
+  height: 100%;
+}
+
+.node.Income {
+  fill: #8ec4ea !important;
+}
+
+.node.Expenses {
+  fill: #FF7F7F !important;
+}
+
+.node.Savings {
+  fill: #FAFAFA !important;
+}
+
+.node.Food {
+  fill: #FFB347 !important;
+}
+
+.node.Gifts {
+  fill: #98FB98 !important;
+}
+
+.node.Shopping {
+  fill: #E6A8D7 !important;
+}
+
+.node.Travel {
+  fill: #87CEEB !important;
+}
+
+.node.Communication {
+  fill: #DDA0DD !important;
+}
+
+.node.Home {
+  fill: #20B2AA !important;
+}
+
+.node.Other {
+  fill: #D3D3D3 !important;
+}
+
+.link {
+  opacity: 0.8;
+}
+
+.link.from-Income.to-Expenses {
+  stroke: #FF7F7F !important;
+}
+
+.link.from-Income.to-Savings {
+  stroke: #d09d9d !important;
+}
+
+.link.from-Expenses.to-Food {
+  stroke: #FFB347 !important;
+}
+
+.link.from-Expenses.to-Gifts {
+  stroke: #98FB98 !important;
+}
+
+.link.from-Expenses.to-Shopping {
+  stroke: #E6A8D7 !important;
+}
+
+.link.from-Expenses.to-Travel {
+  stroke: #87CEEB !important;
+}
+
+.link.from-Expenses.to-Communication {
+  stroke: #DDA0DD !important;
+}
+
+.link.from-Expenses.to-Home {
+  stroke: #20B2AA !important;
+}
+
+.link.from-Expenses.to-Other {
+  stroke: #D3D3D3 !important;
+}

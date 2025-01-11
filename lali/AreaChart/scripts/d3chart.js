@@ -12,10 +12,8 @@ class Chart {
             container: "body",
             defaultTextFill: "#2C3E50",
             defaultFont: "Helvetica",
-
             gridLineColor: '#e5e5e5',
             gridLineOpacity: 0.7,
-// ხაზების გამოტოვება არ გინდა attrs-ში
             gradientStops: [
                 { offset: '0%', color: '#C9E6C7', opacity: 0.8 },
                 { offset: '50%', color: '#C9E6C7', opacity: 0.3 },
@@ -24,28 +22,24 @@ class Chart {
 
             lineColor: '#2FA533',
             lineWidth: '2.5',
-
             axisColor: '#666',
             axisFontSize: '12px',
-
             companyNameFontSize: '24px',
             companyNameColor: '#1a1a1a',
             mainPriceFontSize: '32px',
             mainPriceColor: '#1a1a1a',
-
             positiveColor: '#30A632',
             negativeColor: '#EF4444',
-
             containerPadding: '20px',
-
+            containerDisplay: 'block',
             curveType: d3.curveMonotoneX,
             ticksCount: 5,
             dateFormat: '%b %d',
-
             data: null,
             chartWidth: null,
             chartHeight: null,
-            firstRender: true
+            firstRender: true,
+            yAxisColor: '#666'
         };
 
         // Defining accessors
@@ -121,10 +115,9 @@ class Chart {
             dateFormat,
             companyNameFontSize,
             companyNameColor,
-            mainPriceFontSize, //ეს ორი ცვლადი ზედმეტია
-            mainPriceColor,
             positiveColor,
-            negativeColor
+            negativeColor,
+            yAxisColor
         } = this.getState();
 
         if (!Array.isArray(data)) {
@@ -219,7 +212,7 @@ class Chart {
             .call(d3.axisLeft(yScale)
                 .ticks(5)
                 .tickFormat(d => Math.round(d)))
-            .style('color', '#666') //ატტრს-ში
+            .style('color', yAxisColor)
             .select('.domain').remove();
 
         const lastPrice = data[data.length - 1].price.toFixed(2);
@@ -306,7 +299,6 @@ class Chart {
             svgHeight,
             defaultFont,
             calc,
-            chartWidth //ზედმეტია
         } = this.getState();
 
         d3Container.selectAll('svg').remove();
@@ -314,8 +306,7 @@ class Chart {
         d3Container
             .style("padding", "20px")
             .style("overflow-x", "auto")
-            .style("overflow-y", "hidden")
-            .style("display", "block"); //ატტრს-ში
+            .style("overflow-y", "hidden");
 
         const svg = d3Container
             ._add({
@@ -377,12 +368,11 @@ class Chart {
 
     setDynamicContainer() {
         const attrs = this.getState();
-        const { containerPadding } = attrs;
+        const { containerPadding, containerDisplay } = attrs;
         const d3Container = d3.select(attrs.container)
             .style("padding", containerPadding)
             .style("overflow-x", "auto")
             .style("overflow-y", "hidden")
-            .style("display", "block"); //ატტრს-ში
 
         this.updateDimensions();
 
