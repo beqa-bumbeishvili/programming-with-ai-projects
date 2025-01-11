@@ -1,6 +1,5 @@
 class Chart {
     constructor() {
-        // Defining state attributes
         const attrs = {
             id: "ID" + Math.floor(Math.random() * 1000000),
             svgWidth: 400,
@@ -10,7 +9,6 @@ class Chart {
             marginRight: 5,
             marginLeft: 5,
             container: "body",
-            defaultTextFill: "#2C3E50",
             defaultFont: "Helvetica",
             data: null,
             chartWidth: null,
@@ -23,12 +21,25 @@ class Chart {
                 pointerEvents: "none",
                 boxShadow: "0 0 10px rgba(0,0,0,0.1)",
                 position: "absolute",
-                opacity: 0
+                opacity: 0.8,
+                fontSize: "22px",
+                maxWidth: "500px"
             },
             countryStyles: {
                 stroke: "#fff",
                 strokeWidth: 0.5
-            }
+            },
+            pinStyles: {
+                size: 30,
+                cursor: "pointer",
+                opacity: 0,
+                initialSize: 0
+            },
+            gradientColors: {
+                start: "#91EAE4",
+                end: "#7F7FD5"
+            },
+            countryOrder: ['Georgia', 'Hungary', 'Austria', 'Italy']
         };
 
         this.getState = () => attrs;
@@ -45,7 +56,6 @@ class Chart {
         });
 
         this.initializeEnterExitUpdatePattern();
-
         this.resizeTimer = null;
     }
 
@@ -54,29 +64,18 @@ class Chart {
         this.calculateProperties();
         this.drawSvgAndWrappers();
         this.drawWorldMap();
+
         return this;
     }
 
     calculateProperties() {
-        const {
-            marginLeft,
-            marginTop,
-            marginRight,
-            marginBottom,
-            svgWidth,
-            svgHeight
-        } = this.getState();
+        const { marginLeft, marginTop, marginRight, marginBottom, svgWidth, svgHeight } = this.getState();
 
-        var calc = {
-            id: null,
-            chartTopMargin: null,
-            chartLeftMargin: null,
-            chartWidth: null,
-            chartHeight: null
+        const calc = {
+            chartLeftMargin: marginLeft,
+            chartTopMargin: marginTop,
         };
-        calc.id = "ID" + Math.floor(Math.random() * 1000000); // id for event handlings
-        calc.chartLeftMargin = marginLeft;
-        calc.chartTopMargin = marginTop;
+
         const chartWidth = svgWidth - marginRight - calc.chartLeftMargin;
         const chartHeight = svgHeight - marginBottom - calc.chartTopMargin;
 
@@ -84,43 +83,20 @@ class Chart {
     }
 
     drawWorldMap() {
-        const { chart, chartWidth, chartHeight, worldMap, data } = this.getState();
+        const {
+            chart,
+            chartWidth,
+            chartHeight,
+            worldMap,
+            data,
+            gradientColors,
+            countryStyles,
+            tooltipStyles,
+            pinStyles
+        } = this.getState();
 
-        if (!worldMap) {
-            console.error('worldMap is not defined');
-            return;
-        }
-
-        if (!this.allPins) {
-            this.allPins = [];
-        }
-
-        const countryOrder = ['Georgia', 'Hungary', 'Austria', 'Italy'];
-
-
-        if (data && data.locations) {
-
-            const orderedLocations = countryOrder
-                .map(country => data.locations.find(loc => loc.country === country))
-                .filter(location => location !== undefined);
-
-            orderedLocations.forEach(location => {
-                if (!this.allPins.some(pin => pin.country === location.country)) {
-                    this.allPins.push(location);
-                }
-            });
-        }
-
-
-        let mapLayer = chart.select('.map-layer');
-        let pinsLayer = chart.select('.pins-layer');
-
-        if (mapLayer.empty()) {
-            mapLayer = chart._add('g.map-layer');
-        }
-        if (pinsLayer.empty()) {
-            pinsLayer = chart._add('g.pins-layer');
-        }
+        const mapLayer = chart._add('g.map-layer');
+        const pinsLayer = chart._add('g.pins-layer');
 
         const filteredFeatures = worldMap.features.filter(d => d.properties.name !== "Antarctica");
 
@@ -132,105 +108,74 @@ class Chart {
 
         const path = d3.geoPath().projection(projection);
 
-        let gradient = mapLayer.select("#country-gradient");
-        if (gradient.empty()) {
-            gradient = mapLayer._add("defs.gradient-defs")
-                ._add("linearGradient.gradient")
-                .attr("id", "country-gradient")
-                .attr("gradientUnits", "userSpaceOnUse");
-
-            gradient._add("stop.gradient-stop-start")
-                .attr("offset", "0%")
-                .attr("stop-color", "#91EAE4");
-
-            gradient._add("stop.gradient-stop-end")
-                .attr("offset", "100%")
-                .attr("stop-color", "#7F7FD5");
-        }
-
-        gradient
+        const gradient = mapLayer._add("defs.gradient-defs")
+            ._add("linearGradient.gradient")
+            .attr("id", "country-gradient")
+            .attr("gradientUnits", "userSpaceOnUse")
             .attr("x1", "0")
             .attr("y1", "0")
             .attr("x2", chartWidth)
             .attr("y2", chartHeight);
 
-        // Update map
-        const countries = mapLayer.selectAll('path.country')
-            .data(filteredFeatures);
+        gradient._add("stop.gradient-stop-start")
+            .attr("offset", "0%")
+            .attr("stop-color", gradientColors.start);
 
-        const newCountries = mapLayer._add('path.country', filteredFeatures);
+        gradient._add("stop.gradient-stop-end")
+            .attr("offset", "100%")
+            .attr("stop-color", gradientColors.end);
 
-        newCountries
+        mapLayer._add('path.country', filteredFeatures)
             .attr('d', path)
             .attr('fill', 'url(#country-gradient)')
-            .attr('stroke', this.getState().countryStyles.stroke)
-            .attr('stroke-width', this.getState().countryStyles.strokeWidth);
+            .attr('stroke', countryStyles.stroke)
+            .attr('stroke-width', countryStyles.strokeWidth);
 
-        countries.exit().remove();
+        const tooltip = d3.select("body")
+            ._add("div.tooltip")
+            .style("background-color", tooltipStyles.backgroundColor)
+            .style("padding", tooltipStyles.padding)
+            .style("border-radius", tooltipStyles.borderRadius)
+            .style("pointer-events", tooltipStyles.pointerEvents)
+            .style("box-shadow", tooltipStyles.boxShadow)
+            .style("position", tooltipStyles.position)
+            .style("opacity", tooltipStyles.opacity)
+            .style("font-size", tooltipStyles.fontSize)
+            .style("max-width", tooltipStyles.maxWidth
+            );
 
-        let tooltip = d3.select("body").select(".tooltip");
-        if (tooltip.empty()) {
-            const { tooltipStyles } = this.getState();
-            tooltip = d3.select("body")
-                ._add("div.tooltip")
-                .style("background-color", tooltipStyles.backgroundColor)
-                .style("padding", tooltipStyles.padding)
-                .style("border-radius", tooltipStyles.borderRadius)
-                .style("pointer-events", tooltipStyles.pointerEvents)
-                .style("box-shadow", tooltipStyles.boxShadow)
-                .style("position", tooltipStyles.position)
-                .style("opacity", tooltipStyles.opacity);
-        }
-
-
-        const handlePinEvents = (selection) => {
-            selection
-                .on("mouseover", (event, d) => {
-                    tooltip
-                        .style("opacity", 1)
-                        .html(`<strong>${d.name}</strong><br/>შეფასება: ${d.score}</strong><br/>${d.info}`)
-                        .style("left", (event.pageX + 10) + "px")
-                        .style("top", (event.pageY - 28) + "px");
-                })
-                .on("mouseout", () => {
-                    tooltip.style("opacity", 0);
-                });
-        };
-
-
-        const pins = pinsLayer.selectAll(".pin")
-            .data(this.allPins, d => d.country);
-
-        const newPins = pinsLayer._add("circle.pin", this.allPins)
-            .attr("r", 0)
-            .attr("fill", "#FF4136")
-            .style("cursor", "pointer")
-            .style("opacity", 0)
-            .attr("cx", d => {
+        const newPins = pinsLayer._add("image.pin", data?.locations || [])
+            .attr("width", pinStyles.initialSize)
+            .attr("height", pinStyles.initialSize)
+            .attr("href", "images/pin.svg")
+            .style("cursor", pinStyles.cursor)
+            .style("opacity", pinStyles.opacity)
+            .attr("x", d => {
                 const coords = projection([d.longitude, d.latitude]);
-                return coords ? coords[0] : 0;
+                return coords ? coords[0] - pinStyles.size / 2 : 0;
             })
-            .attr("cy", d => {
+            .attr("y", d => {
                 const coords = projection([d.longitude, d.latitude]);
-                return coords ? coords[1] : 0;
+                return coords ? coords[1] - pinStyles.size : 0;
+            })
+            .on("mouseover", (event, d) => {
+                tooltip
+                    .style("opacity", 1)
+                    .html(`<strong>${d.name}</strong><br/>შეფასება: ${d.score}</strong><br/>${d.info}`)
+                    .style("left", (event.pageX + 10) + "px")
+                    .style("top", (event.pageY - 28) + "px");
+            })
+            .on("mouseout", () => {
+                tooltip.style("opacity", 0);
             });
 
-        newPins.each(function (d) {
-            const orderIndex = countryOrder.indexOf(d.country);
-            if (orderIndex !== -1) {
-                d3.select(this)
-                    .transition()
-                    .delay(orderIndex * 1000)
-                    .duration(500)
-                    .style("opacity", 1)
-                    .attr("r", 5);
-            }
-        });
-
-
-        handlePinEvents(newPins);
-
-        pins.exit().remove();
+        newPins
+            .transition()
+            .delay((d, i) => i * 1000)
+            .duration(500)
+            .style("opacity", 1)
+            .attr("width", pinStyles.size)
+            .attr("height", pinStyles.size);
     }
 
     drawSvgAndWrappers() {
@@ -240,17 +185,12 @@ class Chart {
             svgHeight,
             defaultFont,
             calc,
-            data,
-            chartWidth,
-            chartHeight
         } = this.getState();
 
-        // Draw SVG
         const svg = d3Container._add('svg.svg-container')
             .attr("width", svgWidth)
             .attr("height", svgHeight)
             .attr("font-family", defaultFont);
-
 
         var chart = svg._add('g.chart')
             .attr(
@@ -343,35 +283,27 @@ class Chart {
             .attr("width", attrs.svgWidth);
 
         const newChartWidth = attrs.svgWidth - attrs.marginRight - attrs.marginLeft;
-        const widthRatio = newChartWidth / oldWidth;
-
 
         const projection = d3.geoMercator()
             .fitSize([newChartWidth, chartHeight], {
                 type: "FeatureCollection",
                 features: worldMap.features.filter(d => d.properties.name !== "Antarctica")
             });
-
-
         const path = d3.geoPath().projection(projection);
 
         chart.select('.map-layer')
             .selectAll('path.country')
             .attr('d', path);
 
-
-        const gradient = chart.select('#country-gradient')
-            .attr("x2", newChartWidth);
-
         chart.select('.pins-layer')
             .selectAll('.pin')
-            .attr("cx", d => {
+            .attr("x", d => {
                 const coords = projection([d.longitude, d.latitude]);
-                return coords ? coords[0] : 0;
+                return coords ? coords[0] - this.getState().pinStyles.size / 2 : 0;
             })
-            .attr("cy", d => {
+            .attr("y", d => {
                 const coords = projection([d.longitude, d.latitude]);
-                return coords ? coords[1] : 0;
+                return coords ? coords[1] - this.getState().pinStyles.size : 0;
             });
 
         this.setState({ chartWidth: newChartWidth });

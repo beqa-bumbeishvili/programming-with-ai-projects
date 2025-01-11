@@ -417,3 +417,4 @@ class Chart {
 
 // Initialize the chart
 const chart = new Chart();
+
