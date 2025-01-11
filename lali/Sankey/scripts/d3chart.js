@@ -5,14 +5,14 @@ class Chart {
             id: "ID" + Math.floor(Math.random() * 1000000),
             svgWidth: 800,
             svgHeight: 600,
-            marginTop: 150,
+            marginTop: 100,
             marginBottom: 100,
             marginRight: 150,
             marginLeft: 20,
             container: "body",
             data: null,
             nodeWidth: 15,
-            nodePadding: 40,
+            nodePadding: 25,
             linkOpacity: 0.7,
             fontSize: 12,
             tooltipStyles: {
@@ -26,7 +26,7 @@ class Chart {
                 fadeOutDuration: 500,
                 opacity: 0.9
             },
-
+// ნუ ტოვებთ ამ ხაზებს :D შემდეგზე 5 ლარი იქნება
             labelStyles: {
                 fontSize: '11px',
                 opacity: 0.6,
@@ -41,6 +41,15 @@ class Chart {
                 link: {
                     highlighted: 0.9,
                     dimmed: 0.1
+                }
+            },
+
+            labelLayout: {
+                padding: 6,
+                verticalOffset: '0.35em',
+                textAnchor: {
+                    left: 'start',
+                    right: 'end'
                 }
             }
         };
@@ -82,7 +91,8 @@ class Chart {
             nodeStyles,
             hoverEffects,
             linkOpacity,
-            data
+            data,
+            labelLayout
         } = this.getState();
 
         chart.selectAll('.links, .nodes, .labels').remove();
@@ -98,18 +108,6 @@ class Chart {
         });
 
         const { sankeyData } = calc;
-
-        function getNodeColor(node) {
-            if (!node || !node.name) return colors.main;
-
-            if (colors.endNodes && colors.endNodes[node.name]) {
-                return colors.endNodes[node.name];
-            }
-            if (colors.middleNodes && colors.middleNodes[node.name]) {
-                return colors.middleNodes[node.name];
-            }
-            return colors.main;
-        }
 
         const links = chart._add({
             tag: 'g',
@@ -173,16 +171,16 @@ class Chart {
                 links.style('opacity', calc.getLinkStyle.strokeOpacity);
             });
 
-        const labels = chart._add({
+        const labels = chart._add({  //labels ცვლადი ზედმეტია არსად იყენებ
             tag: 'g'
         })
             .selectAll('text')
             .data(sankeyData.nodes)
             .join('text')
-            .attr('x', d => d.x0 < calc.chartWidth / 2 ? d.x1 + 6 : d.x0 - 6)
-            .attr('y', d => (d.y1 + d.y0) / 2)
-            .attr('dy', '0.35em')
-            .attr('text-anchor', d => d.x0 < calc.chartWidth / 2 ? 'start' : 'end')
+            .attr('x', d => calc.labelLayout.getX(d))
+            .attr('y', d => calc.labelLayout.getY(d))
+            .attr('dy', labelLayout.verticalOffset)
+            .attr('text-anchor', d => calc.labelLayout.getAnchor(d))
             .text(d => d.name)
             .style('font-size', calc.getLabelStyle.fontSize)
             .style('opacity', calc.getLabelStyle.opacity)
@@ -202,7 +200,8 @@ class Chart {
             data,
             tooltipStyles,
             fontSize,
-            linkOpacity
+            linkOpacity,
+            labelLayout
         } = this.getState();
 
         let calc = {
@@ -227,6 +226,17 @@ class Chart {
             sankeyGenerator: d3.sankey()
                 .nodeWidth(nodeWidth)
                 .nodePadding(nodePadding)
+                .nodeSort((a, b) => {
+                    if (a.layer === b.layer) {
+                        if (a.layer === 2 && a.position === "top" && b.position === "top") {
+                            return (a.order || 0) - (b.order || 0);
+                        }
+                        if (a.position === "top") return -1;
+                        if (b.position === "top") return 1;
+                        return 0;
+                    }
+                    return a.layer - b.layer;
+                })
                 .extent([[0, 0], [
                     svgWidth - marginRight - marginLeft,
                     svgHeight - marginBottom - marginTop
@@ -270,13 +280,47 @@ class Chart {
                 fontSize: '14px', 
                 opacity: 0.7,   
                 fontWeight: 300  
+            },
+
+            labelLayout: {
+                getX: d => d.x0 < calc.chartWidth / 2 ? d.x1 + labelLayout.padding : d.x0 - labelLayout.padding,
+                getY: d => (d.y1 + d.y0) / 2,
+                getAnchor: d => d.x0 < calc.chartWidth / 2 ? labelLayout.textAnchor.left : labelLayout.textAnchor.right
             }
         };
 
         if (data) {
+            const nodes = data.nodes.map(d => ({ ...d }));
+            const links = data.links.map(d => {
+                const link = { ...d };
+
+                // hardcode ქვია ამას, შენ არ იცი რა დატა შემოგივა, შეიძლება savings ვაფშე არ იყოს შიგნით
+                // ხელით არ შეილება დატას ელემენტების აღება და მისთვის განსხვავებული პირობების გაწერა
+                if (nodes[link.target].name === "Savings") { 
+                    link.value *= 1; 
+                }
+
+                if (nodes[link.source].name === "Expenses") {
+                    link.custom = {
+                        targetX: calc.chartWidth, 
+                        targetY: link.target * (calc.chartHeight / 6) 
+                    };
+                }
+                return link;
+            });
+
             calc.sankeyData = calc.sankeyGenerator({
-                nodes: data.nodes.map(d => ({ ...d })),
-                links: data.links.map(d => ({ ...d }))
+                nodes: nodes,
+                links: links
+            });
+
+            calc.sankeyData.nodes.forEach(node => {
+                // იგივე აქაც, savings ვაფშე არ უნდა ახსენო
+                if (node.name === "Savings") {
+                    node.x0 = calc.chartWidth * 0.5;
+                    node.x1 = calc.chartWidth * 0.6;
+                    node.dy *= 0.4;
+                }
             });
         }
 

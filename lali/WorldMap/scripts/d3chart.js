@@ -46,6 +46,13 @@ class Chart {
                         start: "#72dc8b",
                         middle: "#97ca0e",
                         end: "#dcd472"
+                    },
+                    attributes: {
+                        id: "map-gradient",
+                        x1: "0%",
+                        y1: "50%",
+                        x2: "100%",
+                        y2: "50%"
                     }
                 },
                 tooltip: {
@@ -84,7 +91,8 @@ class Chart {
                 tooltipOffsetY: 35,
                 tooltipFadeOpacity: 1,
                 pinTransformOffset: { x: 12, y: 24 }
-            }
+            },
+            worldGeojsonUrl: "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson"
         };
 
         // Defining accessors
@@ -114,7 +122,7 @@ class Chart {
         return this;
     }
 
-    calculateProperties(data = this.getState().data) { //data = this.getState().data არგუმენტში არ იყო საჭირო ჩაწერა :D პირველ ხაზზე ქენი ქვევით 
+    calculateProperties() {
         const state = this.getState();
 
         // Calculate dimensions
@@ -171,18 +179,19 @@ class Chart {
             styles,
             animation,
             templates,
-            constants
+            constants,
+            worldGeojsonUrl
         } = this.getState();
 
         chart.selectAll('*').remove();
 
         const gradient = chart.append("defs")
             .append("linearGradient")
-            .attr("id", "map-gradient")
-            .attr("x1", "0%")
-            .attr("y1", "50%")
-            .attr("x2", "100%")
-            .attr("y2", "50%"); //ატტრს-ში
+            .attr("id", styles.gradient.attributes.id)
+            .attr("x1", styles.gradient.attributes.x1)
+            .attr("y1", styles.gradient.attributes.y1)
+            .attr("x2", styles.gradient.attributes.x2)
+            .attr("y2", styles.gradient.attributes.y2);
 
         gradient.append("stop")
             .attr("offset", "0%")
@@ -196,7 +205,7 @@ class Chart {
             .attr("offset", "100%")
             .attr("stop-color", styles.gradient.colors.end);
 
-        d3.json("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson") //index.html-ში გაიტანე ესეც
+        d3.json(worldGeojsonUrl)
             .then(worldData => {
 
                 chart.append('g')
