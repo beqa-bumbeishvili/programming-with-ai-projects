@@ -63,7 +63,7 @@ class Chart {
         const sankey = d3.sankey()
             .nodeWidth(10)
             .nodePadding(12)
-            .extent([[1, 1], [800, 400]])
+            .extent([[1, 1], [800, 300]])
             .nodeAlign(d3.sankeyCenter)
             .nodeSort(null);
 
@@ -85,7 +85,7 @@ class Chart {
                     const target = d.target;
                     const x0 = source.x0;
                     const x1 = target.x1;
-                    const y0 = source.y0+30 ;
+                    const y0 = source.y0+22.5 ;
                     const y1 = target.y1-80;  
                     
                     return `M${x0},${y0}
@@ -116,7 +116,7 @@ class Chart {
             .attr("y", d => {
 
                 if (d.name === "Housing") {
-                    return d.y0 - 52;  
+                    return d.y0 - 57.5;  
                 }
                 return d.y0;
             })
