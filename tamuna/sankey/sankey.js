@@ -18,6 +18,7 @@ class Chart {
         this.setState = (d) => Object.assign(attrs, d);
 
         Object.keys(attrs).forEach((key) => {
+            //@ts-ignore
             this[key] = function (_) {
                 if (!arguments.length) {
                     return attrs[key];
@@ -60,46 +61,17 @@ class Chart {
         };
 
         const sankey = d3.sankey()
-            .nodeWidth(10) //attrs-ში ესენი
+            .nodeWidth(10)
             .nodePadding(12)
             .extent([[1, 1], [800, 400]])
-            .nodeAlign(d3.sankeyLeft)
-<<<<<<< HEAD
+            .nodeAlign(d3.sankeyCenter)
             .nodeSort(null);
-=======
-            .nodeSort((a, b) => {
-                if (a.name === "Income") return -1; //არაა აუცილებელი სურათის მიხედვით იყოს დასორტირებული, სანკეი სულ უნდა მუშაობდეს რა დატაც არ უნდა შემოვიცეს csv ფაილიდან
-                if (b.name === "Income") return 1;  // შეილება Income და Savings სულ არ იყოს იმ დატაში, აქ შეგიძლია დაასორტირო ალფავიტის მიხედვით მაგალითად
-                if (a.name === "Savings") return 2;
-                if (b.name === "Savings") return -2;
-                
-                if (a.name === "Food") return 2;
-                if (b.name === "Food") return -2;
-                if (a.name === "Housing") return -1.5;
-                if (b.name === "Housing") return 1.5;
-                
-                const sequence = [
-                    "Housing",
-                    "Entertainment",
-                    "Taxes",
-                    "Transportation",
-                    "Shopping",
-                    "Travel",
-                    "Health",
-                    "Other",
-                    "Food"
-                ];
-                
-                return sequence.indexOf(a.name) - sequence.indexOf(b.name);
-            });
->>>>>>> 86cbd34335f9a90ce647280167da15533fe4c82c
 
         const { nodes: sankeyNodes, links: sankeyLinks2 } = sankey(sankeyData);
 
         const colorScale = d3.scaleOrdinal()
             .domain(['Income', 'Savings', 'Food', 'Housing', 'Shopping', 'Taxes', 'Health', 'Other', 'Transportation', 'Entertainment'])
             .range(['#A4BFD0', '#A4BFD0', '#F6BB9F', '#D69B7F', '#D69B7F', '#9BC4A5', '#D69B7F', '#9BC4A5', '#D69B7F', '#9BC4A5']);
-            // ატტრს-ში
 
         const link = chart.append("g")
             .selectAll("path")
@@ -108,7 +80,7 @@ class Chart {
             .attr("class", "link")
             .attr("d", d3.sankeyLinkHorizontal())
             .attr("d", d => {
-                if (d.target.name === "Housing" || d.target.name === "Entertainment") { //ნწუ, დატაში შეილება ვაფშე არ გქონდეს ეგენი
+                if (d.target.name === "Housing" || d.target.name === "Entertainment") {
                     const source = d.source;
                     const target = d.target;
                     const x0 = source.x0;
@@ -120,12 +92,7 @@ class Chart {
                             C${(x0 + x1) / 2},${y0}
                              ${(x0 + x1) / 2},${y1}
                              ${x1},${y1}`;
-<<<<<<< HEAD
-                } 
-
-=======
-                } //ხაზი გამოტოვე ქვევით
->>>>>>> 86cbd34335f9a90ce647280167da15533fe4c82c
+                }
                 return d3.sankeyLinkHorizontal()(d);
             })
             .attr("stroke", d => colorScale(d.target.name))
@@ -136,7 +103,9 @@ class Chart {
                 tag: 'div',
                 className: 'tooltip'
             })
-  // ორი ხაზი ზედმეტია
+            .style("position", "absolute")
+            .style("pointer-events", "none")
+            .style("opacity", 0);
 
         const node = chart.append("g")
             .selectAll("rect")
@@ -146,8 +115,8 @@ class Chart {
             .attr("x", d => d.x0)
             .attr("y", d => {
 
-                if (d.name === "Housing") { //ნწუ, დატაში შეილება ვაფშე არ გქონდეს ეს
-                    return d.y0 - 50;  
+                if (d.name === "Housing") {
+                    return d.y0 - 52;  
                 }
                 return d.y0;
             })
@@ -170,7 +139,6 @@ class Chart {
             let xOffset = 40;  
             let yOffset = -15; 
             
-            // ნწუ, დატაში შეილება ვაფშე არ გქონდეს ესენი. hardCode ქვია ამას, ხელით რო ასწორებ კონკრეტულ რაღაცებს, არ მოსულა ;დ
             if (d.name === "Income") {
                 xOffset = 90; 
              yOffset = -30; 
@@ -182,7 +150,7 @@ class Chart {
                     yOffset = -30;    
             } else if (!["Income", "Expenses", "Savings"].includes(d.name)) {
                 xOffset = 0; 
-                yOffset = -80;
+                yOffset = -30;
             }
             
             const xPosition = svgRect.left + (nodeCenter + translateX) * scaleValue + xOffset;
@@ -202,14 +170,14 @@ class Chart {
             );
             
             d3.select(event.currentTarget)
-                .classed("hover", true);
+                .style("opacity", 0.8);
         })
         .on("mouseout", (event) => {
             link.style("opacity", 1)
                 .style("stroke-width", d => Math.max(1, d.width));
             
             d3.select(event.currentTarget)
-                .classed("hover", false);
+                .style("opacity", 1);
             
             tooltip.style("opacity", 0);
         });
@@ -231,6 +199,8 @@ class Chart {
                 }
                 return d.y0 + (d.y1 - d.y0) / 2;
             })
+            .attr("dy", "0.35em")
+            .attr("text-anchor", "middle")
             .text(d => d.name);   
     }
 
@@ -316,7 +286,6 @@ class Chart {
             var container = this;
             var className = params.className;
             var elementTag = params.tag;
-
 
             var selection = container.append(elementTag)
                 .attr('class', className);
