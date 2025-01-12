@@ -103,9 +103,13 @@ class Chart {
                 tag: 'div',
                 className: 'tooltip'
             })
-            .style("position", "absolute")
+            .style("position", "fixed")
             .style("pointer-events", "none")
-            .style("opacity", 0);
+            .style("opacity", 0)
+            .style("z-index", "1000")
+            .style("transition", "opacity 0.2s")
+            .style("box-shadow", "0 2px 4px rgba(0,0,0,0.2)")
+            .style("white-space", "nowrap");
 
         const node = chart.append("g")
             .selectAll("rect")
@@ -125,43 +129,24 @@ class Chart {
             .attr("fill", d => colorScale(d.name));
 
         node.on("mouseover", (event, d) => {
-            const nodeWidth = d.x1 - d.x0;
-            const nodeCenter = d.x0 + (nodeWidth / 2);
+            const nodeElement = event.currentTarget;
+            const nodeRect = nodeElement.getBoundingClientRect();
             
-            const svgRect = svg.node().getBoundingClientRect();
-            const chartTransform = d3.select('.chart').attr('transform');
-            const translate = chartTransform.match(/translate\(([\d.]+),\s*([\d.]+)\)/);
-            const scale = chartTransform.match(/scale\(([\d.]+)\)/);
-            const translateX = parseFloat(translate[1]);
-            const translateY = parseFloat(translate[2]);
-            const scaleValue = parseFloat(scale[1]);
+            const xPosition = nodeRect.left + (nodeRect.width / 2);
+            const yPosition = nodeRect.top - 10;
             
-            let xOffset = 40;  
-            let yOffset = -15; 
+            tooltip
+                .style("opacity", 1)
+                .html(`${d.name}: ${(d.value * 100).toFixed(1)}%`)
+                .style("left", `${xPosition}px`)
+                .style("top", `${yPosition}px`)
+                .style("transform", "translate(-50%, -100%)")
+                .style("background", "rgba(0, 0, 0, 0.8)")
+                .style("color", "white")
+                .style("padding", "8px")
+                .style("border-radius", "4px")
+                .style("font-size", "14px");
             
-            if (d.name === "Income") {
-                xOffset = 90; 
-             yOffset = -30; 
-            } else if (d.name === "Savings") {
-                xOffset = 50; 
-                yOffset = -60;  
-            }else if (d.name === "Expenses") {
-                    xOffset = 50; 
-                    yOffset = -30;    
-            } else if (!["Income", "Expenses", "Savings"].includes(d.name)) {
-                xOffset = 0; 
-                yOffset = -30;
-            }
-            
-            const xPosition = svgRect.left + (nodeCenter + translateX) * scaleValue + xOffset;
-            const yPosition = svgRect.top + (d.y0 + translateY) * scaleValue + yOffset;
-            
-            tooltip.style("opacity", 1)
-                   .html(`${d.name}: ${(d.value * 100).toFixed(1)}%`)
-                   .style("left", `${xPosition}px`)
-                   .style("top", `${yPosition}px`)
-                   .style("transform", "translate(-50%, -100%)"); 
-                   
             link.style("opacity", l => 
                 l.source === d || l.target === d ? 1 : 0.1
             )
@@ -223,7 +208,7 @@ class Chart {
         };
 
         calc.id = "ID" + Math.floor(Math.random() * 1000000);
-        calc.chartLeftMargin = marginLeft + 50;
+        calc.chartLeftMargin = marginLeft;
         calc.chartTopMargin = marginTop;
         calc.chartWidth = svgWidth - marginRight - calc.chartLeftMargin;
         calc.chartHeight = svgHeight - marginBottom - calc.chartTopMargin;
@@ -243,12 +228,13 @@ class Chart {
 
     drawSvgAndWrappers() {
         const attrs = this.getState();
+        const { calc } = attrs;
         
         d3.select(attrs.container).selectAll("*").remove();
         
         const container = d3.select(attrs.container)
-            .style("width", "100vw")
-            .style("height", "100vh")
+            .style("width", "100%")
+            .style("height", "100%")
             .style("display", "flex")
             .style("justify-content", "center")
             .style("align-items", "center");
@@ -259,8 +245,8 @@ class Chart {
                     tag: 'svg',
                     className: 'svg-chart-container'
                 })
-                .attr("width", 1200)
-                .attr("height", 800)
+                .attr("width", "100%")
+                .attr("height", "100%")
                 .attr("viewBox", "0 0 1200 800")
                 .attr("preserveAspectRatio", "xMidYMid meet")
                 .attr("font-family", attrs.defaultFont);
@@ -272,7 +258,7 @@ class Chart {
                 })
                 .attr(
                     "transform",
-                    `translate(150, 150) scale(1)` 
+                    `translate(${1200/4}, ${800/6}) scale(0.8)`
                 );
 
             this.setState({ chart, svg });

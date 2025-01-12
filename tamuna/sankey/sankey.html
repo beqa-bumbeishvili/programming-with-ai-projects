@@ -16,7 +16,7 @@
         let chart;
         d3.csv('sankey.csv')
             .then(data => {
-                chart = new Chart();
+                const chart = new Chart();
                 chart
                     .svgHeight(window.innerHeight - 30)
                     .svgWidth(window.innerWidth - 30)
