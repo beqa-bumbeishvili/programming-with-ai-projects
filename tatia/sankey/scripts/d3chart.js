@@ -4,10 +4,10 @@ class Chart {
             id: "ID" + Math.floor(Math.random() * 1000000),
             svgWidth: 400,
             svgHeight: 200,
-            marginTop: 5,
-            marginBottom: 5,
-            marginRight: 20,
-            marginLeft: 20,
+            marginTop: 10,
+            marginBottom: 10,
+            marginRight: 40,
+            marginLeft: 40,
             container: "body",
             defaultTextFill: "#2C3E50",
             defaultFont: "Helvetica",
@@ -17,11 +17,11 @@ class Chart {
             nodeWidth: 15,
             nodePadding: 10,
             nodeStroke: "lightblue",
-            nodeFill: "blue",
+            nodeFill: "lightblue",
             nodeLabelPadding: 6,
             nodeLebelFontSize: "12px",
             nodeLabelDY: "0.35em",
-            linkStrokeOpacity: 0.8,
+            linkStrokeOpacity: 0.6,
             linkStroke: "#c4dfef",
             linkFill: "none",
             linkMinWidth: 1
@@ -69,7 +69,7 @@ class Chart {
             chartWidth: null,
             chartHeight: null
         };
-        calc.id = "ID" + Math.floor(Math.random() * 1000000); 
+        calc.id = "ID" + Math.floor(Math.random() * 1000000);
         calc.chartLeftMargin = marginLeft;
         calc.chartTopMargin = marginTop;
         const chartWidth = svgWidth - marginRight - calc.chartLeftMargin;
@@ -86,7 +86,6 @@ class Chart {
             nodeWidth,
             nodePadding,
             nodeStroke,
-            nodeFill,
             nodeLabelPadding,
             nodeLabelDY,
             linkStrokeOpacity,
@@ -99,30 +98,28 @@ class Chart {
         const sankey = d3.sankey()
             .nodeWidth(nodeWidth)
             .nodePadding(nodePadding)
+            .nodeAlign(d3.sankeyLeft)
             .extent([[0, 0], [chartWidth, chartHeight]]);
 
         const sankeyData = sankey(data);
 
         const colorScale = d3.scaleOrdinal()
-            .domain(sankeyData.links.filter(d => d.source.name === "Expenses").map(d => d.target.name))
-            .range(['#f7f791', '#9befda', '#e6daf2', '#b7eab4', '#baf2eb', '#a791f2', '#dda0dd']);
+            .domain(data.nodes.map(d => d.name))
+            .range(['#f7f791', '#9befda', '#e6daf2', '#b7eab4', '#baf2eb', '#a791f2', '#dda0dd', '#f7f791', '#9befda', '#e6daf2', '#b7eab4']);
 
         const linkG = chart._add('g.links-container');
         const link = linkG._add('path.link', sankeyData.links)
             .attr("d", d3.sankeyLinkHorizontal())
             .attr("stroke", d => {
-                if (d.source.name === "Expenses") {
+                if (d.source.depth == 1) {
                     const color = colorScale(d.target.name);
                     return color;
                 }
-                return linkStroke;  // Income-ის ლინკების ფერი
+                return linkStroke;
             })
             .attr("fill", linkFill)
             .attr("stroke-opacity", linkStrokeOpacity)
             .attr("stroke-width", d => Math.max(linkMinWidth, d.width));
-
-        link._add('title.link-tooltip')
-            .text(d => `${d.source.name} → ${d.target.name}\n${d.value.toFixed(1)}%`);
 
         const nodeG = chart._add('g.nodes-container');
         const node = nodeG._add('g.node', sankeyData.nodes)
@@ -131,8 +128,24 @@ class Chart {
         node._add('rect.node-rect')
             .attr("height", d => d.y1 - d.y0)
             .attr("width", d => d.x1 - d.x0)
-            .attr("fill", nodeFill)
-            .attr("stroke", nodeStroke);
+            .attr("fill", (d) => {
+                let color = colorScale(d.name);
+                if (d.depth == 1) {
+                    color = linkStroke;
+                }
+                return color;
+            })
+            .attr("stroke", nodeStroke)
+            .on("mouseover", function(event, d) {
+                node.selectAll('rect.node-rect').style("opacity", 0.3);
+                link.style("opacity", 0.8);
+                d3.select(this).style("opacity", 1);
+                link.filter(l => l.source === d || l.target === d).style("opacity", 1);
+            })
+            .on("mouseout", function() {
+                node.selectAll('rect.node-rect').style("opacity", 1);
+                link.style("opacity", linkStrokeOpacity);
+            });
 
         node._add('text.node-lebel')
             .attr("x", d => d.x0 < chartWidth / 2 ? nodeLabelPadding + (d.x1 - d.x0) : -nodeLabelPadding)
@@ -142,9 +155,15 @@ class Chart {
             .attr("font-size", nodeLebelFontSize)
             .text(d => `${d.name}`);
 
-        node._add('title')
-            .text(d => `${d.name}\n${d.value.toFixed(1)}%`);
-
+        node.each(function(d) {
+            tippy(this, {
+                content: `${d.value.toFixed(1)}%`,
+                arrow: false,
+                placement: 'top',
+                followCursor: false,
+                offset: [0, 0],
+            });
+        });
     }
 
     drawSvgAndWrappers() {
@@ -216,8 +235,6 @@ class Chart {
 
     setDynamicContainer() {
         const attrs = this.getState();
-
-        //Drawing containers
         var d3Container = d3.select(attrs.container);
         var containerRect = d3Container.node().getBoundingClientRect();
         if (containerRect.width > 0) attrs.svgWidth = containerRect.width;

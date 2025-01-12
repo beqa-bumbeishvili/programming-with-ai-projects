@@ -1,17 +1,17 @@
 {
     "nodes": [
-        { "name": "Income" },
-        { "name": "Expenses" },
-        { "name": "Direct Savings" },
-        { "name": "Food and Dining" },
-        { "name": "Home" },
-        { "name": "Education" },
-        { "name": "Shopping" },
-        { "name": "Travel" },
+        { "name": "Income"},
+        { "name": "Expenses"},
+        { "name": "Direct Savings"},
+        { "name": "Food and Dining"},
+        { "name": "Home"},
+        { "name": "Education"},
+        { "name": "Shopping"},
+        { "name": "Travel"},
         { "name": "Bills & Utilities" },
-        { "name": "Health" },
-        { "name": "Other" },
-        { "name": "Investments" }
+        { "name": "Health"},
+        { "name": "Other"},
+        { "name": "Investments"}
     ],
     "links": [
         { "source": 0, "target": 1, "value": 67.6 },
