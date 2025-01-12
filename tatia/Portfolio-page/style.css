@@ -1,0 +1,83 @@
+ .grid{
+    display:grid;
+    grid-template-columns: auto auto auto;
+    gap: 30px;
+    padding: 20px;
+    margin-right: 10px;
+
+  }
+
+.grid img{
+ width: 100%;
+  height: 300px;
+  border: 9px solid rgb(109, 214, 221);
+  border-radius: 5px;
+
+  
+}
+#nav-buttons a{
+    text-decoration: none;
+}
+#nav-buttons button{
+    background-color: #62c8f7;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+#nav-buttons button.selected{
+    background-color: #9962f7;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+
+#home{
+   font-size: 30px;
+   font-style: oblique;
+   margin-left:10px
+}
+
+
+.nav-bar{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top:22px;
+    margin-left: 10px;
+    margin-right: 10px;
+
+  }
+.grid img:hover{
+    border: 9px solid  #62c8f7;;
+    
+}
+#profile-picture{
+    height:300px;
+    width: 270px;
+    border-radius: 100%;
+}
+.contact-me{
+margin-top: 200px;
+font-size: 20px;
+}
+body{
+    font-family: "Montserrat";
+}
+.about-info{
+    padding: 30px;
+}
