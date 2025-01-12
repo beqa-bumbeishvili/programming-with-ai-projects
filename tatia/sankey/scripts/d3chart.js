@@ -4,8 +4,8 @@ class Chart {
             id: "ID" + Math.floor(Math.random() * 1000000),
             svgWidth: 400,
             svgHeight: 200,
-            marginTop: 5,
-            marginBottom: 5,
+            marginTop: 10,
+            marginBottom: 10,
             marginRight: 40,
             marginLeft: 40,
             container: "body",
@@ -158,10 +158,9 @@ class Chart {
         node.each(function(d) {
             tippy(this, {
                 content: `${d.value.toFixed(1)}%`,
-                arrow: true,
-                theme: 'light',
-                placement: 'right',
-                followCursor: true,
+                arrow: false,
+                placement: 'top',
+                followCursor: false,
                 offset: [0, 0],
             });
         });

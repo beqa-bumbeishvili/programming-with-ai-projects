@@ -3,6 +3,10 @@
     height: 100vh;
     display: flex;
     align-items: center;
+    padding-top:9px;
+}
+.svg-chart-container{
+    padding-top:9px
 }
 #graph-container {
     width: 100%;
