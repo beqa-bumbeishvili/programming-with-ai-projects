@@ -104,8 +104,8 @@ class Chart {
         const sankeyData = sankey(data);
 
         const colorScale = d3.scaleOrdinal()
-            .domain(sankeyData.links.filter(d => d.source.name === "Expenses").map(d => d.target.name))
-            .range(['#f7f791', '#9befda', '#e6daf2', '#b7eab4', '#baf2eb', '#a791f2', '#dda0dd']);
+            .domain(sankeyData.links.filter(d => d.source.name === "Expenses").map(d => d.target.name)) 
+            .range(['#f7f791', '#9befda', '#e6daf2', '#b7eab4', '#baf2eb', '#a791f2', '#dda0dd']); //attrs-ში
 
         const linkG = chart._add('g.links-container');
         const link = linkG._add('path.link', sankeyData.links)
