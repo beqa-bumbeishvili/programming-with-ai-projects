@@ -1,0 +1,104 @@
+.tooltip {
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  box-shadow: 0 2px 4px rgba(190, 188, 188, 0.1);
+  z-index: 1000;
+}
+
+/* Node colors */
+.node.Income {
+  fill: #349eeb !important;
+}
+.node.Expenses {
+  fill: #93ccf5 !important;
+}
+.node.DirectSavings {
+  fill: #c9e1f2 !important;
+}
+.node.FoodDining {
+  fill: #b1dcfc !important;
+}
+.node.Home {
+  fill: #fab07f !important;
+}
+.node.Education {
+  fill: #36784d !important;
+}
+.node.Shopping {
+  fill: #7dc998 !important;
+}
+.node.Travel {
+  fill: #87ceeb !important;
+}
+.node.Bills {
+  fill: #7dc998 !important;
+}
+.node.Health {
+  fill: #98fb98 !important;
+}
+.node.Other {
+  fill: #d3d3d3 !important;
+}
+.node.Investments {
+  fill: #edad82 !important;
+}
+
+/* Link styles */
+.link {
+  opacity: 0.8;
+}
+
+/* Link colors based on source-target pairs */
+.link.from-Income.to-Expenses {
+  stroke: #b3d8f2 !important;
+}
+.link.from-Income.to-DirectSavings {
+  stroke: #c2edde !important;
+}
+.link.from-Expenses.to-FoodDining {
+  stroke: #e8f5ff !important;
+}
+.link.from-Expenses.to-Home {
+  stroke: #fccfb1 !important;
+}
+.link.from-Expenses.to-Education {
+  stroke: #b0f5cf !important;
+}
+.link.from-Expenses.to-Shopping {
+  stroke: #a3bfad !important;
+}
+.link.from-Expenses.to-Travel {
+  stroke: #87ceeb !important;
+}
+.link.from-Expenses.to-Bills {
+  stroke: #a3bfad !important;
+}
+.link.from-Expenses.to-Health {
+  stroke: #98fb98 !important;
+}
+.link.from-Expenses.to-Other {
+  stroke: #d3d3d3 !important;
+}
+.link.from-Expenses.to-Investments {
+  stroke: #edb691 !important;
+}
+
+/* Tippy custom theme */
+.tippy-box[data-theme~="custom"] {
+  background-color: white;
+  color: #333;
+  border: 1px solid #ddd;
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  padding: 4px 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.tippy-box[data-theme~="custom"][data-placement^="top"] > .tippy-arrow::before {
+  border-top-color: white;
+}
+
+.tippy-box[data-theme~="custom"][data-placement^="bottom"]
+  > .tippy-arrow::before {
+  border-bottom-color: white;
+}
