@@ -208,7 +208,7 @@ class Chart {
         };
 
         calc.id = "ID" + Math.floor(Math.random() * 1000000);
-        calc.chartLeftMargin = marginLeft;
+        calc.chartLeftMargin = marginLeft + 50;
         calc.chartTopMargin = marginTop;
         calc.chartWidth = svgWidth - marginRight - calc.chartLeftMargin;
         calc.chartHeight = svgHeight - marginBottom - calc.chartTopMargin;
@@ -228,13 +228,12 @@ class Chart {
 
     drawSvgAndWrappers() {
         const attrs = this.getState();
-        const { calc } = attrs;
         
         d3.select(attrs.container).selectAll("*").remove();
         
         const container = d3.select(attrs.container)
-            .style("width", "100%")
-            .style("height", "100%")
+            .style("width", "100vw")
+            .style("height", "100vh")
             .style("display", "flex")
             .style("justify-content", "center")
             .style("align-items", "center");
@@ -245,10 +244,9 @@ class Chart {
                     tag: 'svg',
                     className: 'svg-chart-container'
                 })
-                .attr("width", "100%")
-                .attr("height", "100%")
+                .attr("width", 1200)
+                .attr("height", 800)
                 .attr("viewBox", "0 0 1200 800")
-                .attr("preserveAspectRatio", "xMidYMid meet")
                 .attr("font-family", attrs.defaultFont);
 
             let chart = svg
@@ -258,7 +256,7 @@ class Chart {
                 })
                 .attr(
                     "transform",
-                    `translate(${1200/4}, ${800/6}) scale(0.8)`
+                    `translate(150, 150) scale(1)` 
                 );
 
             this.setState({ chart, svg });
