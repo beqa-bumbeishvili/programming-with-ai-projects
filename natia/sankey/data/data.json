@@ -1,0 +1,29 @@
+{
+  "nodes": [
+    { "name": "Income", "layer": 0 },
+    { "name": "Expenses", "layer": 1, "sortIndex": 1 },
+    { "name": "Direct Savings", "layer": 1, "sortIndex": 2 },
+    { "name": "Food & Dining", "layer": 2 },
+    { "name": "Home", "layer": 2 },
+    { "name": "Education", "layer": 2 },
+    { "name": "Shopping", "layer": 2 },
+    { "name": "Travel", "layer": 2 },
+    { "name": "Bills", "layer": 2 },
+    { "name": "Health", "layer": 2 },
+    { "name": "Investments", "layer": 2 },
+    { "name": "Other", "layer": 2 }
+  ],
+  "links": [
+    { "source": 0, "target": 1, "value": 6760 },
+    { "source": 0, "target": 2, "value": 3240 },
+    { "source": 1, "target": 3, "value": 1825 },
+    { "source": 1, "target": 4, "value": 1690 },
+    { "source": 1, "target": 5, "value": 338 },
+    { "source": 1, "target": 6, "value": 405 },
+    { "source": 1, "target": 7, "value": 608 },
+    { "source": 1, "target": 8, "value": 405 },
+    { "source": 1, "target": 9, "value": 135 },
+    { "source": 1, "target": 10, "value": 676 },
+    { "source": 1, "target": 11, "value": 678 }
+  ]
+}
