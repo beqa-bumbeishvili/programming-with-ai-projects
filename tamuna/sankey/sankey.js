@@ -1,22 +1,25 @@
 class Chart {
     constructor() {
+        // Defining state attributes
         const attrs = {
             id: "ID" + Math.floor(Math.random() * 1000000),
             svgWidth: 400,
-            svgHeight: 400,
-            marginTop: 20,
-            marginBottom: 10,
-            marginRight: 50,
-            marginLeft: 50,
+            svgHeight: 200,
+            marginTop: 70,
+            marginBottom: 70,
+            marginRight: 70,
+            marginLeft: 70,
             container: "body",
+            defaultTextFill: "#2C3E50",
             defaultFont: "Helvetica",
             data: null,
-            firstRender: true
+            firstRender: true,
         };
 
         this.getState = () => attrs;
         this.setState = (d) => Object.assign(attrs, d);
 
+       
         Object.keys(attrs).forEach((key) => {
             //@ts-ignore
             this[key] = function (_) {
@@ -28,6 +31,7 @@ class Chart {
             };
         });
 
+       
         this.initializeEnterExitUpdatePattern();
     }
 
@@ -36,9 +40,9 @@ class Chart {
         this.calculateProperties();
         this.drawSvgAndWrappers();
         this.drawSankey();
-
         return this;
     }
+
 
     drawSankey() {
         const { chart, svg, data } = this.getState();
@@ -62,8 +66,8 @@ class Chart {
 
         const sankey = d3.sankey()
             .nodeWidth(10)
-            .nodePadding(12)
-            .extent([[1, 1], [800, 300]])
+            .nodePadding(40)
+            .extent([[0, 0], [width,height]])
             .nodeAlign(d3.sankeyCenter)
             .nodeSort(null);
 
@@ -80,19 +84,7 @@ class Chart {
             .attr("class", "link")
             .attr("d", d3.sankeyLinkHorizontal())
             .attr("d", d => {
-                if (d.target.name === "Housing" || d.target.name === "Entertainment") {
-                    const source = d.source;
-                    const target = d.target;
-                    const x0 = source.x0;
-                    const x1 = target.x1;
-                    const y0 = source.y0+22.5 ;
-                    const y1 = target.y1-80;  
-                    
-                    return `M${x0},${y0}
-                            C${(x0 + x1) / 2},${y0}
-                             ${(x0 + x1) / 2},${y1}
-                             ${x1},${y1}`;
-                }
+              
                 return d3.sankeyLinkHorizontal()(d);
             })
             .attr("stroke", d => colorScale(d.target.name))
@@ -119,9 +111,7 @@ class Chart {
             .attr("x", d => d.x0)
             .attr("y", d => {
 
-                if (d.name === "Housing") {
-                    return d.y0 - 57.5;  
-                }
+               
                 return d.y0;
             })
             .attr("height", d => d.y1 - d.y0)
@@ -179,15 +169,14 @@ class Chart {
                 return d.x0 - 50;
             })
             .attr("y", d => {
-                if (d.name === "Housing") {
-                    return (d.y0 - 50) + (d.y1 - d.y0) / 2;  
-                }
+                
                 return d.y0 + (d.y1 - d.y0) / 2;
             })
             .attr("dy", "0.35em")
             .attr("text-anchor", "middle")
             .text(d => d.name);   
     }
+
 
     calculateProperties() {
         const {
@@ -199,6 +188,7 @@ class Chart {
             svgHeight
         } = this.getState();
 
+        //Calculated properties
         let calc = {
             id: null,
             chartTopMargin: null,
@@ -207,8 +197,8 @@ class Chart {
             chartHeight: null
         };
 
-        calc.id = "ID" + Math.floor(Math.random() * 1000000);
-        calc.chartLeftMargin = marginLeft + 50;
+        calc.id = "ID" + Math.floor(Math.random() * 1000000); // id for event handlings
+        calc.chartLeftMargin = marginLeft;
         calc.chartTopMargin = marginTop;
         calc.chartWidth = svgWidth - marginRight - calc.chartLeftMargin;
         calc.chartHeight = svgHeight - marginBottom - calc.chartTopMargin;
@@ -216,65 +206,90 @@ class Chart {
         this.setState({ calc });
     }
 
-    setDynamicContainer() {
-        const attrs = this.getState();
-
-        if (attrs.container.startsWith('#')) {
-            this.setState({ container: attrs.container });
-        } else {
-            this.setState({ container: '.' + attrs.container });
-        }
-    }
-
     drawSvgAndWrappers() {
-        const attrs = this.getState();
-        
-        d3.select(attrs.container).selectAll("*").remove();
-        
-        const container = d3.select(attrs.container)
-            .style("width", "100vw")
-            .style("height", "100vh")
-            .style("display", "flex")
-            .style("justify-content", "center")
-            .style("align-items", "center");
+        const {
+            d3Container,
+            svgWidth,
+            svgHeight,
+            defaultFont,
+            calc,
+        } = this.getState();
 
-        if (!container.empty()) {
-            const svg = container
-                ._add({
-                    tag: 'svg',
-                    className: 'svg-chart-container'
-                })
-                .attr("width", 1200)
-                .attr("height", 800)
-                .attr("viewBox", "0 0 1200 800")
-                .attr("font-family", attrs.defaultFont);
+        // Draw SVG
+        const svg = d3Container
+            ._add({
+                tag: "svg",
+                className: "svg-chart-container"
+            })
+            .attr("width", svgWidth)
+            .attr("height", svgHeight)
+            .attr("font-family", defaultFont);
 
-            let chart = svg
-                ._add({
-                    tag: 'g',
-                    className: 'chart'
-                })
-                .attr(
-                    "transform",
-                    `translate(150, 150) scale(1)` 
-                );
+            svg.selectAll("*").remove();
 
-            this.setState({ chart, svg });
-        } else {
-            console.error('Container not found:', attrs.container);
-        }
+        let chart = svg
+            ._add({
+                tag: "g",
+                className: "chart"
+            })
+            .attr(
+                "transform",
+                "translate(" + calc.chartLeftMargin + "," + calc.chartTopMargin + ")"
+            );
+
+        this.setState({ chart, svg });
     }
 
     initializeEnterExitUpdatePattern() {
-        d3.selection.prototype._add = function(params) {
-            var container = this;
-            var className = params.className;
-            var elementTag = params.tag;
+        d3.selection.prototype._add = function (params) {
+            let container = this;
+            let className = params.className;
+            let elementTag = params.tag;
+            let data = params.data || [className];
+            let exitTransition = params.exitTransition || null;
+            let enterTransition = params.enterTransition || null;
+            // Pattern in action
+            let selection = container.selectAll("." + className).data(data, (d, i) => {
+                if (typeof d === "object") {
+                    if (d.id) {
+                        return d.id;
+                    }
+                }
+                return i;
+            });
+            if (exitTransition) {
+                exitTransition(selection);
+            } else {
+                selection.exit().remove();
+            }
 
-            var selection = container.append(elementTag)
-                .attr('class', className);
-
+            const enterSelection = selection.enter().append(elementTag);
+            if (enterTransition) {
+                enterTransition(enterSelection);
+            }
+            selection = enterSelection.merge(selection);
+            selection.attr("class", className);
             return selection;
         };
+    }
+
+    setDynamicContainer() {
+        const attrs = this.getState();
+
+        //Drawing containers
+        let d3Container = d3.select(attrs.container);
+        let containerRect = d3Container.node().getBoundingClientRect();
+        if (containerRect.width > 0) attrs.svgWidth = containerRect.width;
+
+        let self = this;
+
+        d3.select(window).on("resize." + attrs.id, function () {
+            let containerRect = d3Container.node().getBoundingClientRect();
+            if (containerRect.width > 0) attrs.svgWidth = containerRect.width;
+
+            self.render();
+        });
+
+        this.setState({ d3Container });
     }
 }
