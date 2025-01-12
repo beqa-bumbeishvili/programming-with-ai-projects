@@ -160,6 +160,9 @@ class Chart {
                 content: `${d.value.toFixed(1)}%`,
                 arrow: true,
                 theme: 'light',
+                placement: 'right',
+                followCursor: true,
+                offset: [0, 0],
             });
         });
     }
