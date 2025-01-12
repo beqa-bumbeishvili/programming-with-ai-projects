@@ -155,8 +155,13 @@ class Chart {
             .attr("font-size", nodeLebelFontSize)
             .text(d => `${d.name}`);
 
-        node._add('title.node-tooltip')
-            .text(d => `${d.value.toFixed(1)}%`);
+        node.each(function(d) {
+            tippy(this, {
+                content: `${d.value.toFixed(1)}%`,
+                arrow: true,
+                theme: 'light',
+            });
+        });
     }
 
     drawSvgAndWrappers() {
